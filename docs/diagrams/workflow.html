@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alfred · 上传工作流设计</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1f232c; --line:#2a2f3a;
+    --txt:#e7eaf0; --sub:#9aa3b2; --accent:#5b8cff; --ok:#3ecf8e; --warn:#f0b429;
+    --danger:#ff6b6b; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--txt);font-size:15px;line-height:1.65}
+  a{color:var(--accent);text-decoration:none}
+
+  header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 20px;
+    background:rgba(15,17,21,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  header h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.3px}
+  header .badge{font-size:11px;color:var(--sub);border:1px solid var(--line);padding:2px 9px;border-radius:20px}
+  header .spacer{flex:1}
+  header .meta{font-size:12px;color:var(--sub)}
+  #menuBtn{display:none;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+    border-radius:9px;padding:6px 11px;cursor:pointer;font-size:13px}
+
+  .layout{display:flex;max-width:1400px;margin:0 auto}
+  nav{position:sticky;top:54px;align-self:flex-start;width:236px;flex:0 0 236px;height:calc(100vh - 54px);
+    overflow-y:auto;padding:18px 10px 60px;border-right:1px solid var(--line)}
+  nav .grp{font-size:11px;color:#6b7382;letter-spacing:1px;margin:16px 12px 6px;text-transform:uppercase}
+  nav a{display:block;padding:7px 12px;border-radius:9px;color:var(--sub);font-size:13.5px;margin-bottom:1px}
+  nav a:hover{background:var(--panel2);color:var(--txt)}
+  nav a.active{background:#22304d;color:#a9c4ff}
+
+  main{flex:1;min-width:0;padding:26px 28px 120px}
+  section{scroll-margin-top:70px;margin-bottom:34px}
+  h2{font-size:22px;margin:0 0 6px;font-weight:700}
+  h2 .num{color:var(--accent);font-weight:800;margin-right:8px}
+  h3{font-size:16px;margin:22px 0 8px;font-weight:650;color:#cfd6e4}
+  .lede{color:var(--sub);font-size:14px;margin:0 0 16px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px}
+  .card.tight{padding:12px 14px}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--sub);font-weight:600;font-size:12px;letter-spacing:.4px;background:var(--panel2)}
+  tr:last-child td{border-bottom:none}
+  td code,li code,p code{background:#23283344;border:1px solid var(--line);border-radius:5px;padding:1px 5px;
+    font-size:12.5px;color:#9fc0ff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+
+  .pill{display:inline-block;border-radius:7px;padding:2px 8px;font-size:11.5px;margin:2px 4px 2px 0;
+    border:1px solid var(--line);background:var(--panel2);color:var(--sub)}
+  .pill.new{background:#1b2d24;border-color:#26503a;color:#7ee0ab}
+  .pill.has{background:#22304d;border-color:#31456e;color:#a9c4ff}
+  .pill.p0{background:#3a1f1f;border-color:#5c2f2f;color:#ff9d9d}
+  .pill.p1{background:#3a331a;border-color:#5c5227;color:#f0d48a}
+
+  .callout{border-radius:11px;padding:11px 14px;font-size:13.5px;margin:10px 0;border:1px solid}
+  .callout.info{background:#141f33;border-color:#22375c;color:#bcd3ff}
+  .callout.good{background:#16241d;border-color:#1f3a2c;color:#bff0d4}
+  .callout.warn{background:#2a2410;border-color:#473b14;color:#f3d98a}
+  .callout.bad{background:#2b1717;border-color:#4d2626;color:#ffb9b9}
+  .callout b{color:#fff}
+
+  .steps{counter-reset:s;list-style:none;padding:0;margin:8px 0}
+  .steps li{counter-increment:s;position:relative;padding:9px 0 9px 42px;border-bottom:1px dashed var(--line);font-size:14px}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:9px;width:26px;height:26px;border-radius:50%;
+    background:var(--panel2);border:1px solid var(--line);color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center}
+
+  .diagram{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px;margin:12px 0;
+    overflow:auto}
+  .diagram .cap{display:flex;justify-content:space-between;align-items:center;padding:6px 10px 8px;
+    font-size:12.5px;color:var(--sub);border-bottom:1px solid var(--line);margin-bottom:8px}
+  .diagram .cap b{color:var(--txt);font-size:13.5px;font-weight:650}
+  .diagram .cap button{background:var(--panel2);border:1px solid var(--line);color:var(--sub);border-radius:7px;
+    padding:3px 10px;font-size:11.5px;cursor:pointer}
+  .diagram .cap button:hover{color:var(--txt);border-color:var(--accent)}
+  pre.mermaid{margin:0;text-align:center;background:transparent}
+
+  .kv{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+  .kv:last-child{border-bottom:none}
+  .kv .k{flex:0 0 130px;color:var(--sub)}
+
+  .flow-str{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13.5px;margin:10px 0}
+  .flow-str span{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 12px}
+  .flow-str i{color:var(--accent);font-style:normal}
+  .flow-str span.hi{background:#22304d;border-color:#31456e;color:#a9c4ff;font-weight:600}
+
+  footer{color:var(--sub);font-size:12px;text-align:center;padding:24px 0 50px;border-top:1px solid var(--line)}
+
+  .modal{position:fixed;inset:0;background:#000d;z-index:60;display:none;padding:24px;overflow:auto}
+  .modal.on{display:block}
+  .modal .inner{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;
+    min-height:100%;display:flex;align-items:center;justify-content:center}
+  .modal .close{position:fixed;top:20px;right:26px;background:var(--panel2);border:1px solid var(--line);
+    color:var(--txt);border-radius:9px;padding:7px 14px;cursor:pointer;z-index:61}
+
+  @media(max-width:900px){
+    nav{position:fixed;left:0;top:54px;background:var(--bg);z-index:15;transform:translateX(-100%);transition:.22s;
+      border-right:1px solid var(--line)}
+    nav.open{transform:none}
+    #menuBtn{display:block}
+    main{padding:20px 16px 100px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🤵 Alfred</h1>
+  <span class="badge">上传工作流设计</span>
+  <div class="spacer"></div>
+  <span class="meta">v1 · 2026-08-02</span>
+  <button id="menuBtn">目录</button>
+</header>
+
+<div class="layout">
+<nav id="nav">
+  <div class="grp">总览</div>
+  <a href="#s0">这份文档在说什么</a>
+  <a href="#s1">名词对照表</a>
+  <a href="#s2">实体与唯一标识</a>
+  <a href="#s3">技能的定义</a>
+  <div class="grp">工作流</div>
+  <a href="#s4">① 上传 JD</a>
+  <a href="#s5">② 简历生成</a>
+  <a href="#s6">③ 投递与面试</a>
+  <a href="#s7">④ 聊天时间线</a>
+  <div class="grp">图</div>
+  <a href="#s8">数据流图 DFD</a>
+  <a href="#s9">流程图 Flow</a>
+  <a href="#s10">ER 图</a>
+  <div class="grp">落地</div>
+  <a href="#s11">潜在问题</a>
+  <a href="#s12">实现清单</a>
+  <a href="#s13">待拍板问题</a>
+</nav>
+
+<main>
+
+<!-- ─────────── 0 ─────────── -->
+<section id="s0">
+  <h2><span class="num">0</span>这份文档在说什么</h2>
+  <p class="lede">只讲一件事：东西是怎么从「你随手发一段话/一张截图」变成「库里干净、能查、能复用的数据」的。</p>
+
+  <div class="card">
+    <div class="flow-str">
+      <span>你发东西</span><i>→</i>
+      <span>原样存档<br><small style="color:var(--sub)">永不丢</small></span><i>→</i>
+      <span>AI 拆解</span><i>→</i>
+      <span class="hi">你过目确认</span><i>→</i>
+      <span>正式入库</span><i>→</i>
+      <span>随时调用</span>
+    </div>
+    <div class="callout warn"><b>最关键的一步是「你过目确认」。</b>没有它，截图认错的公司名、AI 瞎编的截止日期，会悄无声息地污染整个库。</div>
+  </div>
+
+  <h3>已经拍板的三个决策</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>议题</th><th>结论</th><th>为什么</th></tr>
+    <tr><td>技能库怎么建</td><td><b>AI 提议 + 你确认</b>，确认后才进正式词表</td><td>防止「Excel / Microsoft Excel / 熟练使用 Excel」变成三个技能</td></tr>
+    <tr><td>个人经历放哪</td><td><b>单独建一张表</b>，和笔记彻底分开</td><td>经历是"简历素材"要反复挑用；笔记是"我的情绪和判断"，用途完全不同</td></tr>
+    <tr><td>和 Alfred 的对话</td><td><b>双方都存</b>，都带时间戳</td><td>你要的是一条像微信一样能回看的时间线</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ─────────── 1 ─────────── -->
+<section id="s1">
+  <h2><span class="num">1</span>名词对照表</h2>
+  <p class="lede">口语说法 → 系统里的叫法。带 <span class="pill new">新建</span> 的是这次要加的。</p>
+  <div class="card tight">
+  <table>
+    <tr><th>你平时说的</th><th>系统里的名字</th><th>一句话解释</th></tr>
+    <tr><td>公司</td><td><code>company</code> <span class="pill has">已有</span></td><td>一家公司只存一条</td></tr>
+    <tr><td>岗位 / 职位</td><td><code>position</code> <span class="pill has">已有</span></td><td>某家公司的某个具体职位</td></tr>
+    <tr><td>职位大类</td><td><code>position.job_family</code></td><td>心理咨询 / 数据 / 研究…用来筛"某一类岗位"</td></tr>
+    <tr><td>技能</td><td><code>skill</code> <span class="pill new">新建</span></td><td>两层：大类 → 细分</td></tr>
+    <tr><td>岗位要求</td><td><code>position_requirement</code> <span class="pill new">新建</span></td><td>JD 里每条要求单独一行</td></tr>
+    <tr><td>我的经历</td><td><code>experience</code> <span class="pill new">新建</span></td><td>可反复挑进简历的素材</td></tr>
+    <tr><td>简历 / 求职信</td><td><code>document_asset</code> + <code>document_version</code> <span class="pill has">已有</span></td><td>档案 + 每一版快照</td></tr>
+    <tr><td>我的想法/评价</td><td><code>note</code> <span class="pill has">已有</span></td><td>主观内容</td></tr>
+    <tr><td>我和 Alfred 的聊天</td><td><code>chat_message</code> <span class="pill new">新建</span></td><td>双方消息，带时间戳</td></tr>
+    <tr><td>我发的那次东西</td><td><code>ingest_request</code> <span class="pill has">已有</span></td><td>原始输入存档 + 处理状态</td></tr>
+    <tr><td>语音/图片原件</td><td><code>attachment</code> <span class="pill has">已有</span></td><td>原文件 + 转写文字</td></tr>
+    <tr><td>投递记录</td><td><code>application</code> <span class="pill has">已有</span></td><td>投了哪家哪个岗，用的哪版简历</td></tr>
+    <tr><td>任意两样东西的关联</td><td><code>entity_link</code> <span class="pill has">已有</span></td><td>万能连线</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ─────────── 2 ─────────── -->
+<section id="s2">
+  <h2><span class="num">2</span>核心实体与唯一标识</h2>
+  <p class="lede">每个实体靠什么"认出自己"，撞车了怎么办。</p>
+
+  <div class="card tight">
+  <table>
+    <tr><th>实体</th><th>唯一键</th><th>长什么样</th><th>冲突了怎么办</th></tr>
+    <tr><td>公司</td><td><code>slug</code></td><td><code>bytedance</code></td><td>先查 slug，再按别名模糊匹配；命中就复用</td></tr>
+    <tr><td>岗位</td><td><code>fingerprint</code></td><td>hash(公司id + 标准职位名 + 地点)</td><td>同岗从两个渠道来 → 只留一条，来源追加</td></tr>
+    <tr><td>技能</td><td><code>slug</code></td><td><code>english</code> / <code>english/business-writing</code></td><td>归一化后仍不命中 → 建 <code>proposed</code> 等你确认</td></tr>
+    <tr><td>岗位要求</td><td>position_id + 原文哈希</td><td>—</td><td>重复解析只留一条</td></tr>
+    <tr><td>经历</td><td><code>slug</code></td><td><code>hku-psy-ra-2025</code></td><td>你自己命名，重名拒绝</td></tr>
+    <tr><td>简历版本</td><td>(asset_id, version_no) + checksum</td><td>cv-clinical-psy #7</td><td>内容没变就不新建版本</td></tr>
+    <tr><td>投递</td><td><code>id</code>（软约束：岗位+投递日）</td><td>—</td><td>同岗二投合法，但会提醒你"3 月投过"</td></tr>
+    <tr><td>聊天消息</td><td><code>id</code> + <code>sent_at</code></td><td>—</td><td>重发用幂等键挡掉</td></tr>
+    <tr><td>附件</td><td><code>sha256</code></td><td>—</td><td>同截图传两次只存一份</td></tr>
+  </table>
+  </div>
+
+  <h3>三个"两层结构"的处理方式不一样</h3>
+  <div class="grid3">
+    <div class="card">
+      <b>① 职位</b><div class="pill">不需要新表</div>
+      <p style="font-size:13.5px;color:var(--sub);margin:8px 0 0">
+      大类 = <code>job_family</code>，细分 = <code>title</code>。<br>
+      职位天然属于某家公司，脱离公司谈"职位大类"没有独立存在的必要。</p>
+    </div>
+    <div class="card">
+      <b>② 技能</b><div class="pill new">需要新表 · 自引用</div>
+      <p style="font-size:13.5px;color:var(--sub);margin:8px 0 0">
+      大类一条记录，细分一条记录，靠 <code>parent_id</code> 挂上去。<br>
+      技能要跨公司复用，「所有要 Excel 的岗位」必须能一键查出来。</p>
+    </div>
+    <div class="card">
+      <b>③ 经历</b><div class="pill">一层就够</div>
+      <p style="font-size:13.5px;color:var(--sub);margin:8px 0 0">
+      经历表本身是平的，靠挂技能来体现"这段经历证明了什么能力"。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────── 3 ─────────── -->
+<section id="s3">
+  <h2><span class="num">3</span>Agent 对「技能」的定义</h2>
+  <p class="lede">整个设计里最需要说死的一点 —— AI 一旦自由发挥，技能库三天就废。</p>
+
+  <div class="callout info">
+    <b>技能 =</b> 一个归一化、去重、可跨岗位复用的「能力标签」，两层结构（大类 → 细分），并且必须能追溯到 JD 里的原句。
+  </div>
+
+  <h3>技能的四个必填要素</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>要素</th><th>说明</th><th>例子</th></tr>
+    <tr><td><code>category</code> 大类</td><td>粗粒度，用来做导航</td><td>英语</td></tr>
+    <tr><td><code>name</code> 名称</td><td>具体能力</td><td>商务写作</td></tr>
+    <tr><td><code>evidence_text</code> 证据句</td><td>JD 里哪句话推出来的</td><td>"能独立撰写英文邮件与报告"</td></tr>
+    <tr><td><code>importance</code> 强度</td><td><code>must</code> 硬性 / <code>nice</code> 加分</td><td>must</td></tr>
+  </table>
+  </div>
+
+  <h3>AI 抽技能的四步法</h3>
+  <div class="card">
+  <ol class="steps">
+    <li><b>抽取</b>　把 JD 句子压成技能短语：<br><span style="color:var(--sub)">"熟练使用 Excel 进行数据透视分析" → Excel</span></li>
+    <li><b>归一</b>　去掉大小写、标点、修饰词，套同义词表：<br><span style="color:var(--sub)">"Microsoft Excel" / "excel" / "EXCEL 技能" → excel</span></li>
+    <li><b>匹配</b>　拿归一化结果去技能表比对（slug + 别名 + 模糊）：<br><span style="color:var(--ok)">命中 → 直接复用（99% 的情况）</span></li>
+    <li><b>提议</b>　不命中才新建 <code>proposed</code> 技能，等你确认 → <code>approved</code> / <code>merged</code> / <code>rejected</code></li>
+  </ol>
+  <div class="callout good"><b>关键约束：</b><code>proposed</code> 状态的技能不参与任何统计和筛选，它只是候选。即使 AI 提了一堆垃圾，也污染不了你的正式技能库。</div>
+  </div>
+
+  <h3>什么<u>不算</u>技能</h3>
+  <p class="lede">你说的"心理学背景、实习经历"要和能力拆开，否则技能库会混进一堆不是能力的东西。JD 里的要求分三类，全进 <code>position_requirement</code>，用 <code>kind</code> 区分：</p>
+  <div class="card tight">
+  <table>
+    <tr><th>kind</th><th>含义</th><th>例子</th><th>挂 skill_id</th></tr>
+    <tr><td><code>skill</code></td><td>能力</td><td>英语商务写作、Excel 数据透视、CBT 咨询技术</td><td style="color:var(--ok)">✅ 挂</td></tr>
+    <tr><td><code>qualification</code></td><td>学历 / 证书 / 专业背景</td><td>心理学硕士、注册心理师执照</td><td style="color:var(--sub)">❌ 不挂</td></tr>
+    <tr><td><code>experience</code></td><td>经历 / 年限</td><td>2 年以上咨询实习经验</td><td style="color:var(--sub)">❌ 不挂</td></tr>
+  </table>
+  </div>
+  <div class="callout info">好处：你既能问「所有要 CBT 技术的岗位」，也能问「哪些岗位要求心理学硕士」，两者不混淆。</div>
+
+  <h3>技能词表初始形态（举例）</h3>
+  <div class="card tight" style="font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#9fc0ff;white-space:pre">心理学
+ ├── 临床评估
+ ├── CBT 认知行为疗法
+ └── 个案报告撰写
+英语
+ ├── 商务写作
+ └── 会议口语
+Microsoft Office
+ ├── Excel 数据处理
+ └── 商务邮件撰写
+研究方法
+ ├── SPSS 统计分析
+ └── 文献综述</div>
+
+  <div class="diagram">
+    <div class="cap"><b>技能确认流程</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart LR
+    P(["AI 提议的新技能"]) --> Q{"你怎么看"}
+    Q -->|"确实是新技能"| A["approved<br/>进正式词表"]
+    Q -->|"跟已有的重复"| M["merged<br/>并入已有技能<br/>说法自动变成别名"]
+    Q -->|"这不算技能"| R["rejected<br/>下次不再提"]
+    Q -->|"先放着"| P
+    A --> USE(["可用于筛选和统计"])
+    M --> USE
+</pre>
+  </div>
+</section>
+
+<!-- ─────────── 4 ─────────── -->
+<section id="s4">
+  <h2><span class="num">4</span>工作流一 · 上传 JD</h2>
+  <p class="lede">链接 / 截图 / 语音 / 文字，混着发也行。</p>
+
+  <div class="card tight">
+  <table>
+    <tr><th>步骤</th><th>发生了什么</th><th>落到哪张表</th></tr>
+    <tr><td>① 你发东西</td><td>链接、截图、语音、文字</td><td><code>chat_message</code>(user)、<code>ingest_request</code>、<code>attachment</code></td></tr>
+    <tr><td>② 原样存档</td><td><b>调 AI 之前就先存</b>。AI 全挂了原始输入也在</td><td>同上</td></tr>
+    <tr><td>③ 归一成文本</td><td>链接抓正文 / 截图 OCR / 语音转文字</td><td><code>attachment.transcription</code></td></tr>
+    <tr><td>④ 选技能（路由）</td><td>判断这是岗位 / 感想 / coffee chat</td><td><code>ingest_run</code>(route)</td></tr>
+    <tr><td>⑤ AI 拆解</td><td>公司、岗位、日期、投递方式、要求、技能候选、评价</td><td><code>ingest_run</code>(extract)</td></tr>
+    <tr><td>⑥ <b>预览卡片</b></td><td><b>暂不入库</b>，字段可直接改</td><td><code>ingest_run.parsed</code></td></tr>
+    <tr><td>⑦ 背景搜集</td><td>搜公司新闻口碑，<b>只展示不入库</b></td><td>不落库</td></tr>
+    <tr><td>⑧ 你确认</td><td>改完点确认</td><td><code>company</code>/<code>position</code>/<code>position_requirement</code>/<code>note</code></td></tr>
+    <tr><td>⑨ Alfred 回话</td><td>一句话总结 + 待确认技能</td><td><code>chat_message</code>(assistant)</td></tr>
+  </table>
+  </div>
+
+  <h3>拆出来的字段清单</h3>
+  <div class="grid2">
+    <div class="card">
+      <b>基本信息</b> <span class="pill">→ company / position</span>
+      <div class="kv"><div class="k">公司</div><div>名称、简介</div></div>
+      <div class="kv"><div class="k">职位</div><div>名称 <code>title</code>、大类 <code>job_family</code></div></div>
+      <div class="kv"><div class="k">日期</div><div>发布 <code>posted_at</code>、<b>截止 <code>deadline_at</code></b></div></div>
+      <div class="kv"><div class="k">其他</div><div>地点、工作模式、签证</div></div>
+    </div>
+    <div class="card">
+      <b>投递信息</b> <span class="pill">→ position</span>
+      <div class="kv"><div class="k">投递链接</div><div><code>apply_url</code></div></div>
+      <div class="kv"><div class="k">投递方式</div><div><code>apply_method</code></div></div>
+      <div class="kv"><div class="k">要准备的材料</div><div><code>required_documents</code> <span class="pill new">新字段</span><br><small style="color:var(--sub)">有了它 Alfred 才能提醒「这家还要 PS，你还没写」</small></div></div>
+    </div>
+    <div class="card">
+      <b>技能需求</b> <span class="pill">→ position_requirement + skill</span>
+      <p style="font-size:13.5px;color:var(--sub);margin:8px 0 0">每条要求一行，标 must / nice，能力类的挂技能。</p>
+    </div>
+    <div class="card">
+      <b>我的评价</b> <span class="pill">→ note + position</span>
+      <div class="kv"><div class="k">喜好程度</div><div><code>interest_level</code> 1–5</div></div>
+      <div class="kv"><div class="k">原话</div><div><code>personal_comment_md</code></div></div>
+      <div class="kv"><div class="k">改简历思路<br>面试准备</div><div>拆成独立 <code>note</code>，用 <code>entity_link</code> 挂到这个岗位</div></div>
+    </div>
+  </div>
+  <div class="callout warn"><b>背景搜集不入库。</b>公司新闻、口碑、面经会过期，存下来反而误导；需要时随时重搜。但卡片上会给一个「存为笔记」按钮，你点了才存。</div>
+
+  <h3>特殊情况怎么办</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>情况</th><th>处理</th></tr>
+    <tr><td>JD 里没写公司名（小红书吐槽帖）</td><td>建占位公司标 <code>needs_review</code>，等你补</td></tr>
+    <tr><td>同一岗位从两个渠道各发一次</td><td>指纹命中 → 复用，追加来源，不新建</td></tr>
+    <tr><td>截止日期写"本周五"</td><td>按今天换算成具体日期，在预览里<b>高亮标出</b>这是推算的</td></tr>
+    <tr><td>一张截图里有三个岗位</td><td>拆成三个预览卡片，可只确认其中一个</td></tr>
+    <tr><td>AI 挂了</td><td>标 <code>partial</code>，原始输入还在，随时可重跑</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ─────────── 5 ─────────── -->
+<section id="s5">
+  <h2><span class="num">5</span>工作流二 · 简历与求职信生成</h2>
+
+  <div class="card">
+  <ol class="steps">
+    <li>你说：<i style="color:#a9c4ff">给字节的数据分析岗改简历，用经历 1、3、5</i></li>
+    <li>Alfred 定位公司 + 岗位（没有就先建）</li>
+    <li>从 <code>experience</code> 取出你点名的那几条</li>
+    <li><b>缺口比对</b>：岗位要求 vs 经历带的技能 →「这岗要 SPSS，你选的三条没体现，要不要加经历 4」</li>
+    <li>生成 LaTeX <b>草稿</b>（雏形，还不是最终版）</li>
+    <li>你确认 / 让它改</li>
+    <li>定稿 → 存 <code>document_version</code>（LaTeX 源码快照）</li>
+    <li>编译 PDF → 存文件路径</li>
+    <li>抽关键内容建索引，以后能搜「哪份简历写过 SPSS」</li>
+  </ol>
+  </div>
+
+  <h3>关键设计：记住「这版用了哪几条经历」</h3>
+  <div class="card tight">
+  <table>
+    <tr><th colspan="2"><code>document_version_experience</code> <span class="pill new">新建</span></th></tr>
+    <tr><td><code>document_version_id</code></td><td>哪一版简历</td></tr>
+    <tr><td><code>experience_id</code></td><td>用了哪条经历</td></tr>
+    <tr><td><code>order_no</code></td><td>在简历里排第几</td></tr>
+    <tr><td><code>rendered_bullets</code></td><td>这版实际怎么措辞的（同一段经历，投研究岗和投咨询岗写法不一样）</td></tr>
+  </table>
+  </div>
+  <div class="callout good"><b>为什么必须有这张表：</b>三个月后收到面试通知，你能一眼看到「当时投这个岗用的是经历 1/3/5，实习那段我强调的是数据分析」，直接照着准备面试。</div>
+
+  <h3>版本管理规则</h3>
+  <div class="card tight">
+    <div class="kv"><div class="k">不可变</div><div>每次定稿 = 一个新版本，老版本永远不改</div></div>
+    <div class="kv"><div class="k">必填摘要</div><div>每版必须有「这版改了什么」，AI 自动生成，你可以改</div></div>
+    <div class="kv"><div class="k">防灌水</div><div>内容没变（checksum 相同）就不建新版本</div></div>
+    <div class="kv"><div class="k">延后编译</div><div>只在你确认后才编译 PDF，草稿阶段不浪费时间</div></div>
+  </div>
+
+  <h3>经历表长什么样</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>字段</th><th>说明</th><th>例子</th></tr>
+    <tr><td><code>slug</code></td><td>唯一标识</td><td>hku-psy-ra-2025</td></tr>
+    <tr><td><code>title</code></td><td>显示名</td><td>香港大学心理系 研究助理</td></tr>
+    <tr><td><code>kind</code></td><td>类型</td><td>internship / project / research / volunteer / award</td></tr>
+    <tr><td><code>org_name</code></td><td>在哪做的</td><td>香港大学</td></tr>
+    <tr><td><code>started_on</code> / <code>ended_on</code></td><td>起止</td><td>2025-06 ~ 2025-09</td></tr>
+    <tr><td><code>bullets</code></td><td><b>简历条目候选</b>，可存多种措辞和中英双语</td><td>["独立完成 40 份个案评估报告", …]</td></tr>
+    <tr><td><code>display_order</code></td><td>你说的"经历 1、2、3"就是这个</td><td>1</td></tr>
+  </table>
+  </div>
+  <div class="callout info"><code>experience_skill</code> 这张关联表带来一个很爽的能力：<b>Alfred 能反向推荐</b> —— 「这个岗要 CBT，你的经历 2 里有 CBT，建议加进去」。</div>
+</section>
+
+<!-- ─────────── 6 ─────────── -->
+<section id="s6">
+  <h2><span class="num">6</span>工作流三 · 投递与面试跟踪</h2>
+  <p class="lede">这块现有表基本够用，只补充关联关系说明。</p>
+  <div class="card tight">
+  <table>
+    <tr><th>记录什么</th><th>存哪</th></tr>
+    <tr><td>投了哪家哪个岗</td><td><code>application.position_id</code></td></tr>
+    <tr><td><b>用的哪份简历/求职信</b></td><td><code>resume_version_id</code> / <code>cover_letter_version_id</code></td></tr>
+    <tr><td>投递渠道、时间</td><td><code>channel</code> / <code>submitted_at</code></td></tr>
+    <tr><td>网页表单填了什么</td><td><code>submission_detail_md</code></td></tr>
+    <tr><td>内推人是谁</td><td><code>referrer_person_id</code></td></tr>
+    <tr><td>面试轮次、类型、时间</td><td><code>interview</code></td></tr>
+    <tr><td><b>面试问了什么、我怎么答的</b></td><td><code>interview.questions</code></td></tr>
+    <tr><td>面试感受</td><td><code>feedback_md</code> + <code>feeling</code></td></tr>
+  </table>
+  </div>
+  <div class="diagram">
+    <div class="cap"><b>投递状态流转</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+stateDiagram-v2
+    [*] --> draft
+    draft --> submitted
+    submitted --> ack_received
+    submitted --> ghosted : 长期无回应
+    ack_received --> oa_pending
+    oa_pending --> oa_done
+    ack_received --> interviewing
+    oa_done --> interviewing
+    interviewing --> offer
+    interviewing --> rejected
+    offer --> accepted
+    offer --> declined
+    ghosted --> interviewing : 突然回复
+</pre>
+  </div>
+</section>
+
+<!-- ─────────── 7 ─────────── -->
+<section id="s7">
+  <h2><span class="num">7</span>工作流四 · 你和 Alfred 的聊天时间线</h2>
+
+  <div class="callout info">
+    <b>为什么要单独一张表：</b>现有的 <code>ingest_request</code> 记的是"处理任务"，不是聊天记录 —— Alfred 的回复只有一句总结，读起来不像对话；而且有些消息（比如"帮我看看这周有什么截止"）根本不产生 ingest 任务，没地方存。
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <b><code>chat_message</code></b> <span class="pill new">新建</span>
+      <div class="kv"><div class="k">sent_at</div><div><b>时间戳</b>，时间线排序靠它</div></div>
+      <div class="kv"><div class="k">role</div><div>user（你发的） / assistant（Alfred 回的）</div></div>
+      <div class="kv"><div class="k">media_kind</div><div>text / voice / image / link / mixed</div></div>
+      <div class="kv"><div class="k">content_md</div><div>显示文本（语音就是转写、图片就是描述）</div></div>
+      <div class="kv"><div class="k">attachment_ids</div><div>语音、图片的原件</div></div>
+      <div class="kv"><div class="k">ingest_request_id</div><div>这条消息触发了哪次处理（可空）</div></div>
+      <div class="kv"><div class="k">reply_to_id</div><div>Alfred 这句在回你的哪句</div></div>
+      <div class="kv"><div class="k">status</div><div>sent / processing / done / failed</div></div>
+    </div>
+    <div class="card">
+      <b>和 <code>ingest_request</code> 的分工</b>
+      <table style="margin-top:8px">
+        <tr><th></th><th>chat_message</th><th>ingest_request</th></tr>
+        <tr><td>是什么</td><td>聊天记录，给人看</td><td>处理任务，给系统用</td></tr>
+        <tr><td>谁的内容</td><td>你 + Alfred 双方</td><td>只有你的输入</td></tr>
+        <tr><td>读取频率</td><td>高（每次打开都刷）</td><td>低（排查问题才看）</td></tr>
+        <tr><td>数量关系</td><td>一条 user 消息</td><td>→ 0 或 1 个任务</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="callout warn"><b>有意的冗余：</b><code>chat_message.content_md</code> 会把语音转写文字冗余存一份，不必每次都去 join 附件表。时间线是读得最频繁的东西，多存一份文本换秒开，划算。</div>
+</section>
+
+<!-- ─────────── 8 ─────────── -->
+<section id="s8">
+  <h2><span class="num">8</span>数据流图 · Data Flow Diagram</h2>
+  <p class="lede">数据从哪来、经过谁、存到哪去。</p>
+
+  <div class="diagram">
+    <div class="cap"><b>Level 0 · 整体</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart LR
+    U(["你"])
+    subgraph ALFRED["Alfred 系统"]
+        direction TB
+        A1["接收与存档"]
+        A2["AI 拆解"]
+        A3["确认与入库"]
+        A4["调用与生成"]
+    end
+    LLM(["AI 模型"])
+    WEB(["外部网页 / 搜索"])
+    DB[("数据库")]
+
+    U -- "文字/语音/图片/链接" --> A1
+    A1 -- "原始内容" --> DB
+    A1 -- "归一化文本" --> A2
+    A2 <-- "问答" --> LLM
+    A2 -- "抓正文/查背景" --> WEB
+    A2 -- "预览卡片" --> U
+    U -- "改一改 + 确认" --> A3
+    A3 -- "正式写入" --> DB
+    U -- "给这个岗改简历" --> A4
+    DB -- "经历/技能/岗位要求" --> A4
+    A4 -- "简历草稿" --> U
+</pre>
+  </div>
+
+  <div class="diagram">
+    <div class="cap"><b>Level 1 · 上传 JD 的内部数据流</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart TB
+    IN(["你发的内容"])
+    N1["归一化<br/>链接抓正文 / 截图OCR / 语音转写"]
+    S1[("attachment<br/>原件+转写")]
+    S2[("ingest_request<br/>原始输入")]
+    S3[("chat_message<br/>你说的这句")]
+    R1["路由：这是什么类型的东西"]
+    E1["抽取：拆成结构化字段"]
+    K1["技能归一：匹配已有技能库"]
+    P1{"预览卡片<br/>等你确认"}
+    W1["写入实体"]
+    S4[("company / position")]
+    S5[("position_requirement")]
+    S6[("skill 提议区")]
+    S7[("note 我的评价")]
+    S8[("reminder 截止提醒")]
+    S9[("chat_message<br/>Alfred 的回复")]
+    BG["背景搜集<br/>只看不存"]
+
+    IN --> N1
+    IN --> S2
+    IN --> S3
+    N1 --> S1
+    N1 --> R1
+    R1 --> E1
+    E1 --> K1
+    K1 --> P1
+    E1 --> BG
+    BG -.->|"只展示"| P1
+    P1 -->|"确认"| W1
+    P1 -->|"丢弃"| X(["不入库"])
+    W1 --> S4
+    W1 --> S5
+    W1 --> S6
+    W1 --> S7
+    W1 --> S8
+    W1 --> S9
+</pre>
+  </div>
+
+  <div class="diagram">
+    <div class="cap"><b>Level 1 · 简历生成的数据流</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart LR
+    Q(["给X公司Y岗改简历<br/>用经历1/3/5"])
+    D1[("position_requirement<br/>这个岗要什么")]
+    D2[("experience<br/>我的经历素材")]
+    D3[("experience_skill<br/>经历证明了什么能力")]
+    M["缺口比对<br/>要求 vs 我有的"]
+    G["LaTeX 生成"]
+    P{"你确认"}
+    V[("document_version<br/>源码快照")]
+    L[("document_version_experience<br/>用了哪几条经历")]
+    PDF[("PDF 文件")]
+
+    Q --> M
+    D1 --> M
+    D2 --> M
+    D3 --> M
+    M -->|"提示缺口"| Q
+    M --> G
+    G --> P
+    P -->|"再改改"| G
+    P -->|"定稿"| V
+    V --> L
+    V --> PDF
+</pre>
+  </div>
+</section>
+
+<!-- ─────────── 9 ─────────── -->
+<section id="s9">
+  <h2><span class="num">9</span>流程图 · Flow Diagram</h2>
+
+  <div class="diagram">
+    <div class="cap"><b>上传 JD 主流程（含所有分支）</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart TD
+    START(["你发了链接/截图/语音"]) --> SAVE["立即存档原件<br/>此刻起内容不会丢"]
+    SAVE --> NORM["归一成纯文本"]
+    NORM --> OK1{"文本拿到了吗"}
+    OK1 -->|"否"| FAIL1["标记 partial<br/>告诉你抓取失败<br/>可手动补内容"]
+    OK1 -->|"是"| ROUTE["判断类型"]
+    ROUTE --> ISJOB{"是岗位信息吗"}
+    ISJOB -->|"否"| OTHER["走别的技能<br/>笔记 / coffee chat"]
+    ISJOB -->|"是"| EXTRACT["AI 拆解字段"]
+    EXTRACT --> CO{"识别到公司了吗"}
+    CO -->|"否"| PLACE["建占位公司<br/>标记待补"]
+    CO -->|"是"| MATCH["按 slug + 别名匹配已有公司"]
+    PLACE --> FP
+    MATCH --> FP["算岗位指纹"]
+    FP --> DUP{"这个岗已经存过了吗"}
+    DUP -->|"是"| MERGE["复用已有岗位<br/>追加新来源"]
+    DUP -->|"否"| NEW["准备新建岗位"]
+    MERGE --> SK
+    NEW --> SK["技能归一与匹配"]
+    SK --> SKHIT{"技能库里有吗"}
+    SKHIT -->|"有"| REUSE["直接复用"]
+    SKHIT -->|"没有"| PROPOSE["建成待确认技能"]
+    REUSE --> CARD
+    PROPOSE --> CARD["生成预览卡片"]
+    CARD --> BG["顺手搜背景信息<br/>只展示不入库"]
+    BG --> REVIEW{"你看一眼"}
+    REVIEW -->|"改字段"| CARD
+    REVIEW -->|"丢弃"| DROP(["不入库<br/>原始内容仍留档"])
+    REVIEW -->|"确认"| WRITE["写入数据库"]
+    WRITE --> REM{"有截止日期吗"}
+    REM -->|"有"| MKREM["自动建提前3天的提醒"]
+    REM -->|"没有"| REPLY
+    MKREM --> REPLY["Alfred 回话<br/>写进聊天时间线"]
+    REPLY --> END(["完成"])
+</pre>
+  </div>
+
+  <div class="diagram">
+    <div class="cap"><b>简历生成流程</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart TD
+    S(["给某公司某岗改简历"]) --> PICK{"指定用哪几条经历了吗"}
+    PICK -->|"指定了"| GET["取出指定经历"]
+    PICK -->|"没指定"| REC["按岗位要求自动推荐经历"]
+    REC --> CONFIRM1{"这几条行吗"}
+    CONFIRM1 -->|"换一批"| REC
+    CONFIRM1 -->|"可以"| GET
+    GET --> GAP["比对岗位要求<br/>找出没覆盖到的能力"]
+    GAP --> WARN{"有明显缺口吗"}
+    WARN -->|"有"| TELL["提示你<br/>要求SPSS但选的经历没体现"]
+    WARN -->|"没有"| GEN
+    TELL --> GEN["生成 LaTeX 草稿"]
+    GEN --> LOOK{"你看草稿"}
+    LOOK -->|"改措辞/换经历"| GEN
+    LOOK -->|"定稿"| SAVE["存新版本<br/>记录用了哪几条经历"]
+    SAVE --> CK{"内容和上一版一样吗"}
+    CK -->|"一样"| SKIP["不新建版本"]
+    CK -->|"不一样"| PDF["编译 PDF"]
+    PDF --> IDX["抽取关键词建索引"]
+    IDX --> DONE(["可用于投递"])
+</pre>
+  </div>
+
+  <div class="diagram">
+    <div class="cap"><b>从上传到投递的完整闭环</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+flowchart LR
+    A(["发现岗位"]) --> B(["解析入库"])
+    B --> C(["写评价与准备思路"])
+    C --> D(["生成定制简历"])
+    D --> E(["投递"])
+    E --> F(["跟踪状态"])
+    F --> G(["面试记录"])
+    G --> H(["复盘写进笔记"])
+    H -.->|"经验反哺"| C
+    G -.->|"新技能被问到"| I(["补进技能库"])
+    I -.-> D
+</pre>
+  </div>
+</section>
+
+<!-- ─────────── 10 ─────────── -->
+<section id="s10">
+  <h2><span class="num">10</span>ER 图 · 实体关系</h2>
+  <p class="lede">拆成三张看，避免一张图糊成一团。</p>
+
+  <div class="diagram">
+    <div class="cap"><b>10.1 上传与解析</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+erDiagram
+    CHAT_MESSAGE ||--o| INGEST_REQUEST : "触发"
+    INGEST_REQUEST ||--o{ INGEST_RUN : "每次AI调用"
+    INGEST_REQUEST ||--o{ ATTACHMENT : "原件"
+    INGEST_REQUEST ||--o{ COMPANY : "产出"
+    INGEST_REQUEST ||--o{ POSITION : "产出"
+    INGEST_REQUEST ||--o{ NOTE : "产出"
+
+    CHAT_MESSAGE {
+        string id PK
+        timestamp sent_at "时间戳"
+        string role "user 或 assistant"
+        string media_kind "text voice image link"
+        text content_md "显示文本"
+        json attachment_ids
+        string ingest_request_id FK
+        string reply_to_id FK
+        string status
+    }
+    INGEST_REQUEST {
+        string id PK
+        string skill_name
+        text raw_text
+        string link
+        text transcript
+        json attachment_ids
+        string status "received running partial succeeded failed"
+        text summary_md
+    }
+    ATTACHMENT {
+        string id PK
+        string media_kind
+        string sha256 UK "同文件不重复存"
+        string storage_uri
+        text transcription "语音转写"
+        text vision_caption "图片描述"
+    }
+</pre>
+  </div>
+
+  <div class="diagram">
+    <div class="cap"><b>10.2 岗位 · 技能 · 要求</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+erDiagram
+    COMPANY ||--o{ POSITION : "发布"
+    POSITION ||--o{ POSITION_REQUIREMENT : "要求"
+    SKILL ||--o{ POSITION_REQUIREMENT : "被要求"
+    SKILL ||--o{ SKILL : "大类包含细分"
+    SKILL ||--o{ EXPERIENCE_SKILL : "被证明"
+    EXPERIENCE ||--o{ EXPERIENCE_SKILL : "证明"
+
+    COMPANY {
+        string id PK
+        string name
+        string slug UK "唯一标识"
+        json aliases "别名用于去重"
+        string industry
+        int interest_level
+    }
+    POSITION {
+        string id PK
+        string company_id FK
+        string fingerprint UK "去重指纹"
+        string title "细分职位名"
+        string job_family "职位大类"
+        string location
+        timestamp deadline_at "投递截止"
+        string apply_url "投递链接"
+        json required_documents "要交的材料"
+        string source_kind "来源渠道"
+        int interest_level "喜好程度"
+        text personal_comment_md "我的评价原话"
+    }
+    SKILL {
+        string id PK
+        string slug UK "english 或 english-business-writing"
+        string name "显示名"
+        string parent_id FK "大类指向空"
+        json aliases "同义说法"
+        string kind "hard soft language tool domain"
+        string status "proposed approved merged rejected"
+        string merged_into_id FK
+    }
+    POSITION_REQUIREMENT {
+        string id PK
+        string position_id FK
+        string kind "skill qualification experience"
+        string skill_id FK "仅能力类才有"
+        text text "要求原文"
+        string importance "must nice"
+        real confidence
+    }
+    EXPERIENCE_SKILL {
+        string experience_id FK
+        string skill_id FK
+        int proficiency "1到5"
+        text evidence_text
+    }
+</pre>
+  </div>
+
+  <div class="diagram">
+    <div class="cap"><b>10.3 经历 · 文档 · 投递</b><button onclick="zoom(this)">放大</button></div>
+<pre class="mermaid">
+erDiagram
+    EXPERIENCE ||--o{ DOCUMENT_VERSION_EXPERIENCE : "被引用"
+    DOCUMENT_ASSET ||--o{ DOCUMENT_VERSION : "版本链"
+    DOCUMENT_VERSION ||--o{ DOCUMENT_VERSION_EXPERIENCE : "用了哪几条"
+    DOCUMENT_VERSION ||--o{ APPLICATION : "投递时所用"
+    POSITION ||--o{ APPLICATION : "投递"
+    APPLICATION ||--o{ INTERVIEW : "面试轮次"
+    APPLICATION ||--o| OFFER : "结果"
+
+    EXPERIENCE {
+        string id PK
+        string slug UK
+        string title
+        string kind "internship project research award"
+        string org_name
+        string org_company_id FK
+        date started_on
+        date ended_on
+        text summary_md
+        json bullets "简历条目候选"
+        int display_order "经历1 2 3"
+    }
+    DOCUMENT_ASSET {
+        string id PK
+        string slug UK
+        string kind "resume 或 cover_letter"
+        string name
+        string template_source "LaTeX模板"
+    }
+    DOCUMENT_VERSION {
+        string id PK
+        string asset_id FK
+        int version_no "与asset唯一"
+        string checksum "内容没变就不新建"
+        string source_format "latex"
+        text source_content "完整源码"
+        string tailored_for_position_id FK
+        text change_summary_md "这版改了什么"
+        string compiled_pdf_url
+    }
+    DOCUMENT_VERSION_EXPERIENCE {
+        string document_version_id FK
+        string experience_id FK
+        int order_no "简历里排第几"
+        json rendered_bullets "实际措辞"
+    }
+    APPLICATION {
+        string id PK
+        string position_id FK
+        string status "投递状态机"
+        string resume_version_id FK
+        string cover_letter_version_id FK
+        timestamp submitted_at
+        text submission_detail_md
+    }
+    INTERVIEW {
+        string id PK
+        string application_id FK
+        int round_no
+        string kind
+        timestamp scheduled_at
+        json questions "问了什么我怎么答"
+        text feedback_md "我的感受"
+    }
+</pre>
+  </div>
+
+  <h3>万能连线 <code>entity_link</code></h3>
+  <p class="lede">任何两个实体都能连起来，不用为每种关系加一张表。</p>
+  <div class="card tight">
+  <table>
+    <tr><th>场景</th><th>连法</th></tr>
+    <tr><td>这条笔记是关于那个岗的</td><td><code>note → position</code>，relation = <code>about</code></td></tr>
+    <tr><td>这条笔记提到了某家公司</td><td><code>note → company</code>，relation = <code>mentions</code></td></tr>
+    <tr><td>这个岗需要某技能</td><td>走 <code>position_requirement</code> 专表，<b>不用</b> entity_link</td></tr>
+    <tr><td>这张截图是这次投递的凭证</td><td><code>application → attachment</code>，relation = <code>evidence</code></td></tr>
+    <tr><td>这条笔记来自那段录音</td><td><code>note → attachment</code>，relation = <code>derived_from</code></td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ─────────── 11 ─────────── -->
+<section id="s11">
+  <h2><span class="num">11</span>潜在问题 Brainstorm</h2>
+  <p class="lede">先替你踩坑。按风险高低排。</p>
+
+  <h3 style="color:var(--danger)">高风险 · 不处理一定出事</h3>
+  <div class="grid2">
+    <div class="card">
+      <b>① 技能库爆炸</b>
+      <div class="callout bad" style="margin:8px 0">三个月后技能表 400 条，其中 300 条是同义重复</div>
+      <div style="font-size:13.5px;color:var(--sub)"><b style="color:var(--ok)">对策</b>　AI 只能提议不能直接入库；<code>proposed</code> 不参与筛选；提供"合并技能"操作，合并时旧说法自动进别名</div>
+    </div>
+    <div class="card">
+      <b>② 截图 / OCR 认错关键字段</b>
+      <div class="callout bad" style="margin:8px 0">公司名认成"字节眺动"，截止日期认成去年</div>
+      <div style="font-size:13.5px;color:var(--sub)"><b style="color:var(--ok)">对策</b>　强制走预览卡片；AI 推算出来的字段（"本周五"→ 具体日期）在卡片上<b>高亮标注</b></div>
+    </div>
+    <div class="card">
+      <b>③ 经历和笔记混为一谈</b>
+      <div class="callout bad" style="margin:8px 0">想往简历里加东西时，翻遍笔记也找不到那段实习怎么写的</div>
+      <div style="font-size:13.5px;color:var(--sub)"><b style="color:var(--ok)">对策</b>　已定案分表。判断标准一句话 —— <b>能写进简历的是经历，其余全是笔记</b></div>
+    </div>
+    <div class="card">
+      <b>④ 简历版本认不出来</b>
+      <div class="callout bad" style="margin:8px 0">收到面试通知，不知道当初投的是哪版</div>
+      <div style="font-size:13.5px;color:var(--sub)"><b style="color:var(--ok)">对策</b>　<code>resume_version_id</code> 硬关联 + 记录用了哪几条经历 + 每版必填改动摘要</div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--warn)">中风险 · 会不舒服但不致命</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>问题</th><th>对策</th></tr>
+    <tr><td><b>⑤ 同岗位重复入库</b><br><small style="color:var(--sub)">"数据分析师"和"数据分析实习生"该分开（对的）；"Data Analyst"和"数据分析师"被分开（错的）</small></td><td>指纹先过一遍中英归一表；不确定时在卡片上问你"这是不是和已有的 XX 同一个岗"</td></tr>
+    <tr><td><b>⑥ 聊天时间线越滚越长</b></td><td>按天分组、分页加载；加 <code>is_pinned</code> 置顶；纯闲聊可标记归档</td></tr>
+    <tr><td><b>⑦ 你的评价被塞进 JD 描述里</b><br><small style="color:var(--sub)">AI 把"这家听说加班很凶"写进了岗位描述</small></td><td>prompt 已明确"主观评价只进 my_comment"；再加校验 —— 描述字段出现第一人称就打回</td></tr>
+    <tr><td><b>⑧ 背景搜集的信息想留下来</b><br><small style="color:var(--sub)">搜到"这家去年裁员 30%"，肯定想留</small></td><td>默认不存，卡片上给「存为笔记」按钮，你点了才存成 <code>note(kind=research)</code></td></tr>
+  </table>
+  </div>
+
+  <h3 style="color:var(--sub)">低风险 · 记着就行</h3>
+  <div class="card tight">
+    <div class="kv"><div class="k">⑨ 材料清单没人管</div><div><code>required_documents</code> + 生成 checklist 提醒</div></div>
+    <div class="kv"><div class="k">⑩ 同岗二次投递</div><div>不阻止，但提示"你 3 月投过这个岗"</div></div>
+    <div class="kv"><div class="k">⑪ 文件越存越多</div><div>PDF 本身不大；真占地方的是截图，sha256 去重已解决大半</div></div>
+  </div>
+</section>
+
+<!-- ─────────── 12 ─────────── -->
+<section id="s12">
+  <h2><span class="num">12</span>实现清单（与现有代码的差距）</h2>
+
+  <h3>要新建的表</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>表</th><th>作用</th><th>优先级</th></tr>
+    <tr><td><code>skill</code></td><td>两级技能受控词表，带 proposed 状态</td><td><span class="pill p0">P0</span></td></tr>
+    <tr><td><code>position_requirement</code></td><td>替代 <code>position.requirements</code> 这个 JSON 字段</td><td><span class="pill p0">P0</span></td></tr>
+    <tr><td><code>experience</code></td><td>个人经历素材库</td><td><span class="pill p0">P0</span></td></tr>
+    <tr><td><code>experience_skill</code></td><td>经历 ↔ 技能</td><td><span class="pill p1">P1</span></td></tr>
+    <tr><td><code>document_version_experience</code></td><td>简历版本 ↔ 用了哪几条经历</td><td><span class="pill p1">P1</span></td></tr>
+    <tr><td><code>chat_message</code></td><td>你和 Alfred 的双向时间线</td><td><span class="pill p1">P1</span></td></tr>
+  </table>
+  </div>
+
+  <h3>要改的地方</h3>
+  <div class="card tight">
+  <table>
+    <tr><th>位置</th><th>改什么</th></tr>
+    <tr><td><code>models/tables.py</code></td><td>加上述新表；<code>position</code> 增加 <code>required_documents</code>、<code>posted_at</code></td></tr>
+    <tr><td><code>models/enums.py</code></td><td>加 <code>SkillStatus</code>、<code>SkillKind</code>、<code>RequirementKind</code>、<code>ChatRole</code>、<code>ExperienceKind</code></td></tr>
+    <tr><td><code>skills/extract_job/skill.yaml</code></td><td><code>skills</code> 从"字符串列表"升级为"带大类/证据句/强度的对象"；<code>requirements</code> 加 <code>kind</code>；<code>add_tags</code> 换成 <code>upsert_skills</code> + <code>link_requirements</code></td></tr>
+    <tr><td><code>skills/_actions.py</code></td><td>新增 <code>upsert_skill</code>（含归一化匹配）、<code>link_requirement</code>、<code>append_chat_message</code></td></tr>
+    <tr><td><code>ingest.py</code></td><td>支持 dry_run 预览模式；每次 ingest 前后写 <code>chat_message</code></td></tr>
+    <tr><td>接口层</td><td>技能确认/合并、经历 CRUD、聊天时间线分页、预览确认提交</td></tr>
+  </table>
+  </div>
+  <div class="callout warn">现有 <code>docs/DATA_MODEL.md</code> 把技能表述为「<code>namespace='skill'</code> 的 tag」。<b>本设计取代该方案</b> —— tag 是自由标签，扛不住"两级结构 + 提议确认 + 合并去重"这三件事。落地时需同步更新 DATA_MODEL.md。</div>
+
+  <h3>建议的落地顺序</h3>
+  <div class="card">
+  <ol class="steps">
+    <li>建 <code>skill</code> + <code>position_requirement</code>，改 extract_job 技能　<span style="color:var(--ok)">← 上传链路立刻变干净</span></li>
+    <li>加预览确认机制（dry_run + 确认接口）　<span style="color:var(--ok)">← 挡住脏数据</span></li>
+    <li>建 <code>experience</code> 表 + 录入你现有的经历　<span style="color:var(--ok)">← 为简历生成铺路</span></li>
+    <li>简历生成链路 + <code>document_version_experience</code></li>
+    <li><code>chat_message</code> 时间线</li>
+  </ol>
+  </div>
+</section>
+
+<!-- ─────────── 13 ─────────── -->
+<section id="s13">
+  <h2><span class="num">13</span>还需要你后续拍板的问题</h2>
+  <p class="lede">不影响现在动工，但迟早要定。</p>
+  <div class="card tight">
+    <div class="kv"><div class="k">技能层级够吗</div><div>现在两级。"心理学 → 临床评估 → MMPI 施测"这种三级暂时压成两级。<code>parent_id</code> 自引用天然支持多级，以后不用改表。</div></div>
+    <div class="kv"><div class="k">要不要记熟练度</div><div>现在熟练度挂在 <code>experience_skill</code> 上。要不要再有一个"我整体的 Excel 水平"？建议先不加，用经历自动推算。</div></div>
+    <div class="kv"><div class="k">背景搜集完全不存会后悔吗</div><div>已给折中方案：默认不存 + 一键存为笔记。</div></div>
+    <div class="kv"><div class="k">CL 和 PS 要分开吗</div><div><code>document_asset.kind</code> 加一个枚举值即可。</div></div>
+    <div class="kv"><div class="k">经历的中英双语措辞</div><div>现在放在 <code>experience.bullets</code> 里。以后要做完整中英双版简历，可能要单独拆。</div></div>
+  </div>
+</section>
+
+<footer>Alfred · 上传工作流设计说明 · 配套文档 <code>docs/UPLOAD_WORKFLOW.md</code></footer>
+</main>
+</div>
+
+<div class="modal" id="modal">
+  <button class="close" onclick="closeZoom()">关闭 ✕</button>
+  <div class="inner" id="modalInner"></div>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      background: '#171a21',
+      primaryColor: '#1f232c',
+      primaryTextColor: '#e7eaf0',
+      primaryBorderColor: '#2a2f3a',
+      lineColor: '#5b8cff',
+      secondaryColor: '#22304d',
+      tertiaryColor: '#1b2d24',
+      fontSize: '14px',
+      fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif'
+    },
+    flowchart: { curve: 'basis', htmlLabels: true, nodeSpacing: 45, rankSpacing: 55 },
+    er: { layoutDirection: 'TB', entityPadding: 14 }
+  });
+</script>
+
+<script>
+  // 目录高亮
+  const links = [...document.querySelectorAll('nav a')];
+  const secs  = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+    });
+  }, { rootMargin: '-70px 0px -70% 0px', threshold: 0 });
+  secs.forEach(s => obs.observe(s));
+
+  // 移动端目录
+  const nav = document.getElementById('nav');
+  document.getElementById('menuBtn').onclick = () => nav.classList.toggle('open');
+  links.forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+  // 图放大
+  const modal = document.getElementById('modal');
+  const modalInner = document.getElementById('modalInner');
+  window.zoom = btn => {
+    const svg = btn.closest('.diagram').querySelector('svg');
+    if (!svg) return;
+    modalInner.innerHTML = '';
+    const clone = svg.cloneNode(true);
+    clone.style.width = '100%';
+    clone.style.maxWidth = 'none';
+    clone.style.height = 'auto';
+    modalInner.appendChild(clone);
+    modal.classList.add('on');
+  };
+  window.closeZoom = () => modal.classList.remove('on');
+  modal.addEventListener('click', e => { if (e.target === modal) closeZoom(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
+</script>
+</body>
+</html>

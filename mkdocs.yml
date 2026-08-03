@@ -1,0 +1,85 @@
+site_name: Alfred · 产品设计文档
+site_description: Alfred 个人 AI 求职助理 — 产品需求、数据模型与架构决策文档站
+docs_dir: docs
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: 切换到深色
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: 切换到浅色
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - 首页: index.md
+  - 需求与设计:
+      - 产品愿景 (VISION): VISION.md
+      - 数据模型 V2: DATA_MODEL_V2.md
+      - 术语表 (GLOSSARY): GLOSSARY.md
+      - 变更记录 (CHANGELOG): CHANGELOG.md
+      - 重新设计会话 2026-08-03: design-sessions/2026-08-03-v1-redesign.md
+  - 架构决策 ADR:
+      - 索引: adr/README.md
+      - "ADR-0001 PostgreSQL": adr/0001-postgresql-over-sqlite.md
+      - "ADR-0002 双仓库": adr/0002-two-repositories.md
+      - "ADR-0003 Taro 三端": adr/0003-taro-react-tri-platform.md
+      - "ADR-0004 可脚本化技能目录": adr/0004-scriptable-skill-directories.md
+      - "ADR-0005 长输入分块": adr/0005-chunked-pipeline-for-long-input.md
+      - "ADR-0006 推迟 LaTeX 编译": adr/0006-defer-latex-pdf-compilation.md
+      - "ADR-0007 命名 Alfred": adr/0007-naming-alfred.md
+      - "ADR-0008 services 唯一落库": adr/0008-services-as-single-write-path.md
+      - "ADR-0009 命名 job_posting/occupation": adr/0009-naming-job-posting-occupation.md
+      - "ADR-0010 Event/Fact 双真相": adr/0010-event-fact-dual-truth.md
+      - "ADR-0011 多用户边界": adr/0011-multi-tenant-boundary.md
+      - "ADR-0012 编排 LangGraph": adr/0012-orchestration-langgraph.md
+      - "ADR-0013 上下文分段": adr/0013-context-segments.md
+      - "ADR-0014 简历溯源": adr/0014-resume-provenance.md
+      - "ADR-0015 Location 实体": adr/0015-location-entity.md
+      - "ADR-0016 领域无关内核": adr/0016-domain-agnostic-kernel.md
+      - "ADR-0017 Organization 泛化": adr/0017-organization-generalization.md
+  - 可视化 (HTML):
+      - 上传工作流图: diagrams/workflow.html
+      - 首页原型: diagrams/index.html
+      - 变更日志图: diagrams/changelog.html
+  - 历史基线 v0.1 (已作废):
+      - 说明: archive/v0.1-baseline/README.md
+      - SPEC 总体设计: archive/v0.1-baseline/SPEC.md
+      - API 契约: archive/v0.1-baseline/API.md
+      - Skills 规范: archive/v0.1-baseline/SKILLS.md
+      - 路线图: archive/v0.1-baseline/ROADMAP.md
+      - 数据模型 (旧): archive/v0.1-baseline/DATA_MODEL.md
+      - 上传工作流: archive/v0.1-baseline/UPLOAD_WORKFLOW.md

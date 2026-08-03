@@ -1,0 +1,12 @@
+# Alfred 文档站 — 本仓库当前只发布文档。
+# 代码（alfred/、tests/ 等）稍后另议，暂不入库。
+# 如需提交代码，请调整以下忽略规则。
+*
+!**/
+!docs/
+!docs/**
+!.github/
+!.github/**
+!mkdocs.yml
+!.gitignore
+!README.md
