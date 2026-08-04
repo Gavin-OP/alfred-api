@@ -17,6 +17,15 @@
 | `event`（带 kind 的时间轴表） | `event`（行为真相）+ `interaction`/`interview` 强类型表 | [0010](./adr/0010-event-fact-dual-truth.md) |
 | `coffee_chat` 概念 | `interaction`（kind 枚举，泛化） | [0010](./adr/0010-event-fact-dual-truth.md) |
 
+### 0.1 引擎术语重构（2026-08-04，ADR-0018 / 0019）
+另有一组**引擎层**重命名（非数据表）：原 "Skill" 目录改为 **Node**；多 Node 经 Edge 组成 **Graph**（Python 声明，见 ADR-0019）；Node 内部原子写原语 **Action** 不变。数据模型里的 `skill` 表不参与此次改名，仍指能力词表。
+
+| 旧（引擎） | 新（引擎） | ADR |
+|---|---|---|
+| `Skill` 目录（含 prompt+output_schema+actions） | `Node`（处理单元） | [0018](./adr/0018-engine-terminology-node-graph-action.md) |
+| —（Node 之间原本无真控制流） | `Graph`（LangGraph `StateGraph`，Python 声明） | [0018](./adr/0018-engine-terminology-node-graph-action.md)、[0019](./adr/0019-graph-as-python.md) |
+| `ACTION_KINDS` / executor handler | `Action`（不变） | — |
+
 ---
 
 ## 1. 设计铁律（写代码前必读）
@@ -75,6 +84,23 @@ erDiagram
     INTERVIEW ||--o{ INTERVIEW_INTERVIEWER : ""
     PERSON ||--o{ INTERACTION_PERSON : "参与"
     INTERACTION ||--o{ INTERACTION_PERSON : "多人"
+
+    %% ---- 习惯领域包（ADR-0021） ----
+    USER ||--o{ HABIT : "定义"
+    HABIT ||--o{ HABIT_LOG : "打卡"
+    LOCATION ||--o{ HABIT_LOG : "场所"
+
+    %% ---- 作品领域包（ADR-0021） ----
+    USER ||--o{ WORK_ITEM : "记录"
+    WORK_ITEM ||--o{ REVIEW : "观后感/读后感"
+    LOCATION ||--o{ WORK_ITEM : "地点"
+
+    %% ---- 进度/旅行领域包（ADR-0021） ----
+    USER ||--o{ PROJECT : "管理(kind)"
+    PROJECT ||--o{ PROJECT : "父子"
+    PROJECT ||--o{ PROGRESS_LOG : "日志"
+    PROJECT ||--o{ TRIP_DAY : "按天"
+    LOCATION ||--o{ TRIP_DAY : "足迹"
 ```
 
 ---
@@ -160,7 +186,26 @@ erDiagram
 
 ---
 
-## 5. 关键查询模式
+## 5. 新增领域包（habit / media / progress，ADR-0021）
+
+> 本轮（2026-08-04）在「共享基座 + 领域扩展表」路线下新增三领域，先定模型、逐步实现。job 现有表（§4）原样保留并包成第一个 Domain Graph。
+
+### 5.1 `habit` / `habit_log`（习惯 Tracker）
+- `habit`：`id, user_id, name, kind(health|sport|study|life|other), cadence(daily|weekly|custom), goal_md, created_at, archived_at`。习惯定义。
+- `habit_log`：`id, user_id, habit_id, occurred_at, note_md, location_id NULL → location`。打卡记录；**可挂 `location_id`**（如「在某某球馆打乒乓球」）。
+
+### 5.2 `work_item` / `review`（作品 / 书影音）
+- `work_item`：`id, user_id, kind(book|movie|drama|game|music|other), title, creator_md, location_id NULL → location, started_at, finished_at, status(wish|doing|done), rating(1-5) NULL`。书/影/剧/游戏等；**可挂 `location_id`**（如「在某某书店读完」）。
+- `review`：`id, user_id, work_item_id, rating(1-5), content_md, reviewed_at`。读后感/观后感。
+
+### 5.3 `project` / `progress_log` / `trip_day`（进度 / 项目 / 旅行）
+- `project`：`id, user_id, kind(vlog|project|trip|other), title, parent_id NULL → project（父子）, status, started_at, due_at, summary_md`。`kind='trip'` 即旅行；支持父子（大项目拆子项目）。
+- `progress_log`：`id, user_id, project_id, occurred_at, note_md, progress_pct NULL`。进度日志（vlog 第几集、项目里程碑）。
+- `trip_day`：`id, user_id, project_id(kind=trip), day_date, location_id → location, note_md`。旅行按天挂 `location_id`，实现「今天去哪/明天去哪」。
+
+> **旅行归 progress**：不单独设 travel 领域；`project.kind='trip'` + `trip_day` 表达，靠共享 `location` 与 job/habit/media 的地点统一挂钩。
+
+## 6. 关键查询模式
 
 - **技能匹配**：`user_skill ⋈ skill ⋈ position_requirement` 三表 JOIN（均带索引）。
 - **简历溯源**：渲染时经 `document_version_fact` 拼 footnote；校验器阻断 `source` 为空的 bullet。
@@ -169,10 +214,11 @@ erDiagram
 
 ---
 
-## 6. 迁移影响面（实现期）
+## 7. 迁移影响面（实现期）
 
 1. **重命名**：`position→job_posting`、`company→organization`、`position.job_family→occupation`、`tag.namespace='skill'→skill+user_skill`。
 2. **新增表**（按依赖顺序）：`occupation` → `job_posting` → `skill` → `skill_alias` → `location` → `location_alias` → `position_requirement` → `experience` → `experience_source` → `user_skill` → `fact` → `event` → `chat_segment` → `interaction` → `interaction_person` → `application_evidence` → `document_version_fact` → `nudge_rule` → `nudge`。
 3. **语义变更**：`event` 从时间轴表改为行为真相；旧 `event.kind` 内容迁移到 `interaction`/`interview` 强类型表。
 4. **租户列**：所有私有表加 `user_id` + 复合唯一约束（`UNIQUE(user_id, slug)`）。
 5. **每表独立 Alembic revision**，避免巨型迁移。
+6. **新增领域包表**（ADR-0021，先定模型逐步实现）：`habit` → `habit_log` → `work_item` → `review` → `project` → `progress_log` → `trip_day`；其中 `habit_log` / `work_item` / `trip_day` 挂 `location_id` 复用共享 `location`。`travel` 不单设领域，`project.kind='trip'` + `trip_day` 表达。

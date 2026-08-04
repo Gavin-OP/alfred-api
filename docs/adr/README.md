@@ -39,3 +39,9 @@
 | [0015](./0015-location-entity.md) | Location：`location` 实体 + `location_alias` 反查 | accepted |
 | [0016](./0016-domain-agnostic-kernel.md) | 领域无关内核 + 领域包边界 | accepted |
 | [0017](./0017-organization-generalization.md) | `company` 泛化为 `organization`（kind 枚举） | accepted |
+| [0018](./0018-engine-terminology-node-graph-action.md) | 引擎术语重构：Skill → Node / Graph / Action（消除一词双义） | accepted |
+| [0019](./0019-graph-as-python.md) | Graph 是代码不是配置（Graph-as-Code，YAML 只做 Node 配置） | accepted |
+| [0020](./0020-four-layer-dispatch.md) | 四层分发 L0–L3（模态→声明式预筛→LLM 模糊回路→回流） | accepted |
+| [0021](./0021-domain-graph-packages.md) | 领域扩展：共享基座 + 领域 Graph 包（job/habit/media/progress+travel） | accepted |
+
+> **术语注解**：ADR-0018 起，引擎单元改名 **Node**（原 "Skill" 目录）；旧 ADR（0001–0017）正文里的 "Skill" 一律按 **Node** 理解。"skill"（小写，领域数据）仍指 `skill` 能力词表。
