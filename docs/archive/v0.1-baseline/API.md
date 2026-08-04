@@ -1,5 +1,7 @@
 # Alfred REST API 契约（v1 草案）
 
+> ⚠️ **本文件属于 v0.1 基线草稿，已作废。** 当前权威规范见顶层 [`DATA_MODEL_V2`](../../DATA_MODEL_V2.md)、[`GLOSSARY`](../../GLOSSARY.md)、[`ADR 0009–0017`](../../adr/README.md)。本文档仅供历史追溯。
+>
 > 配套：[SPEC](./SPEC.md) ｜ [数据模型](./DATA_MODEL.md) ｜ [Skills](./SKILLS.md)
 > 运行后可在 `/docs`（Swagger）与 `/openapi.json` 看到自动生成的权威契约。本文件是设计意图说明。
 

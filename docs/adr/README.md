@@ -25,9 +25,9 @@
 | [0001](./0001-postgresql-over-sqlite.md) | 用 PostgreSQL 而非 SQLite | accepted |
 | [0002](./0002-two-repositories.md) | 前后端拆成两个独立仓库 | accepted |
 | [0003](./0003-taro-react-tri-platform.md) | 前端用 Taro + React 一套三端 | accepted |
-| [0004](./0004-scriptable-skill-directories.md) | Skills 用"可带脚本的目录"而非硬编码函数 | accepted |
+| [0004](./0004-scriptable-skill-directories.md) | Skills 用"可带脚本的目录"而非硬编码函数 | accepted |（注：其"拒绝 LangGraph"的替代分析已被 [0012](./0012-orchestration-langgraph.md) 推翻，LangGraph 已采纳；技能目录方案本身仍有效）
 | [0005](./0005-chunked-pipeline-for-long-input.md) | 长输入用分块流水线，由 Skill 自行决定 | accepted |
-| [0006](./0006-defer-latex-pdf-compilation.md) | MVP 延后 LaTeX → PDF 编译 | accepted |
+| [0006](./0006-defer-latex-pdf-compilation.md) | MVP 延后 LaTeX → PDF 编译 | **superseded** (by [0014](./0014-resume-provenance.md)) |
 | [0007](./0007-naming-alfred.md) | 项目命名为 Alfred，移除 claw 前缀 | accepted |
 | [0008](./0008-services-as-single-write-path.md) | services 层作为唯一落库入口 | accepted |
 | [0009](./0009-naming-job-posting-occupation.md) | 命名：`job_posting`+`occupation`，退役 `position` | accepted |

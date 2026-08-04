@@ -1,5 +1,7 @@
 # Alfred 路线图（Version / Milestone）
 
+> ⚠️ **本文件属于 v0.1 基线草稿，已作废。** 当前权威规范见顶层 [`DATA_MODEL_V2`](../../DATA_MODEL_V2.md)、[`UPLOAD_WORKFLOW`](../../UPLOAD_WORKFLOW.md)、[`ADR 0009–0017`](../../adr/README.md)。本文档仅供历史追溯。
+>
 > 配套：[SPEC](./SPEC.md) ｜ [ADR](../../adr/README.md)
 > 跟踪方式：GitHub Milestone + Issue + Label（见 §7）
 

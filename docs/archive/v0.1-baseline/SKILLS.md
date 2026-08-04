@@ -1,5 +1,7 @@
 # Alfred Skills 系统规范
 
+> ⚠️ **本文件属于 v0.1 基线草稿，已作废。** 当前权威规范见顶层 [`DATA_MODEL_V2`](../../DATA_MODEL_V2.md)（技能三义分离 + 共享词表 `skill`）、[`GLOSSARY`](../../GLOSSARY.md)、[`ADR 0009–0017`](../../adr/README.md)。本文档仅供历史追溯。
+>
 > 配套：[SPEC](./SPEC.md) ｜ [数据模型](./DATA_MODEL.md) ｜ [ADR-0004](../../adr/0004-scriptable-skill-directories.md)
 
 ---

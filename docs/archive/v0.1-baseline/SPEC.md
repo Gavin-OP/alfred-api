@@ -1,5 +1,7 @@
 # Alfred — 个人 AI 助理 · 后端总体设计（SPEC）
 
+> ⚠️ **本文件属于 v0.1 基线草稿，已作废。** 当前权威规范见顶层 [`DATA_MODEL_V2`](../../DATA_MODEL_V2.md)、[`UPLOAD_WORKFLOW`](../../UPLOAD_WORKFLOW.md)、[`GLOSSARY`](../../GLOSSARY.md)、[`ADR 0009–0017`](../../adr/README.md)。本文档仅供历史追溯，按此实现会偏离最新设计。
+>
 > 版本：v0.1-draft ｜ 状态：设计已锁定，进入实现
 > 相关文档：[数据模型](./DATA_MODEL.md) ｜ [Skills 系统](./SKILLS.md) ｜ [API 契约](./API.md) ｜ [术语表](../../GLOSSARY.md) ｜ [路线图](./ROADMAP.md) ｜ [ADR](../../adr/README.md)
 

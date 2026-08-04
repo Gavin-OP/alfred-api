@@ -73,8 +73,10 @@ AI 不可用或多次返回不合规结构时的兜底：用规则（正则、�
 
 ## B. 数据模型
 
+> ⚠️ **本节约一半概念来自 v0.1 基线。** 当前权威数据模型见 [`DATA_MODEL_V2`](./DATA_MODEL_V2.md) 与 §B2；其中 `entity_link`、`tag.namespace='skill'`、`position.job_family` 在 V2 已**移除**（见各条内 ⚠️ 标注与 §E）。
+
 ### Entity（实体）
-数据库里的一个"东西"，即网络图中的**节点**。共 13 类：`company` `position` `person` `application` `interview` `offer` `document_asset` `document_version` `note` `event` `reminder` `tag` `attachment`。
+数据库里的一个"东西"，即网络图中的**节点**。v0.1 原列 13 类：`company` `position` `person` `application` `interview` `offer` `document_asset` `document_version` `note` `event` `reminder` `tag` `attachment`——其中 **`company`→`organization`**、**`position`→`job_posting`**、技能归类用的 **`tag`→`skill`** 已在 V2 更名/移除（详见 [`DATA_MODEL_V2`](./DATA_MODEL_V2.md)）。
 
 ### EntityRef（实体引用）
 指向某个实体的轻量指针：`{type, id}`（列表场景会附带 `label`、`snippet` 等展示字段）。
@@ -83,6 +85,8 @@ AI 不可用或多次返回不合规结构时的兜底：用规则（正则、�
 ### EntityLink（通用边）
 连接**任意两个实体**的关系记录：`(source_type, source_id) --relation--> (target_type, target_id)`。
 这是"任何东西都能当 filter"的底层支撑——一条笔记可以同时链到公司、岗位、某个人和某项技能，而不需要为每种组合建表。
+
+> ⚠️ **V2 已移除 `entity_link`。** 强关系一律走外键强类型表（`organization`→`job_posting`→`application`→`interview`/`offer`）；弱关系走受控关系词 + 专门关系表（如 `interaction_person`、`interview_interviewer`、`application_evidence`）。不再有任意两实体自由连线的一张总表。
 
 ### Relation（关系词）
 `entity_link.relation` 的值，来自**受控词表**（`mentions` / `about` / `works_at` / `referred_by` / `interviewed_by` / `participant` / `evidence` / `derived_from` / `requires_skill` / `similar_to` / `related_to` / …）。
@@ -96,9 +100,10 @@ AI 不可用或多次返回不合规结构时的兜底：用规则（正则、�
 ### Tag / Namespace（标签 / 命名空间）
 `tag` 通过 `entity_tag` 挂到任意实体上。`namespace` 区分标签的种类（`skill` / `industry` / `job_family` / `topic` / `emotion` / `custom`），避免"Python（技能）"和"焦虑（情绪）"混在同一个列表里。
 
-### Job family（职位类别）
-`position.job_family`，归一化后的岗位大类（`swe` / `quant` / `data` / `pm` / `research` / …）。
-这是用户所说的**"某一类职位"**作为 filter 的实现。
+> ⚠️ **V2 已移除 `tag.namespace='skill'`。** 技能归类改由共享词表 `skill`（+ `user_skill` / `position_requirement`）实现（见 [`DATA_MODEL_V2`](./DATA_MODEL_V2.md)）。`tag` 作为自由标签的兜底能力保留，但不再承担"技能"语义。
+
+### Job family（职位类别）⚠️ 已废弃
+旧 `position.job_family`（`swe`/`quant`/`data`/`pm`/`research`/…）已在 V2 被 **`occupation`** 取代（见 [ADR-0009](./adr/0009-naming-job-posting-occupation.md)）。"某一类职位"作为 filter 现在由 `occupation` 实现（§E 已废弃列表另有说明）。
 
 ### Slug
 人类可读的稳定唯一标识，如 `bytedance`、`jane-chen-hsbc`。
@@ -128,12 +133,6 @@ AI 不可用或多次返回不合规结构时的兜底：用规则（正则、�
 
 ### Ghosting（已读不回）
 投了简历后公司长期无任何回应。对应 `application.status = ghosted`。
-
----
-
-### Job family（职位类别）⚠️ 废弃
-
-旧 `position.job_family`（`swe`/`quant`/`data`/`pm`/`research`/…）已被 **`occupation`** 取代（见 [ADR-0009](./adr/0009-naming-job-posting-occupation.md)）。"某一类职位"作为 filter 现在由 `occupation` 实现。
 
 ---
 

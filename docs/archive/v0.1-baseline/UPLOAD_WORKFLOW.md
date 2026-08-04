@@ -1,5 +1,7 @@
 # Alfred 上传工作流设计说明
 
+> ⚠️ **本文件属于 v0.1 基线草稿，已作废。** 当前权威版本见顶层 [`UPLOAD_WORKFLOW`](../../UPLOAD_WORKFLOW.md) 与可视化 [`ui/workflow.html`](../../../ui/workflow.html)（均已更新至 V2）。本文档仅供历史追溯。
+>
 > 面向人：产品负责人（你自己）+ 后续实现的人
 > 配套：[数据模型](./DATA_MODEL.md) ｜ [技能规范](./SKILLS.md) ｜ [接口](./API.md)
 > 可视化版本：`ui/workflow.html`（同样的内容，带可交互图）
