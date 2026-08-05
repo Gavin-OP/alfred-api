@@ -1,69 +1,69 @@
-# CONTEXT.md — Alfred 项目入口
+# CONTEXT.md — Alfred Project Entry Point
 
-> 这是项目的**单一上下文入口**。任何 AI / 协作者上手先读这份，再按需下行到：
-> - **词汇表（权威）**：[docs/GLOSSARY.md](docs/GLOSSARY.md)
-> - **决策记录**：[docs/adr/](docs/adr/)（含 README 索引）
-> - **愿景与演进**：[docs/VISION.md](docs/VISION.md)
-> - **数据模型**：[docs/DATA_MODEL_V2.md](docs/DATA_MODEL_V2.md)
-> - **上传/捕获工作流**：[docs/UPLOAD_WORKFLOW.md](docs/UPLOAD_WORKFLOW.md)
-> - **引擎规范（Node/Graph/Action）**：[docs/GRAPH.md](docs/GRAPH.md)
+> This is the project's **single context entry point**. Any AI collaborator or human should read this first, then drill down as needed:
+> - **Glossary (authoritative)**: [docs/GLOSSARY.md](docs/GLOSSARY.md)
+> - **Decision records**: [docs/adr/](docs/adr/) (with README index)
+> - **Vision & evolution**: [docs/VISION.md](docs/VISION.md)
+> - **Data model**: [docs/DATA_MODEL_V2.md](docs/DATA_MODEL_V2.md)
+> - **Upload / capture workflow**: [docs/UPLOAD_WORKFLOW.md](docs/UPLOAD_WORKFLOW.md)
+> - **Engine spec (Node/Graph/Action)**: [docs/GRAPH.md](docs/GRAPH.md)
 >
-> 领域文档维护规则见 `docs/agents/domain.md`（由 `domain-modeling` 技能驱动）。
+> Domain-doc maintenance rules live in `docs/agents/domain.md` (driven by the `/domain-modeling` skill).
 
 ---
 
-## 1. Purpose（项目是做什么的）
+## 1. Purpose
 
-Alfred 是一个**领域无关的「个人 OS / 个人管家」**。从一个求职助理起步，内核保持领域无关，通过**领域包（Domain Graph）**逐步扩展覆盖：求职（job）、习惯（habit）、作品/书影音（media）、进度/项目/旅行（progress）。所有领域共享同一套引擎、同一份共享基座、同一种记忆与上下文。
+Alfred is a **domain-agnostic "personal OS / personal butler"**. It starts as a job-hunting assistant; the kernel stays domain-agnostic and is extended through **Domain Graphs** to cover: jobs (job), habits (habit), media/books (media), and progress/projects/travel (progress). All domains share the same engine, the same shared substrate, and the same memory & context.
 
-## 2. Kernel / Domain 边界
+## 2. Kernel / Domain boundary
 
-- **共享基座（Kernel）**：`person` / `organization` / `occupation` / `skill` / `location` / `event` / `fact` / `chat_*` / `memory` / `attachment` / `reminder` / `nudge`。不属于任何领域，由跨域 subgraph 维护。边界与理由见 [ADR-0016](docs/adr/0016-domain-agnostic-kernel.md)。
-- **领域包（Domain Package）**：每个领域是一个 **Domain Graph**，自带私有扩展表，仅在私有表加 `user_id`。首个领域 job 已落地；habit / media / progress 为本轮新增（先定模型，逐步实现）。
+- **Shared substrate (Kernel)**: `person` / `organization` / `occupation` / `skill` / `location` / `event` / `fact` / `chat_*` / `memory` / `attachment` / `reminder` / `nudge`. Belongs to no single domain; maintained by cross-domain subgraphs. Boundary and rationale: [ADR-0016](docs/adr/0016-domain-agnostic-kernel.md).
+- **Domain Package**: each domain is a **Domain Graph** with its own private extension tables; only the private tables carry `user_id`. The first domain, job, is live; habit / media / progress are added this round (model first, implement later).
 
-## 3. Engine：Node / Graph / Action（三层抽象）
+## 3. Engine: Node / Graph / Action (three-layer abstraction)
 
-> **本轮术语重构（2026-08-04）**：原 "Skill" 一词既指引擎单元又指能力词表，产生冲突。现引擎单元改名 **Node**，多个 Node 组成 **Graph**，**Action** 是 Node 内部的原子写原语。旧 ADR 中的 "Skill" = 现在的 Node。详见 [ADR-0018](docs/adr/0018-engine-terminology-node-graph-action.md)。
+> **Terminology refactor (2026-08-04)**: the old word "Skill" meant both an engine unit and a capability vocabulary, causing conflicts. The engine unit is now renamed **Node**; multiple Nodes form a **Graph**; **Action** is the atomic write primitive inside a Node. "Skill" in old ADRs = today's Node. See [ADR-0018](docs/adr/0018-engine-terminology-node-graph-action.md).
 
-| 层 | 名称 | 角色 | 形态 |
+| Layer | Name | Role | Form |
 |---|---|---|---|
-| 底层 | **Action** | 原子写原语，1:1 映射 `services` 函数，单一落库入口 | `services/executor.py` + `ACTION_KINDS` |
-| 中层 | **Node** | 处理单元：LLM 抽取（prompt+output_schema）→ 产出 `out` → 跑一组 Action 改共享 state。**不含控制流** | `alfred/nodes/<name>/node.yaml`（配置）|
-| 顶层 | **Graph** | 带共享 state 的 LangGraph `StateGraph`；Node 经 Edge 串联/分支/并行/循环。多个领域 Graph 可封 subgraph 经外层 router 再编排 | `alfred/graphs/<domain>.py`（**Python 声明，不是 YAML**）|
+| Bottom | **Action** | Atomic write primitive, 1:1 mapped to a `services` function, single write entry | `services/executor.py` + `ACTION_KINDS` |
+| Middle | **Node** | Processing unit: LLM extraction (prompt + output_schema) → produces `out` → runs a set of Actions to mutate shared state. **No control flow.** | `alfred/nodes/<name>/node.yaml` (config) |
+| Top | **Graph** | LangGraph `StateGraph` with shared state; Nodes chained/branched/parallel/looped via Edges. Domain Graphs can be wrapped as subgraphs and re-orchestrated by an outer router | `alfred/graphs/<domain>.py` (**Python, not YAML**) |
 
-- **Declarative Node**：以 `node.yaml` 为主（`match` / `chunking` / `prompt` / `output_schema`）。
-- **Scripted Node**：以 Python 函数体为主，可返回 `Command(goto=...)` 做**数据驱动的动态路由**（静态流程仍在 Graph 里画）。
-- **Routing（4 层分发 L0–L3）**：模态 → 声明式预筛 → LLM 模糊回路 → 回流。跨域 `memory`/`capture` subgraph 常驻，任意 Domain Graph 可调用。见 [UPLOAD_WORKFLOW.md](docs/UPLOAD_WORKFLOW.md)。
-- **dry_run / commit**：Action 落库前的预览与确认，迁移为 LangGraph `interrupt` / `resume`（HITL），保证脏数据不入库。
+- **Declarative Node**: `node.yaml`-driven (`match` / `chunking` / `prompt` / `output_schema`).
+- **Scripted Node**: Python-body-driven, may return `Command(goto=...)` for **data-driven dynamic routing** (static flow still drawn in the Graph).
+- **Routing (4-layer dispatch L0–L3)**: modality → declarative pre-filter → LLM fuzzy loop → fallback. Cross-domain `memory`/`capture` subgraphs are always resident and callable from any Domain Graph. See [UPLOAD_WORKFLOW.md](docs/UPLOAD_WORKFLOW.md).
+- **dry_run / commit**: preview and confirmation before an Action writes; migrated to LangGraph `interrupt` / `resume` (HITL) so dirty data never lands.
 
-## 4. Data Model（数据模型）
+## 4. Data Model
 
-归一化优先：凡需跨内部查询 / 联结的，必须关系化，不用 JSON 数组。（[DATA_MODEL_V2.md](docs/DATA_MODEL_V2.md) 第 6 铁律）
+Normalize first: anything that needs cross-internal querying / joining must be relational, not a JSON array. (Iron Law #6 in [DATA_MODEL_V2.md](docs/DATA_MODEL_V2.md))
 
-- 唯一键：UUID 主键；`slug`（公司）/ `fingerprint`（岗位=sha256(公司id+标准化职位名+地点)）作业务去重。
-- 技能三义分离 + 平权存储：`skill` 仅作共享词表；"我的技能"=`user_skill`，"JD 所需"=`position_requirement(kind=skill)`，相似技能用 `skill_alias` 反查。
-- 经历库：一条经历一行，仅存原始口语稿 `raw_input_md`；AI 优化稿随岗位进 `document_version_fact`，不建 bullets 表。
+- Unique keys: UUID primary key; `slug` (company) / `fingerprint` (role = sha256(company_id + normalized title + location)) for business de-duplication.
+- Skill three-meaning split + equal-weight storage: `skill` is only a shared vocabulary; "my skills" = `user_skill`, "JD requires" = `position_requirement(kind=skill)`; similar skills reverse-looked-up via `skill_alias`.
+- Experience store: one row per experience, storing only the raw spoken draft `raw_input_md`; AI-polished bullets go into `document_version_fact` per role — no separate bullets table.
 
-## 5. Memory & Context（记忆与上下文）
+## 5. Memory & Context
 
-- `chat_message`（全量双方对话、带时间戳）为底座——你说的每句话都留存、日后能调出。
-- `chat_thread` 分组/归档 + `memory` 实体（抽取的结构化事实/偏好/意图/上下文）做长期累积。
-- 召回 = BM25 全文 + 向量余弦混合加权（7:3）+ 指数时间衰减 salience；PG 走 `<=>` + tsvector，SQLite 退化为 Python 端余弦 + LIKE（封装在 `MemoryStore`，对调用方只暴露 `recall()`）。
+- `chat_message` (full two-party conversation, timestamped) is the base — every word you say is retained and retrievable later.
+- `chat_thread` groups/archive + `memory` entities (extracted structured facts/preferences/intents/context) for long-term accumulation.
+- Recall = BM25 full-text + vector cosine hybrid weighting (7:3) + exponential time-decay salience; PG uses `<=>` + tsvector, SQLite degrades to Python-side cosine + LIKE (wrapped in `MemoryStore`, exposing only `recall()` to callers).
 
-## 6. 词汇摘要（必须一致）
+## 6. Vocabulary summary (must stay consistent)
 
-| 词 | 含义 | 易混淆 |
+| Term | Meaning | Easy to confuse with |
 |---|---|---|
-| **Node** | 引擎处理单元（原 "Skill"）| 不是 `skill`（能力词表）|
-| **Graph** | LangGraph StateGraph，Node 经 Edge 组成 | 不是命名空间 |
-| **Action** | Node 内原子写原语 | — |
-| **Domain Graph** | 一个领域的 Node+Edge 集合（可复用模块）| — |
-| **skill** | 能力词表（领域数据）| 不是引擎 Node |
-| **Kernel / 共享基座** | 跨领域表（person/organization/skill/location/...）| 不属于任何 Domain Graph |
-| **L0–L3** | 4 层分发：模态/预筛/LLM模糊/回流 | — |
+| **Node** | Engine processing unit (formerly "Skill") | not `skill` (capability vocabulary) |
+| **Graph** | LangGraph StateGraph, Nodes joined by Edges | not a namespace |
+| **Action** | Atomic write primitive inside a Node | — |
+| **Domain Graph** | A domain's Node+Edge set (reusable module) | — |
+| **skill** | Capability vocabulary (domain data) | not the engine Node |
+| **Kernel / Shared substrate** | Cross-domain tables (person/organization/skill/location/...) | belongs to no Domain Graph |
+| **L0–L3** | 4-layer dispatch: modality / pre-filter / LLM fuzzy / fallback | — |
 
-## 7. Dev Workflow（Vibe Coding）
+## 7. Dev Workflow (Vibe Coding)
 
-自然语言需求 → `/grilling`（ relentless 访谈定稿，grill-with-docs 同步出 ADR/术语表/CHANGELOG）→ `to-spec` 把 spec 发 GitHub issue tracker（标 `ready-for-agent`）→ Agent 按规格实现 → TDD 验证。
+Natural-language requirement → `/grilling` (relentless interview to finalize, grill-with-docs emits ADR/glossary/CHANGELOG in sync) → `to-spec` pushes the spec to the GitHub issue tracker (labeled `ready-for-agent`) → Agent implements to spec → TDD verification.
 
-工程技能（Matt Pocock 集）配置在 `docs/agents/`；issue 追踪与 triage 标签见 `docs/agents/issue-tracker.md` 与 `docs/agents/triage-labels.md`。
+Engineering skills (Matt Pocock collection) are configured under `docs/agents/`; issue tracking and triage labels are in `docs/agents/issue-tracker.md` and `docs/agents/triage-labels.md`.

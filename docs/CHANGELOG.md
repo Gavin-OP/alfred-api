@@ -49,13 +49,13 @@
 |---|---|---|
 | 引擎术语 | "Skill" 一词双义 → 改名 **Node**（处理单元）/ **Graph**（LangGraph 真控制流）/ **Action**（原子写原语不变） | [0018](./adr/0018-engine-terminology-node-graph-action.md) |
 | Graph 形态 | **Graph 是 Python 代码**（Graph-as-Code）；YAML 只做 Node 配置，不承载控制流 | [0019](./adr/0019-graph-as-python.md) |
-| 输入分发 | **四层分发 L0–L3**：模态 → 声明式预筛 → LLM 模糊回路 → 回流；跨域 subgraph 常驻 | [0020](./0020-four-layer-dispatch.md) |
+| 输入分发 | **四层分发 L0–L3**：模态 → 声明式预筛 → LLM 模糊回路 → 回流；跨域 subgraph 常驻 | [0020](./adr/0020-four-layer-dispatch.md) |
 | 领域扩展 | **共享基座 + 领域 Graph 包**：job（原样保留）+ habit / media / progress(+travel) | [0021](./adr/0021-domain-graph-packages.md) |
 
 ### 关键变化（文档层）
 
-- 词汇表 [GLOSSARY.md](./GLOSSARY.md)：消除 "Skill" 歧义，引入 Node/Graph/Action、4 层分发、共享基座；旧 ADR 的 "Skill" 一律按 Node 理解。
-- 入口 [CONTEXT.md](./CONTEXT.md)：引擎描述从 "Skills" 改为 "Node / Graph / Action"。
+- 词汇表 [GLOSSARY.md](./GLOSSARY.md)：消除 "Skill" 歧义，引入 Node / Graph / Action、4 层分发、共享基座；旧 ADR 的 "Skill" 一律按 Node 理解。
+- 入口 [CONTEXT.md](https://github.com/Gavin-OP/alfred-api/blob/main/CONTEXT.md)：引擎描述从 "Skills" 改为 "Node / Graph / Action"。
 - 引擎规范 [GRAPH.md](./GRAPH.md)（新建）：Node 配置 YAML + Graph Python + Action + HITL 状态机。
 - 捕获工作流 [UPLOAD_WORKFLOW.md](./UPLOAD_WORKFLOW.md)（新建）：4 层分发 L0–L3 + Mode A/B。
 - 数据模型 [DATA_MODEL_V2.md](./DATA_MODEL_V2.md)：新增 habit / media / progress(+travel) 三领域包与 ER 图。

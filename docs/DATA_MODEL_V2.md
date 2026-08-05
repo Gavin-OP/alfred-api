@@ -1,5 +1,7 @@
 # Alfred 数据模型 V2（V1 重新设计定稿）
 
+> **元信息** ｜ 状态：现行有效 ｜ 最后更新：2026-08-04 ｜ 范围：V1 重新设计的权威数据模型 ｜ 关联：[ADR-0009~0017](./adr/README.md)、[重新设计会话](./design-sessions/2026-08-03-v1-redesign.md)
+
 > **这是 V1 重新设计的权威数据模型。** 旧 `DATA_MODEL.md` 已过时，仅供对照。
 > 决策背景与逐条论证见 [design-sessions/2026-08-03-v1-redesign.md](./design-sessions/2026-08-03-v1-redesign.md)；每个决策有对应 ADR（0009–0017）。
 > 数据库：PostgreSQL 16 ｜ ORM：SQLModel ｜ 迁移：Alembic ｜ 编排：LangGraph（见 ADR-0012）。

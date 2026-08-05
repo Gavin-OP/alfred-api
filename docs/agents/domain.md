@@ -1,38 +1,42 @@
-# Domain Docs
+# 领域文档维护规范
 
-How the engineering skills should consume this repo's domain documentation when exploring the codebase.
+> **用途**：供工程技能（engineering skills）与 AI 代理在探索代码库时，了解应如何阅读与消费本仓库的领域文档（CONTEXT / GLOSSARY / ADR / VISION），并遵循统一的术语与冲突标记约定。
 
-## Before exploring, read these
+本规范说明工程技能（engineering skills）在探索代码库时，应如何消费本仓库的领域文档。
 
-- **`CONTEXT.md`** at the repo root — the entry point. It points at the authoritative glossary and the ADRs.
-- **`docs/GLOSSARY.md`** — the single source of truth for domain vocabulary. Read it for the area you're about to work in; use its terms exactly.
-- **`docs/adr/`** — read ADRs that touch the area you're about to work in. `docs/adr/README.md` is the index (ADRs 0001–0017).
-- **`docs/VISION.md`** — the top-level product constraint that overrides local decisions.
+## 阅读顺序
 
-If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
+开始探索前，先读这些：
 
-## File structure
+- **仓库根目录 `CONTEXT.md`** —— 单一上下文入口，指向权威术语表与 ADR。
+- **`docs/GLOSSARY.md`** —— 领域词汇的唯一权威来源。先读你即将动手的领域相关词条，严格使用其中术语。
+- **`docs/adr/`** —— 阅读与你即将动手的领域相关的 ADR；`docs/adr/README.md` 是索引（ADR-0001 ~ 0021）。
+- **`docs/VISION.md`** —— 凌驾于局部决策之上的最上层产品约束。
 
-Single-context repo (this repo):
+如果以上文件不存在，**静默继续**，不要提示缺失，也不要主动建议创建。领域文档由 `/domain-modeling` 技能（经 `/grill-with-docs`、`/improve-codebase-architecture` 触发）在术语或决策真正敲定时惰性生成。
+
+## 目录结构
+
+本项目是单一上下文仓库（single-context repo）：
 
 ```
 /
-├── CONTEXT.md              ← entry point
+├── CONTEXT.md              ← 入口
 ├── docs/
-│   ├── GLOSSARY.md        ← authoritative vocabulary
-│   ├── VISION.md          ← top-level constraint
-│   └── adr/               ← architecture decisions (0001–0017)
-└── alfred/                ← backend source
+│   ├── GLOSSARY.md        ← 权威词汇
+│   ├── VISION.md          ← 最上层约束
+│   └── adr/               ← 架构决策（0001 ~ 0021）
+└── alfred/                ← 后端源码
 ```
 
-## Use the glossary's vocabulary
+## 使用术语表中的词汇
 
-When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `docs/GLOSSARY.md`. Don't drift to synonyms the glossary explicitly avoids.
+当你输出的内容命名了一个领域概念（issue 标题、重构提案、假设、测试名），请使用 `docs/GLOSSARY.md` 中定义的说法，不要漂移到术语表明确避免的同义词。
 
-If the concept you need isn't in the glossary yet, that's a signal — either you're inventing language the project doesn't use (reconsider) or there's a real gap (note it for `/domain-modeling`).
+如果需要的概念尚未进入术语表，这是一个信号——要么你在发明项目并不使用的语言（请重新考虑），要么确实存在真实缺口（记下来交给 `/domain-modeling`）。
 
-## Flag ADR conflicts
+## 标记 ADR 冲突
 
-If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
+如果你的输出与某条已有 ADR 相矛盾，请显式指出，而不是静默覆盖：
 
-> _Contradicts ADR-0007 (naming Alfred) — but worth reopening because…_
+> _与 ADR-0007（命名 Alfred）相矛盾——但值得重新开启，因为……_

@@ -47,10 +47,7 @@ plugins:
 nav:
   - 首页: index.md
   - 最新更新 (Latest):
-      - "ADR-0018 引擎术语 Node/Graph/Action": adr/0018-engine-terminology-node-graph-action.md
-      - "ADR-0019 图即 Python": adr/0019-graph-as-python.md
-      - "ADR-0020 四层分发": adr/0020-four-layer-dispatch.md
-      - "ADR-0021 领域图包": adr/0021-domain-graph-packages.md
+      - 最近更新索引: LATEST.md
   - 需求与设计:
       - 产品愿景 (VISION): VISION.md
       - 数据模型 V2: DATA_MODEL_V2.md
@@ -78,7 +75,12 @@ nav:
       - "ADR-0015 Location 实体": adr/0015-location-entity.md
       - "ADR-0016 领域无关内核": adr/0016-domain-agnostic-kernel.md
       - "ADR-0017 Organization 泛化": adr/0017-organization-generalization.md
-  - 代理指南 (Agents):
+      - "ADR-0018 引擎术语 Node/Graph/Action": adr/0018-engine-terminology-node-graph-action.md
+      - "ADR-0019 图即 Python": adr/0019-graph-as-python.md
+      - "ADR-0020 四层分发": adr/0020-four-layer-dispatch.md
+      - "ADR-0021 领域图包": adr/0021-domain-graph-packages.md
+  - 协作与贡献 (Contributing):
+      - 文档规范 (STYLE): STYLE.md
       - 领域文档: agents/domain.md
       - Issue 追踪: agents/issue-tracker.md
       - 分层标签: agents/triage-labels.md

@@ -1,24 +1,30 @@
-# Alfred 文档站 (alfred-docs)
+# Alfred Docs (alfred-docs)
 
-本仓库是 **Alfred 个人 AI 求职助理** 的产品设计文档站，由 [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) 构建并部署到 GitHub Pages。
+This repository is the product/design documentation site for **Alfred**, a personal AI job-hunting assistant. It is built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) and deployed to GitHub Pages.
 
-- 源文件在 `docs/` 目录（Markdown + 少量 HTML 可视化）。
-- 站点配置：`mkdocs.yml`。
-- 部署：推送到 `main` 即由 `.github/workflows/deploy.yml` 自动构建并发布到 `gh-pages` 分支（仓库 Settings → Pages 选择 `gh-pages` 分支即可）。
+- Source lives in `docs/` (Markdown + a few HTML diagrams).
+- Site config: `mkdocs.yml`.
+- Deploy: pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and publishes to the `gh-pages` branch (enable it under repo Settings → Pages → `gh-pages`).
 
-## 本地预览
+## Local preview
 
 ```bash
 pip install mkdocs-material
 mkdocs serve
-# 打开 http://127.0.0.1:8000
+# open http://127.0.0.1:8000
 ```
 
-## 目录
+## Structure
 
 - `docs/`
-  - `index.md` · `VISION.md` · `DATA_MODEL_V2.md` · `GLOSSARY.md` · `CHANGELOG.md` — 当前权威设计
-  - `design-sessions/` — 设计会话原始记录
-  - `adr/` — 架构决策记录（ADR-0001 ~ 0017）
-  - `diagrams/` — HTML 可视化
-  - `archive/v0.1-baseline/` — 已作废的旧版 v0.1 草稿（仅供追溯，请勿照此实现）
+  - `index.md` · `VISION.md` · `DATA_MODEL_V2.md` · `GLOSSARY.md` · `CHANGELOG.md` — current authoritative design
+  - `design-sessions/` — raw design session transcripts
+  - `adr/` — Architecture Decision Records (ADR-0001 ~ 0021)
+  - `diagrams/` — HTML visualizations
+  - `agents/` — contributor/agent docs (domain docs, issue tracker, triage labels)
+  - `STYLE.md` — documentation format standard for the whole site
+  - `archive/v0.1-baseline/` — obsolete v0.1 drafts (kept for reference only; do not implement from these)
+
+## Project entry point
+
+`CONTEXT.md` at the repo root is the single context entry point for AI collaborators and humans.

@@ -50,7 +50,7 @@ Node（配置, alfred/nodes/<name>/node.yaml）:
 - **得到**：配置（YAML）与代码（Python）职责清晰分离——Node 的「是什么、怎么抽」与 Graph 的「怎么连」解耦。
 - **得到**：Vibe Coding 友好——作者改流程就改 Python（明确、可测），改 Node 行为就改 YAML（无需动控制流）。
 - **代价**：重组一个流需要改 Python 而非只改 YAML（用户已明确接受这一点）。
-- **代价**：Graph 代码需要单元测试覆盖 Edge 拓扑（在 [codebase-design](../../docs/agents/) 的「小接口深实现」约束下做）。
+- **代价**：Graph 代码需要单元测试覆盖 Edge 拓扑（在 [codebase-design](../agents/domain.md) 的「小接口深实现」约束下做）。
 
 ## 备选方案（Alternatives）
 
