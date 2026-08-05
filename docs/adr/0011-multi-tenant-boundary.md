@@ -1,7 +1,8 @@
 # ADR-0011 · 多用户边界：私有表带 user_id，共享表不带
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §6.4](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §6.4](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

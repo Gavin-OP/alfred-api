@@ -1,9 +1,9 @@
-# ADR-0002 前后端拆成两个独立仓库
+# ADR-0002 · 前后端拆成两个独立仓库
 
-- **状态**：accepted
-- **日期**：2026-08-01
+- 状态：accepted
+- 日期：2026-08-01
 
-## 背景
+## 背景（Context）
 
 旧 jobhunter 是 npm workspaces 单体仓库（`apps/mobile` + `server` + `packages/shared`）。
 
@@ -18,7 +18,7 @@
 
 也就是说，语言一分家，monorepo 就只剩"目录挨在一起"这点心理便利了。
 
-## 决策
+## 决策（Decision）
 
 拆成两个独立仓库：
 
@@ -30,7 +30,7 @@
 **契约对齐方式**：后端 FastAPI 自动产出 `openapi.json` → 前端用 `openapi-typescript` 生成 `schema.d.ts`。
 这比手写共享类型包**更强**：后端改字段，前端重新生成后 TypeScript 立刻报错，漂移无处可藏。
 
-## 理由与代价
+## 理由与代价（Consequences）
 
 **得到**
 
@@ -47,7 +47,7 @@
 
 缓解：前端提供 `npm run sync:api` 一键拉取并生成类型；接口变更在 API.md 与 CHANGELOG 里显式记录。
 
-## 备选方案
+## 备选方案（Alternatives）
 
 | 方案 | 为何不选 |
 |---|---|

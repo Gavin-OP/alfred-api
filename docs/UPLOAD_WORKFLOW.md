@@ -1,4 +1,4 @@
-# UPLOAD_WORKFLOW.md — 捕获与分发工作流
+# UPLOAD_WORKFLOW — 捕获与分发工作流
 
 > 配套 [GRAPH.md](./GRAPH.md) 与 [ADR-0020](./adr/0020-four-layer-dispatch.md)。
 > 描述一次用户输入从进入到落库的完整链路：**4 层分发（L0–L3）** + **Mode A 捕获家族** + **Mode B 组装/查询**。

@@ -1,7 +1,8 @@
 # ADR-0012 · 编排框架：LangGraph 编排 + Action 执行
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §7.4](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §7.4](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

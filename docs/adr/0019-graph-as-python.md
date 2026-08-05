@@ -1,7 +1,7 @@
 # ADR-0019 · Graph 是代码，不是配置（Graph-as-Code）
 
 - 状态：accepted
-- 日期：2026-08-04
+- 日期：2026-08-05
 - 关联：[0012](./0012-orchestration-langgraph.md)（LangGraph 编排方向）、[0018](./0018-engine-terminology-node-graph-action.md)（术语）、[GRAPH.md](../GRAPH.md)（规范）。
 
 ## 背景（Context）

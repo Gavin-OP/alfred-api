@@ -1,7 +1,8 @@
 # ADR-0016 · 领域无关内核 + 领域包边界
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §7.5](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §7.5](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

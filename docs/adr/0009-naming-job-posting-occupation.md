@@ -1,7 +1,8 @@
 # ADR-0009 · 命名体系：job_posting + occupation，退役 `position`
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §6.1](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §6.1](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

@@ -1,11 +1,11 @@
-# ADR-0006 MVP 延后 LaTeX → PDF 编译
+# ADR-0006 · MVP 延后 LaTeX → PDF 编译
 
 > ⚠️ **状态更新（2026-08-03 V1 重新设计）**：本 ADR 已被 **[ADR-0014 · 简历 Markdown 化 + 版本溯源](./0014-resume-provenance.md)** 取代。简历主信息改为结构化 Markdown（`document_version.markdown_main` + 模板引用 `template_ref` + `checksum`），PDF 编译延后到用户确认后才执行；**不再以 LaTeX 源码作为中间格式**。本文件保留作历史追溯。
 
-- **状态**：superseded by ADR-0014
-- **日期**：2026-08-01
+- 状态：superseded by ADR-0014
+- 日期：2026-08-01
 
-## 背景
+## 背景（Context）
 
 用户对简历/Cover Letter 的原始要求包含编译能力：
 
@@ -17,7 +17,7 @@
 
 在明确权衡后，用户选择了 **"建模型+存版本，PDF 延后"**。
 
-## 决策
+## 决策（Decision）
 
 MVP **只做数据层与 AI 修改层**，不做编译：
 
@@ -31,7 +31,7 @@ MVP **只做数据层与 AI 修改层**，不做编译：
 - `document_version.pdf_path` / `compiled_at` / `compile_log` 字段**先建好，值为 NULL**
 - `POST /v1/documents/{id}/versions/{no}/compile` 端点**先存在，返回 `501 Not Implemented`**
 
-## 理由与代价
+## 理由与代价（Consequences）
 
 **得到**
 
@@ -53,7 +53,7 @@ MVP **只做数据层与 AI 修改层**，不做编译：
 
 决策留到 v0.3 实际动手时再敲定，届时补一份新的 ADR。
 
-## 备选方案
+## 备选方案（Alternatives）
 
 | 方案 | 为何不选 |
 |---|---|

@@ -1,7 +1,8 @@
 # ADR-0015 · Location：实体 + 别名反查
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §7.3](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §7.3](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

@@ -1,7 +1,8 @@
 # ADR-0013 · 上下文管理：常驻单 Session + 自动分段
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §7.1](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §7.1](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

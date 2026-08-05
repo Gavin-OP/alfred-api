@@ -1,7 +1,8 @@
 # ADR-0010 · Event 与 Fact 的并列真相模型
 
 - 状态：accepted
-- 关联讨论：[design-sessions/2026-08-03-v1-redesign.md §6.2](../design-sessions/2026-08-03-v1-redesign.md)
+- 日期：2026-08-04
+- 关联：[design-sessions/2026-08-03-v1-redesign.md §6.2](../design-sessions/2026-08-03-v1-redesign.md)
 
 ## 背景（Context）
 

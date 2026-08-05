@@ -1,7 +1,7 @@
 # ADR-0021 · 领域扩展：共享基座 + 领域 Graph 包
 
 - 状态：accepted
-- 日期：2026-08-04
+- 日期：2026-08-05
 - 关联：[0016](./0016-domain-agnostic-kernel.md)（领域无关内核）、[0017](./0017-organization-generalization.md)（组织泛化）、[0018](./0018-engine-terminology-node-graph-action.md)、[GRAPH.md](../GRAPH.md)。
 
 ## 背景（Context）

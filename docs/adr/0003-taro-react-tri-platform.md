@@ -1,9 +1,9 @@
-# ADR-0003 前端用 Taro + React 一套三端
+# ADR-0003 · 前端用 Taro + React 一套三端
 
-- **状态**：accepted
-- **日期**：2026-08-01
+- 状态：accepted
+- 日期：2026-08-01
 
-## 背景
+## 背景（Context）
 
 用户的三条硬约束：
 
@@ -15,7 +15,7 @@
 
 旧 jobhunter 的 `apps/mobile` 已经是 Taro + React，具备可参考的工程经验（也暴露了坑：`dev:web` 曾因缺 `@pmmmwh/react-refresh-webpack-plugin` 起不来）。
 
-## 决策
+## 决策（Decision）
 
 前端使用 **Taro 3.x + React + TypeScript**，一套代码编译到：
 
@@ -25,7 +25,7 @@
 
 状态管理与数据层用 TanStack Query（跨端可用），网络层封装 `Taro.request`，**不直接写 `window` / `wx`**，需要平台差异时用 `process.env.TARO_ENV` 分支。
 
-## 理由与代价
+## 理由与代价（Consequences）
 
 **得到**
 
@@ -39,7 +39,7 @@
 - 编译链（webpack）偶发依赖问题，需要在仓库里锁死版本
 - RN 端产物需要额外调试，不能假设"编译过就等于能跑"
 
-## 备选方案
+## 备选方案（Alternatives）
 
 | 方案 | 为何不选 |
 |---|---|

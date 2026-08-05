@@ -1,9 +1,9 @@
-# ADR-0001 用 PostgreSQL 而非 SQLite
+# ADR-0001 · 用 PostgreSQL 而非 SQLite
 
-- **状态**：accepted
-- **日期**：2026-08-01
+- 状态：accepted
+- 日期：2026-08-01
 
-## 背景
+## 背景（Context）
 
 旧的 jobhunter 原型用 Prisma + SQLite。新后端要重新选型时，用户明确表态：**"后端使用 postgresql，不要使用 sqlite"**。
 
@@ -14,13 +14,13 @@
 - 提醒调度器每分钟扫表，同时 ingest 可能在写入长录音的分块结果。SQLite 的**写锁是库级的**，容易出现 `database is locked`。
 - 未来要多设备访问（手机小程序 + 电脑网页），SQLite 的单文件形态迟早要换。
 
-## 决策
+## 决策（Decision）
 
 **使用 PostgreSQL 16**，通过 `docker compose` 在本地一键启动，连接串走 `DATABASE_URL`。
 
 ORM 用 SQLModel（SQLAlchemy 2.0 内核），迁移用 Alembic。
 
-## 理由与代价
+## 理由与代价（Consequences）
 
 **得到**
 
@@ -38,7 +38,7 @@ ORM 用 SQLModel（SQLAlchemy 2.0 内核），迁移用 Alembic。
 
 代价可接受：`docker-compose.yml` 已放进仓库，`make dev` 一条命令解决。
 
-## 备选方案
+## 备选方案（Alternatives）
 
 | 方案 | 为何不选 |
 |---|---|

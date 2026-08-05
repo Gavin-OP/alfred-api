@@ -1,7 +1,7 @@
 # ADR-0020 · 四层分发（4-Layer Dispatch, L0–L3）
 
 - 状态：accepted
-- 日期：2026-08-04
+- 日期：2026-08-05
 - 关联：[0018](./0018-engine-terminology-node-graph-action.md)、[UPLOAD_WORKFLOW.md](../UPLOAD_WORKFLOW.md)、[GRAPH.md](../GRAPH.md)。
 
 ## 背景（Context）
