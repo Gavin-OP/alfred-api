@@ -1,0 +1,6 @@
+/* 隐藏 MkDocs Material 对 frontmatter `status` 字段自动生成的导航徽章。
+   `status` 是本站点治理元数据（见 STYLE §6.3），不应被主题渲染成导航里的「!」图标。
+   仅隐藏视觉标记，保留文档中的 status 数据本身。 */
+.md-status {
+  display: none !important;
+}

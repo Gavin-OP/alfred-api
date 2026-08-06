@@ -10,6 +10,10 @@ status: 现行有效
 
 ---
 
+## 2026-08-07 · 站点导航去除 status 徽章「!」
+- 根因：MkDocs Material 将 frontmatter 的 `status`（如 `现行有效` / `草稿` / `accepted`）当作内置「页面状态」徽章渲染到左侧导航，未知状态值回退成「!」图标。该 `status` 字段是站点治理元数据（见 [STYLE §6.3](../STYLE.md)），供 AI 过滤，不应被主题渲染。
+- 修法：新增 [docs/css/extra.css](./css/extra.css) 对 `.md-status` 设 `display:none`，并在 [mkdocs.yml](../mkdocs.yml) 注册 `extra_css`；仅隐藏视觉标记，保留文档内 `status` 数据本身。不影响任何正文内容。
+
 ## 2026-08-06 · 文档一致性修正（mermaid / 流程图 / 索引）
 - [PRD：job-seeking](./prd/job-seeking.md) 修复工作流三 mermaid 语法错误（节点标签内多余引号导致无法渲染）；为原缺流程图的工作流八（笔试）、十一（Offer 比较）、十四（Coffee Chat）补齐 flowchart，统一为带引号标签风格。
 - [LATEST](./LATEST.md) 补 2026-08-06 更新索引（此前停在 08-05）。
