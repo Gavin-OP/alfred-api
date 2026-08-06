@@ -119,6 +119,13 @@ erDiagram
     APPLICATION ||--o{ REJECTION : "关联投递"
     JOB_POSTING ||--o{ REJECTION : "岗位"
     REJECTION ||--o{ MEMORY : "沉淀经验"
+
+    %% ===== Offer 比较 / 统计 / Coffee Chat / 合同审查（本篇补充） =====
+    USER ||--o{ ACTIVITY_LOG : "每日活跃(热力图)"
+    USER ||--o{ CONTRACT_REVIEW : "合同审查"
+    OFFER ||--o{ CONTRACT_REVIEW : "对应Offer"
+    ORGANIZATION ||--o{ CONTRACT_REVIEW : "公司"
+    PERSON ||--o{ INTERACTION : "接触(咖啡聊/内推)"
 ```
 
 ---
@@ -139,6 +146,11 @@ erDiagram
 | **八 · 笔试** | `written_test`, `written_test_question`, `memory` | `skill`, `interview`, `job_posting` | 记录题目 + 尝试搜答案（标注不确定，不写死结论） |
 | **九 · 拿到 Offer** | `offer`, `nudge`(截止提醒), `event` | `application`, `job_posting`, `organization` | 解析薪资/入职/体检/签证/毕业证明；截止前 3 天 + 当天提醒，决定后停 |
 | **十 · 收到拒信** | `rejection`, `memory`(经验沉淀), `event` | `application`, `interview`, `question_bank` | 识别岗位并结束流程；复盘沉淀，类似岗位自动调出 |
+| **十一 · Offer 比较** | —（只读派生） | `offer`(多行 × 维度) | 仅聚合展示，不新增存储、不替用户决策 |
+| **十二 · 静默期保温** | `follow_up`(`kind=silence_warmup`), `event`, `nudge`(静默触发) | `application`(投递后 N 天), `organization`, `document_version` | 与 Thank-you / Follow-up 共用 `follow_up`，靠 `kind` 区分话术 |
+| **十三 · 统计与分析** | `activity_log`(每日活跃), `memory`(学习清单), `question_bank`(进步路径) | `application`/`interview`/`offer`/`rejection`(转化率), `skill`(拒信分析) | 热力图 + 占比 + 转化率 + 拒信→学习清单 |
+| **十四 · Coffee Chat** | `person`(扩展字段), `interaction`, `interaction_person`, `follow_up`(内推后跟进) | `organization`, `occupation` | 记录对象全量画像；内推后写 referral 时间与公司 |
+| **十五 · 合同审查** | `contract_review`(解析条款 + 缺失标记) | `offer`, `organization` | 解析合同 + 标缺失关键条款（违约金/试用期/竞业/Notice/年假/医保） |
 
 **数据流主干（Capture → Normalize → Store → Retrieve）：**
 ```
@@ -225,6 +237,7 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 |---|---|---|
 | `id` | uuid PK | |
 | `user_id` | uuid（私有） | |
+| `kind` | varchar | `thank_you` \| `result_follow_up` \| `silence_warmup` \| `other`（区分目的与话术；工作流七=result_follow_up，工作流十二=silence_warmup，面试后致谢=thank_you） |
 | `interview_id` | uuid FK NULL → interview | 关联面试 |
 | `application_id` | uuid FK NULL → application | 关联投递 |
 | `channel` | varchar | `email` \| `message`（用户明确选择） |
@@ -301,6 +314,54 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 
 > 拒信落库即把对应 `application` 标记为 `rejected`，结束该投递流程；复盘经验写入 `memory`，下次类似公司/岗位自动调出。
 
+### 4.12 `person`（内核扩展 · Coffee Chat 画像）
+在 V2 `person` 之上建议新增候选人画像字段（工作流十四）：
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `gender` | varchar NULL | 性别 |
+| `birthday` | date NULL | 生日 |
+| `education_md` | text NULL | 教育背景（学校 / 专业 / 年限 / 毕业时间） |
+| `work_history_md` | text NULL | 工作经历 |
+| `personality_md` | text NULL | 性格特点 |
+| `referral_willing` | bool NULL | Referral 意愿（用户观察） |
+
+> `person` 为共享词表（不带 `user_id`）；同一人可在多次 `interaction` 中被不同用户复用，画像字段取最近一次更新。
+
+### 4.13 `interaction`（内核扩展 · 内推追踪）
+在 V2 `interaction` 之上建议新增（工作流十四）：
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `kind` | varchar | `coffee_chat` \| `meal` \| `hangout` \| `call` \| `networking_event` \| `info_session` \| `referral_talk` |
+| `referral_made_at` | timestamptz NULL | 实际帮忙内推的时间 |
+| `referral_company_md` | text NULL | 内推公司 |
+| `referral_followup_md` | text NULL | 后续 Follow-up 情况 |
+
+### 4.14 `activity_log`（新增 · 每日活跃热力图）
+支撑工作流十三（a）GitHub Calendar 风格统计；其余统计多从既有表聚合，不必逐日落库。
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `day` | date | 活跃日期（去重键 day+user_id） |
+| `kind` | varchar | `apply` \| `practice` \| `job_search` \| `interview` \| `review` \| `other` |
+| `count` | int | 当日该类型事件次数（聚合自 `event`） |
+| `note_md` | text NULL | 备注 |
+
+> 写入策略：`event` 发生后异步按 `day+kind` 累加 `count`；热力图直接读 `activity_log`，避免实时扫 `event`。
+
+### 4.15 `contract_review`（新增 · 合同审查）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `offer_id` | uuid FK NULL → offer | 对应 Offer |
+| `organization_id` | uuid FK NULL → organization | 公司 |
+| `raw_contract_md` | text NULL | 用户提供的合同原文 / 要点 |
+| `user_thought_md` | text NULL | 用户想法 |
+| `parsed_clauses_json` | jsonb NULL | 已解析条款（违约金 / 试用期 / 竞业 / Notice / 年假 / 医保 …） |
+| `missing_key_clauses` | text[] NULL | **缺失的关键条款**（帮用户提出） |
+| `risk_note_md` | text NULL | 风险提示与建议 |
+
 ---
 
 ## 5. 关键不变量（数据完整性红线）
@@ -314,6 +375,11 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 7. **Offer 截止提醒闭环**：`offer.deadline_at` 必须生成「决定前 3 天 + 当天」两次 `nudge`；`decided_at` 一旦写入即停后续提醒。
 8. **Offer 信息补全**：`offer.deadline_at` 或 `interviewer_contact_md` 缺失时，主动追问；不臆补全字段。
 9. **拒信即结束**：`rejection` 落库须将对应 `application.status` 置 `rejected`，并写 `memory` 沉淀经验供类似岗位调出。
+10. **跟进三态共用通道、靠 kind 区分**：`follow_up.kind` 必须区分 `thank_you` / `result_follow_up` / `silence_warmup`；同一草稿不可兼多种目的。
+11. **静默保温不臆造进展**：`follow_up(kind=silence_warmup)` 仅问进展 / 重申意向 / 提议 withdraw，不得编造「HR 说快有结果」之类信息。
+12. **Offer 比较只读**：工作流十一只读取聚合 `offer` 多行，不新增存储、不改写 `offer`、不替用户置 `status`。
+13. **合同缺失显式标红**：`contract_review.missing_key_clauses` 一旦非空，必须显式提示用户补齐（违约金 / 试用期 / 竞业 / Notice / 年假 / 医保）。
+14. **活动计数幂等**：`activity_log(day, kind)` 同一日同一类只累加 `count`，不因重复事件而重复建行。
 
 ---
 
@@ -327,3 +393,8 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 - [ ] `offer` 的薪资 / 体检 / 签证等字段，是否进一步结构化（而非自由 `md`）以便对比矩阵？
 - [ ] `rejection` 的「类似公司 / 岗位」判定：靠 `occupation` + `organization` 相似度，还是 `skill` 重合度？
 - [ ] 笔试题目是否需与 `question_bank` 打通（technical 题复用）？
+- [ ] `follow_up.kind` 是否还需 `withdraw` 独立值，或并入 `silence_warmup` 的意图字段？
+- [ ] `offer` 对比所需结构化字段（实薪 / 薪资结构 / 公司类型 / 规模 / 被辞风险）是否从自由 `md` 升级为列，以便工作流十一直接比较？
+- [ ] `activity_log` 是否直接由 `event` 物化视图生成，而非异步累加（避免双写不一致）？
+- [ ] `person` 扩展画像字段是否值得独立成 `person_profile` 表（避免共享词表被私人观察污染）？
+- [ ] `contract_review.parsed_clauses_json` 的条款 schema 是否需要先做 ADR（公司类型差异大）？
