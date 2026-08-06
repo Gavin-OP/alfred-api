@@ -10,6 +10,14 @@ status: 现行有效
 
 ---
 
+## 2026-08-06 · 求职工作流补全（十一～十五）与数据模型细化
+- [PRD：job-seeking](./prd/job-seeking.md) 新增工作流十一～十五（Offer 比较 / 静默期保温 / 统计与分析 / Coffee Chat / 合同审查）+ FR-18～FR-22；候选工作流章节裁剪已转正项。
+- [DATA_MODEL_V3.md](./DATA_MODEL_V3.md) 扩展：`follow_up.kind`（thank_you / result_follow_up / silence_warmup）、`activity_log`、`contract_review`、`person`/`interaction` 画像字段；补工作流 11–15 数据流行与关键不变量（共 14 条）。
+
+## 2026-08-05 · 求职工作流补全（六～十）与 ER 设计
+- [PRD：job-seeking](./prd/job-seeking.md) 新增工作流六～十（面试复盘 / 跟进生成 / 笔试 / Offer / 拒信）+ FR-13～FR-17。
+- 产出 [DATA_MODEL_V3.md](./DATA_MODEL_V3.md)（ER 图 + 数据流 + 新表规格 + 不变量草稿），登记 mkdocs nav；并修订 mkdocs.yml 注册。
+
 ## 2026-08-03 · V1 重新设计（重大架构定型）
 
 本轮把分散在聊天记录里的概念清单与已落地代码做了对齐，拷问并拍板了 11 个互相锁死的建模决策。全部为 `accepted`。
