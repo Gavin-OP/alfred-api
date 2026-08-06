@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0001 · 用 PostgreSQL 而非 SQLite
 
 - 状态：accepted

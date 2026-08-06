@@ -1,3 +1,8 @@
+---
+type: reference
+status: 现行有效
+---
+
 # Changelog
 
 > Alfred 设计演进的逐版记录。每一条决策都链接到对应的 ADR 与设计会话存档。

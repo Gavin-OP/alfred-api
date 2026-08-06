@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0012 · 编排框架：LangGraph 编排 + Action 执行
 
 - 状态：accepted

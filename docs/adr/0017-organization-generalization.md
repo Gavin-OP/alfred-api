@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0017 · Organization 泛化（company → organization）
 
 - 状态：accepted

@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0015 · Location：实体 + 别名反查
 
 - 状态：accepted

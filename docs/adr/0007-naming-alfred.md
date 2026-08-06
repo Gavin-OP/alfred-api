@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0007 · 项目命名为 Alfred，移除 claw 前缀
 
 - 状态：accepted

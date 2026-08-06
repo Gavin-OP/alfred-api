@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0009 · 命名体系：job_posting + occupation，退役 `position`
 
 - 状态：accepted

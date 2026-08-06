@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0008 · services 层作为唯一落库入口
 
 - 状态：accepted

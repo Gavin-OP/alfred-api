@@ -1,3 +1,8 @@
+---
+type: contributing
+status: 现行有效
+---
+
 # 领域文档维护规范
 
 > **用途**：供工程技能（engineering skills）与 AI 代理在探索代码库时，了解应如何阅读与消费本仓库的领域文档（CONTEXT / GLOSSARY / ADR / VISION），并遵循统一的术语与冲突标记约定。

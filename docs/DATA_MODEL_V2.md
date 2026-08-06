@@ -1,3 +1,8 @@
+---
+type: design
+status: 现行有效
+---
+
 # Alfred 数据模型 V2（V1 重新设计定稿）
 
 > **元信息** ｜ 状态：现行有效 ｜ 最后更新：2026-08-04 ｜ 范围：V1 重新设计的权威数据模型 ｜ 关联：[ADR-0009~0017](./adr/README.md)、[重新设计会话](./design-sessions/2026-08-03-v1-redesign.md)

@@ -1,3 +1,8 @@
+---
+type: reference
+status: 现行有效
+---
+
 # Alfred 领域词汇表（Glossary / Ubiquitous Language）
 
 > 这是 Alfred 全项目的**唯一权威词汇表**。所有文档、ADR、代码注释、prompt 都必须使用这里的词，避免"同一个意思三种叫法"。
@@ -60,7 +65,7 @@
 | `reminder` / `nudge` / `nudge_rule` | 用户手设提醒 / 系统算出提醒 / 提醒规则 |
 
 ### 2. 领域包（Domain Packages）—— 每个 Domain Graph 私有的扩展表
-> 第一个领域 **job** 已落地；**habit / media / progress** 为本期新增（先定模型，逐步实现）。
+> 第一个领域 **job** 已落地；**habit / media / progress** 为规划中的未来领域（先定模型，本轮暂不实现，仅通过领域无关内核保留扩展能力）。
 
 | 领域 | 关键表 | 说明 |
 |---|---|---|
@@ -97,3 +102,17 @@
 - **Alfred**：项目名（[ADR-0007](./adr/0007-naming-alfred.md)）。
 - **alfred-api**：后端仓库（本仓库）；**alfred-web**：前端仓库（小程序→网页→APP→硬件）。
 - **Matt Pocock 工程技能**：`to-tickets` / `triage` / `to-spec` / `grill-with-docs` / `domain-modeling` 等，配置见 `docs/agents/`。
+
+---
+
+## F. 文档类型（Document Types）
+
+本站文档按 [ADR-0022](./adr/0022-documentation-taxonomy-prd-design-adr.md) 分为以下类型，`type` 以 YAML frontmatter 为准：
+
+| 术语 | 英文 | 定义 | 落地位置 |
+|---|---|---|---|
+| **PRD** | Product Requirements Document | 产品需求文档：关注"做什么"——功能、场景、业务需求、成功指标 | `docs/prd/` |
+| **Design Document** | 设计文档 | 设计文档：关注"怎么做"——ER 图、数据流图（DFD）、接口、权衡 | `docs/` 设计文档分区 |
+| **ADR** | Architecture Decision Record | 架构决策记录：关注"为什么这样决策"，可标记取代旧 ADR | `docs/adr/` |
+| **Specification** | 规范 | 统称：PRD + Design + ADR 构成的可回溯规范集合；用户每次新意见都是对 specification 的更改 | — |
+| **VISION** | 北极星 | 最高层产品方向，为 PRD 提供方向，本身不是 PRD | `docs/VISION.md` |

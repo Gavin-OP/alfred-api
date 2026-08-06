@@ -1,3 +1,9 @@
+---
+type: adr
+status: superseded
+superseded_by: ./0014-resume-provenance.md
+---
+
 # ADR-0006 · MVP 延后 LaTeX → PDF 编译
 
 > ⚠️ **状态更新（2026-08-03 V1 重新设计）**：本 ADR 已被 **[ADR-0014 · 简历 Markdown 化 + 版本溯源](./0014-resume-provenance.md)** 取代。简历主信息改为结构化 Markdown（`document_version.markdown_main` + 模板引用 `template_ref` + `checksum`），PDF 编译延后到用户确认后才执行；**不再以 LaTeX 源码作为中间格式**。本文件保留作历史追溯。

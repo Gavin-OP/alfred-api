@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0003 · 前端用 Taro + React 一套三端
 
 - 状态：accepted

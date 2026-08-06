@@ -1,3 +1,8 @@
+---
+type: index
+status: 现行有效
+---
+
 # 架构决策记录（ADR）
 
 **ADR = Architecture Decision Record**。每份 ADR 回答一个问题：**我们当初为什么这么决定？**
@@ -6,7 +11,7 @@
 
 ## 格式
 
-每份 ADR 文件开头是统一的元信息块，正文为四个标准章节：
+每份 ADR 头部以 YAML frontmatter 声明 `type: adr`（机器可读分类，详见 [STYLE §6](../STYLE.md)），其下为元信息与四个标准章节：
 
 **元信息块（文件开头）**
 
@@ -51,5 +56,6 @@
 | [0019](./0019-graph-as-python.md) | Graph 是代码不是配置（Graph-as-Code，YAML 只做 Node 配置） | accepted |
 | [0020](./0020-four-layer-dispatch.md) | 四层分发 L0–L3（模态→声明式预筛→LLM 模糊回路→回流） | accepted |
 | [0021](./0021-domain-graph-packages.md) | 领域扩展：共享基座 + 领域 Graph 包（job/habit/media/progress+travel） | accepted |
+| [0022](./0022-documentation-taxonomy-prd-design-adr.md) | 文档治理：PRD / Design / ADR 三类分类与生命周期 | accepted |
 
 > **术语注解**：ADR-0018 起，引擎单元改名 **Node**（原 "Skill" 目录）；旧 ADR（0001–0017）正文里的 "Skill" 一律按 **Node** 理解。"skill"（小写，领域数据）仍指 `skill` 能力词表。

@@ -1,3 +1,8 @@
+---
+type: contributing
+status: 现行有效
+---
+
 # 分诊标签（Triage Labels）
 
 > **用途**：把五种规范分诊角色（`mattpocock/skills` 体系）映射到本仓库 issue 追踪器实际使用的标签字符串，供技能在提及某角色时引用对应标签。

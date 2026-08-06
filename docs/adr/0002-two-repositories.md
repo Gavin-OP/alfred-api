@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0002 · 前后端拆成两个独立仓库
 
 - 状态：accepted

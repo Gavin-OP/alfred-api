@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0004 · Skills 用"可带脚本的目录"而非硬编码函数
 
 - 状态：accepted

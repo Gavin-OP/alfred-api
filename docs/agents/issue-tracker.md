@@ -1,3 +1,8 @@
+---
+type: contributing
+status: 现行有效
+---
+
 # Issue 追踪：GitHub
 
 > **用途**：说明本仓库的 issue 与 PRD 如何以 GitHub Issues 形式存在，以及技能与人工应如何用 `gh` CLI 创建、读取、分诊与关闭工单（含 PR 作为分诊面的规则与 wayfinding 寻路操作）。

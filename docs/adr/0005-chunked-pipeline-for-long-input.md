@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0005 · 长输入用分块流水线，且由 Skill 自行决定
 
 - 状态：accepted

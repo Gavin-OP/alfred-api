@@ -1,8 +1,13 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0018 · 引擎术语重构：Skill → Node / Graph / Action
 
 - 状态：accepted
 - 日期：2026-08-05
-- 取代/关联：旧 ADR（0001–0017）中出现的 "Skill" 一律按本 ADR 重新解释为本文件的 **Node**；与 [0012](./0012-orchestration-langgraph.md)（LangGraph 编排）协同。
+- 关联：旧 ADR（0001–0017）中出现的 "Skill" 一律按本 ADR 重新解释为本文件的 **Node**；与 [0012](./0012-orchestration-langgraph.md)（LangGraph 编排）协同。
 
 ## 背景（Context）
 

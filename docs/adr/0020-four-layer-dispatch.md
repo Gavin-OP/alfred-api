@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0020 · 四层分发（4-Layer Dispatch, L0–L3）
 
 - 状态：accepted

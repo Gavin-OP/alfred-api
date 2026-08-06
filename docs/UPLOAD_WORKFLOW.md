@@ -1,3 +1,8 @@
+---
+type: design
+status: 现行有效
+---
+
 # UPLOAD_WORKFLOW — 捕获与分发工作流
 
 > **元信息** ｜ 状态：现行有效 ｜ 最后更新：2026-08-05 ｜ 范围：用户输入从进入到落库的完整链路 ｜ 关联：[GRAPH](./GRAPH.md)、[ADR-0020](./adr/0020-four-layer-dispatch.md)

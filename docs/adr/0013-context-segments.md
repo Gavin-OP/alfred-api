@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0013 · 上下文管理：常驻单 Session + 自动分段
 
 - 状态：accepted

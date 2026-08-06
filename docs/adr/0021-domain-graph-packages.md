@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0021 · 领域扩展：共享基座 + 领域 Graph 包
 
 - 状态：accepted

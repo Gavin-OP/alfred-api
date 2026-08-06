@@ -67,3 +67,13 @@ Normalize first: anything that needs cross-internal querying / joining must be r
 Natural-language requirement → `/grilling` (relentless interview to finalize, grill-with-docs emits ADR/glossary/CHANGELOG in sync) → `to-spec` pushes the spec to the GitHub issue tracker (labeled `ready-for-agent`) → Agent implements to spec → TDD verification.
 
 Engineering skills (Matt Pocock collection) are configured under `docs/agents/`; issue tracking and triage labels are in `docs/agents/issue-tracker.md` and `docs/agents/triage-labels.md`.
+
+## 8. Documentation change control (spec-driven)
+
+Every user update (new feature / opinion / decision) is a **specification change** — i.e. a design change. AI must update the canonical spec doc **first**:
+
+- New requirement → `prd` (see `docs/prd/`).
+- Design / model / flow change → `design` doc.
+- Key decision change → new `adr`, mark old `superseded_by`.
+
+Code and other markdown derive from the spec, never the reverse. Taxonomy: `docs/STYLE.md` §6; decision: [ADR-0022](docs/adr/0022-documentation-taxonomy-prd-design-adr.md). Each doc declares its type in YAML frontmatter (`type`: `prd` / `design` / `adr` / `vision` / `reference` / `contributing` / `index`).

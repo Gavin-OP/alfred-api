@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0014 · 简历溯源：软引用 + 强制 footnote + 校验阻断
 
 - 状态：accepted

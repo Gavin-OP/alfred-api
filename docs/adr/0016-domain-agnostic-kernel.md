@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0016 · 领域无关内核 + 领域包边界
 
 - 状态：accepted

@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0019 · Graph 是代码，不是配置（Graph-as-Code）
 
 - 状态：accepted

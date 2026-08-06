@@ -1,3 +1,8 @@
+---
+type: adr
+status: accepted
+---
+
 # ADR-0010 · Event 与 Fact 的并列真相模型
 
 - 状态：accepted
