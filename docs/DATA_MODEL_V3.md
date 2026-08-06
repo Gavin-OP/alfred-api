@@ -102,6 +102,23 @@ erDiagram
     USER ||--o{ INTERACTION : "接触记录"
     PERSON ||--o{ INTERACTION_PERSON : "参与人"
     INTERACTION ||--o{ INTERACTION_PERSON : "多人"
+
+    %% ===== 笔试 / Offer / 拒信（本篇补充） =====
+    USER ||--o{ WRITTEN_TEST : "私有笔试"
+    JOB_POSTING ||--o{ WRITTEN_TEST : "岗位"
+    INTERVIEW ||--o{ WRITTEN_TEST : "关联面试"
+    WRITTEN_TEST ||--o{ WRITTEN_TEST_QUESTION : "题目"
+    WRITTEN_TEST_QUESTION }o--o{ SKILL : "涉及技能"
+
+    USER ||--o{ OFFER : "私有Offer"
+    APPLICATION ||--o{ OFFER : "关联投递"
+    JOB_POSTING ||--o{ OFFER : "岗位"
+    OFFER ||--o{ NUDGE : "截止前提醒"
+
+    USER ||--o{ REJECTION : "私有拒信"
+    APPLICATION ||--o{ REJECTION : "关联投递"
+    JOB_POSTING ||--o{ REJECTION : "岗位"
+    REJECTION ||--o{ MEMORY : "沉淀经验"
 ```
 
 ---
@@ -119,6 +136,9 @@ erDiagram
 | **五 · 面试追踪** | `interview`(邀请信息), `event(INTERVIEW_SCHEDULED)`, `nudge`(双提醒) | `application`, `job_posting`, `person` | 多轮经 `application_id` 串联并标 `round_no` |
 | **六 · 面试复盘** | `interview`(复盘/感受/结果时间), `interview_qa`(录音解析), `interview_note`, `question_bank`, `memory`, `nudge`(跟进提醒) | `interview`(往轮), `application_material`, `document_version` | 结果时间写 `interview.result_due_at`，驱动 workflow 七提醒 |
 | **七 · 跟进生成** | `follow_up`(草稿→发送状态), `interview_note`, `memory`(补录) | `interview`(复盘), `job_posting`(岗位/公司), `document_version`(邮件版复用) | `channel`(email/message) + `status`(draft/sent/confirmed) 记录发送 |
+| **八 · 笔试** | `written_test`, `written_test_question`, `memory` | `skill`, `interview`, `job_posting` | 记录题目 + 尝试搜答案（标注不确定，不写死结论） |
+| **九 · 拿到 Offer** | `offer`, `nudge`(截止提醒), `event` | `application`, `job_posting`, `organization` | 解析薪资/入职/体检/签证/毕业证明；截止前 3 天 + 当天提醒，决定后停 |
+| **十 · 收到拒信** | `rejection`, `memory`(经验沉淀), `event` | `application`, `interview`, `question_bank` | 识别岗位并结束流程；复盘沉淀，类似岗位自动调出 |
 
 **数据流主干（Capture → Normalize → Store → Retrieve）：**
 ```
@@ -226,6 +246,61 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 | `related_interview_id` | uuid FK NULL → interview | 沉淀来源 |
 | `related_skill_id` | uuid FK NULL → skill | 关联技能 |
 
+### 4.8 `written_test`（新增 · 笔试）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `job_posting_id` | uuid FK → job_posting | 所属岗位 |
+| `interview_id` | uuid FK NULL → interview | 关联面试轮次 |
+| `occurred_at` | timestamptz NULL | 笔试时间 |
+| `note_md` | text NULL | 补充说明 |
+
+### 4.9 `written_test_question`（新增 · 笔试题目与答案）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `written_test_id` | uuid FK → written_test | |
+| `question_md` | text | 题目（来源：截图 / 文字 / 语音） |
+| `found_answer_md` | text NULL | 尝试找到的答案 |
+| `answer_source` | varchar NULL | `web` \| `agent` \| `user` |
+| `confidence_note` | text NULL | **免责声明**：仅作参考、不保证准确 |
+| `related_skill_id` | uuid FK NULL → skill | 涉及技能 |
+
+> 不编造：搜不到时 `found_answer_md` 留空，仅向用户说明「目前没找到，可自行搜索」。
+
+### 4.10 `offer`（新增 · Offer 管理）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `application_id` | uuid FK → application | 关联投递 |
+| `organization_id` | uuid FK → organization | 公司 |
+| `job_posting_id` | uuid FK → job_posting | 岗位 |
+| `offered_at` | timestamptz | 拿到 Offer 时间 |
+| `salary_md` | text NULL | 薪资（自由结构，因公司而异） |
+| `start_date` | date NULL | 入职时间 |
+| `health_check_md` / `visa_md` / `grad_cert_md` | text NULL | 体检 / 签证 / 毕业证明等要求 |
+| `deadline_at` | timestamptz NULL | **决定截止时间**（缺失则主动询问） |
+| `decided_at` | timestamptz NULL | 已决定时间（决定后停提醒） |
+| `status` | varchar | `pending` \| `accepted` \| `declined` \| `expired` |
+| `interviewer_contact_md` | text NULL | 面试官联系方式（信息不全时追问补录） |
+
+### 4.11 `rejection`（新增 · 拒信处理）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `application_id` | uuid FK → application | 关联投递 |
+| `job_posting_id` | uuid FK → job_posting | 识别出的岗位 |
+| `received_at` | timestamptz | 收到时间 |
+| `channel` | varchar | `email` \| `screenshot` \| `verbal` |
+| `reason_md` | text NULL | 识别/推断的拒因 |
+| `retrospective_md` | text NULL | 用户复盘内容 |
+| `parsed_raw_ref` | uuid FK NULL → attachment | 原始拒信（溯源） |
+
+> 拒信落库即把对应 `application` 标记为 `rejected`，结束该投递流程；复盘经验写入 `memory`，下次类似公司/岗位自动调出。
+
 ---
 
 ## 5. 关键不变量（数据完整性红线）
@@ -235,7 +310,10 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 3. **结果时间驱动提醒**：`interview.result_due_at` 一旦写入，必须生成对应 `nudge`（workflow 七触发点）；提醒与手设 `reminder` 分表。
 4. **跟进渠道明确**：`follow_up` 落库时 `channel` 必填；`status` 进入 `confirmed` 前不得视为已发送。
 5. **底层经历唯一**：同一段经历只存一条 `experience`，中英文差异只体现在 `document_version.language`，不复制 `experience`。
-6. **不编造**：任何「搜不到」的面试信息 / 面经，宁可留空也不写库。
+6. **不编造**：任何「搜不到」的面试信息 / 面经 / 笔试答案，宁可留空也不写库；搜到的笔试答案必须带 `confidence_note` 免责声明。
+7. **Offer 截止提醒闭环**：`offer.deadline_at` 必须生成「决定前 3 天 + 当天」两次 `nudge`；`decided_at` 一旦写入即停后续提醒。
+8. **Offer 信息补全**：`offer.deadline_at` 或 `interviewer_contact_md` 缺失时，主动追问；不臆补全字段。
+9. **拒信即结束**：`rejection` 落库须将对应 `application.status` 置 `rejected`，并写 `memory` 沉淀经验供类似岗位调出。
 
 ---
 
@@ -246,3 +324,6 @@ retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
 - [ ] `question_bank` 是否需 `difficulty` / `used_count` 字段支撑「针对性练习」排序？
 - [ ] 多语言语料库：是否独立于 `document_version` 另设 `corpus` 表？
 - [ ] `nudge_rule` 中「出结果提醒」「跟进提醒」的规则参数如何配置？
+- [ ] `offer` 的薪资 / 体检 / 签证等字段，是否进一步结构化（而非自由 `md`）以便对比矩阵？
+- [ ] `rejection` 的「类似公司 / 岗位」判定：靠 `occupation` + `organization` 相似度，还是 `skill` 重合度？
+- [ ] 笔试题目是否需与 `question_bank` 打通（technical 题复用）？
