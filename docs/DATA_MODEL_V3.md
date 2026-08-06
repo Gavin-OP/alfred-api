@@ -1,0 +1,248 @@
+---
+type: design
+status: 草稿
+---
+
+# Alfred 数据模型 V3（求职领域细化 · 草稿）
+
+> **元信息** ｜ 状态：草稿（待评审，用户会逐处修改） ｜ 范围：求职领域包（V1 第一个产品路径）的细化数据模型 ｜ 关联：[DATA_MODEL_V2](../DATA_MODEL_V2.md)、[求职助理 PRD](../prd/job-seeking.md)、[ADR-0023 图表归档位置](../adr/0023-diagram-placement.md)
+
+> **本篇是 `DATA_MODEL_V2.md` 在求职领域的细化草稿**，不重复 V2 已定义的内核表（USER / CHAT_THREAD / EVENT / FACT / PERSON / ORGANIZATION / SKILL …），只在其之上**扩展求职领域包**，并补完工作流五～七所需的新表。V2 仍为内核权威；本篇经评审后将回流进 V2。
+> 数据是所有流程的核心——本篇以 **ER 图 + 数据流（每个工作流读写哪些表）** 为主线，先定数据形状，再谈行为。
+
+---
+
+## 0. 与 V2 的关系 & 本篇新增点
+
+| 主题 | V2 已有 | 本篇新增 / 变更 |
+|---|---|---|
+| 投递 | `application` / `application_evidence` | 新增 `application_material(application_id, document_version_id, role)` 精确记录「哪份 CV / CL / 邮件用在哪次投递」 |
+| 面试 | `interview`（每轮一条） | 扩展面试复盘 / 感受 / 结果时间字段；新增 `interview_qa`、`interview_note`（面经） |
+| 跟进 | — | 新增 `follow_up`（email / message，含渠道、语言、发送状态） |
+| 题库 | — | 新增 `question_bank`（technical / behavior / 单面 / 群面） |
+| 多语料 | `document_version` | 新增 `language`(zh/en) 与 `doc_kind`(cv/cl/email)，支撑同经历不同语言版本 |
+
+---
+
+## 1. 设计铁律（继承 V2，求职域补充）
+
+1. **双真相（ADR-0010）**：行为 → `event`（append-only）；状态 → `fact`（物化快照）。`application`/`interview`/`follow_up` 是强类型表，`event` 只记「行为发生」。
+2. **Action 唯一写入口（ADR-0012）**：落库一律走 `ActionExecutor`，保留 `dry_run/commit`。
+3. **租户边界（ADR-0011）**：私有表带 `user_id`；共享词表（`person`/`organization`/`skill`/`occupation`/`location`）不带。
+4. **版本可追溯（用户硬要求）**：CV / CL / 邮件各自「哪一份用在哪个岗位」的映射，**只在用户确认后**经 `application_material` 落库，生成时不记录。
+5. **不编造**：面经 / 面试信息搜不到如实说明，绝不写库。
+6. **引用消解层**：用户说「港大做 RA 那段」而非「经历 #3」，需自然语言 → filter → 检索 → Top-N 候选 → 用户确认，编号仅是本次临时列表，非持久身份。
+
+---
+
+## 2. 全景 ER（求职领域细化）
+
+> 仅画求职领域包及其与内核的边界；内核表以「（V2）」标注，字段见 V2。
+
+```mermaid
+erDiagram
+    %% ===== 内核（V2，仅边界） =====
+    USER ||--o{ CHAT_THREAD : "常驻对话"
+    CHAT_THREAD ||--o{ CHAT_MESSAGE : "含"
+    CHAT_MESSAGE ||--o{ ATTACHMENT : "含(方向化)"
+    CHAT_MESSAGE ||--o{ EVENT : "触发行为"
+    EVENT ||--o| FACT : "物化为状态"
+    USER ||--o{ MEMORY : "私有记忆"
+    USER ||--o{ REMINDER : "手设提醒"
+    NUDGE_RULE ||--o{ NUDGE : "生成"
+    USER ||--o{ NUDGE : "系统提醒"
+
+    PERSON }o--o{ ORGANIZATION : "任职于"
+    ORGANIZATION ||--o{ JOB_POSTING : "发布"
+    OCCUPATION ||--o{ JOB_POSTING : "属于"
+    LOCATION ||--o{ JOB_POSTING : "位于"
+    SKILL ||--o{ SKILL_ALIAS : "别名"
+    SKILL ||--o{ POSITION_REQUIREMENT : "JD所需"
+    JOB_POSTING ||--o{ POSITION_REQUIREMENT : "要求"
+    SKILL ||--o{ USER_SKILL : "技能定义"
+    USER ||--o{ USER_SKILL : "我的技能"
+    OCCUPATION }o--o{ USER_SKILL : "跨用户可比"
+
+    %% ===== 求职领域包（本篇细化） =====
+    USER ||--o{ APPLICATION : "私有投递"
+    JOB_POSTING ||--o{ APPLICATION : "投递"
+    APPLICATION ||--o{ APPLICATION_EVIDENCE : "凭证(截图/确认邮件)"
+    ATTACHMENT ||--o{ APPLICATION_EVIDENCE : "作为凭证"
+    APPLICATION ||--o{ APPLICATION_MATERIAL : "所用材料"
+    DOCUMENT_VERSION ||--o{ APPLICATION_MATERIAL : "CV/CL/邮件版"
+
+    USER ||--o{ DOCUMENT_ASSET : "简历资产"
+    DOCUMENT_ASSET ||--o{ DOCUMENT_VERSION : "版本链"
+    DOCUMENT_VERSION ||--o{ DOCUMENT_VERSION_EXPERIENCE : "引用经历"
+    EXPERIENCE ||--o{ DOCUMENT_VERSION_EXPERIENCE : "被引用"
+    DOCUMENT_VERSION ||--o{ DOCUMENT_VERSION_FACT : "溯源fact"
+    FACT ||--o{ DOCUMENT_VERSION_FACT : "被引用"
+
+    APPLICATION ||--o{ INTERVIEW : "轮次(每轮一条)"
+    INTERVIEW ||--o{ INTERVIEW_INTERVIEWER : "面试官"
+    PERSON ||--o{ INTERVIEW_INTERVIEWER : "是谁"
+    INTERVIEW ||--o{ INTERVIEW_QA : "问题/回答"
+    INTERVIEW ||--o{ INTERVIEW_NOTE : "面经"
+    JOB_POSTING ||--o{ INTERVIEW_NOTE : "挂钩岗位"
+    USER ||--o{ INTERVIEW_NOTE : "私有"
+
+    INTERVIEW ||--o{ FOLLOW_UP : "跟进"
+    APPLICATION ||--o{ FOLLOW_UP : "关联投递"
+    USER ||--o{ FOLLOW_UP : "私有"
+    FOLLOW_UP }o--o{ DOCUMENT_VERSION : "复用邮件版"
+
+    USER ||--o{ QUESTION_BANK : "私有题库"
+    QUESTION_BANK }o--o{ SKILL : "关联技能"
+    INTERVIEW_QA }o--o{ QUESTION_BANK : "沉淀来源"
+
+    USER ||--o{ EXPERIENCE : "我的经历"
+    EXPERIENCE ||--o{ EXPERIENCE_SOURCE : "来源(多语音)"
+    ATTACHMENT ||--o{ EXPERIENCE_SOURCE : "作为来源"
+
+    USER ||--o{ INTERACTION : "接触记录"
+    PERSON ||--o{ INTERACTION_PERSON : "参与人"
+    INTERACTION ||--o{ INTERACTION_PERSON : "多人"
+```
+
+---
+
+## 3. 数据流向（Data Flow）：每个工作流读写哪些表
+
+> 这是 ER 的「数据流」视角——**数据如何随工作流在表之间流动**。读（R）/ 写（W）标注每张表在每个流程中的角色。
+
+| 工作流 | 主要写入（W） | 主要读取（R） | 关键外键 / 落点 |
+|---|---|---|---|
+| **一 · 发现 JD** | `job_posting`, `position_requirement`, `event`, `memory`, `reminder` | `organization`, `occupation`, `location`, `skill` | fingerprint 去重；JD 要求进 `position_requirement` |
+| **二 · 准备投递** | `document_asset`, `document_version`(cv/cl, 多语言), `document_version_experience`, `document_version_fact`, `event(RESUME_GENERATED)` | `experience`, `position_requirement`, `user_skill`, `skill` | 版本复用靠全局 `checksum`；`language`/`doc_kind` 区分中英文与 CV/CL |
+| **三 · 告知投递** | `application`, `application_evidence`, `application_material`, `interview_note`(面经), `memory` | `document_version`(定位 CV/CL/邮件版), `job_posting` | 「哪份用在哪次投递」在此经 `application_material` 落库 |
+| **四 · 模拟面试** | `interview_qa`(陪练记录), `question_bank`, `memory` | `question_bank`, `interview_note`, `skill` | 用户回答存 `interview_qa`/`memory` 供自我学习 |
+| **五 · 面试追踪** | `interview`(邀请信息), `event(INTERVIEW_SCHEDULED)`, `nudge`(双提醒) | `application`, `job_posting`, `person` | 多轮经 `application_id` 串联并标 `round_no` |
+| **六 · 面试复盘** | `interview`(复盘/感受/结果时间), `interview_qa`(录音解析), `interview_note`, `question_bank`, `memory`, `nudge`(跟进提醒) | `interview`(往轮), `application_material`, `document_version` | 结果时间写 `interview.result_due_at`，驱动 workflow 七提醒 |
+| **七 · 跟进生成** | `follow_up`(草稿→发送状态), `interview_note`, `memory`(补录) | `interview`(复盘), `job_posting`(岗位/公司), `document_version`(邮件版复用) | `channel`(email/message) + `status`(draft/sent/confirmed) 记录发送 |
+
+**数据流主干（Capture → Normalize → Store → Retrieve）：**
+```
+用户多模态输入(语音/截图/文字/链接)
+   │  capture（路由分发到对应 Node/skill）
+   ▼
+normalize（结构化抽取：skill/requirement/experience/interview/follow_up）
+   │  ActionExecutor.dry_run 预览 → 用户确认
+   ▼
+store（强类型表 + event/FACT 双真相；attachment 方向化挂载）
+   │
+   ▼
+retrieve（memory 召回 + 三大技能匹配 + 对话式历史调取）
+   │
+   └─► 反哺下一轮 capture（如 workflow 七复用 workflow 六的复盘）
+```
+
+---
+
+## 4. 新增 / 变更的求职领域表规格
+
+### 4.1 `application_material`（新增 · 版本追踪映射）
+精确回答「哪个岗位投递用了哪份 CV / CL / 邮件」。
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `application_id` | uuid FK → application | |
+| `document_version_id` | uuid FK → document_version | 具体 CV / CL / 邮件版本 |
+| `role` | varchar | `cv` \| `cl` \| `email` |
+| `confirmed_by_user` | bool | 用户确认后才落库（满足「生成时不记录」约束） |
+
+### 4.2 `document_version`（变更 · 多语言多类型）
+在 V2 基础上新增：
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `language` | varchar | `zh` \| `en`（同一经历按语言翻译，底层 `experience` 一致） |
+| `doc_kind` | varchar | `cv` \| `cl` \| `email` |
+
+> 邮件版（`doc_kind='email'`）可由 `follow_up` 复用，避免重复生成。
+
+### 4.3 `interview`（变更 · 复盘与结果时间）
+在 V2（每轮一条）基础上扩展：
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `round_no` | int | 第几轮（首轮=1；无前序则 1，有则串联同 `application_id` 理清） |
+| `form` | varchar | `single` \| `group` |
+| `recording_url` | text NULL | 现场录音（workflow 六解析源） |
+| `stage` | varchar | `invitation` \| `round_done` \| `hr` \| …（阶段变化追踪） |
+| `interview_at` / `location_md` / `attire_md` / `agenda_md` | — | 时间 / 地点 / 着装 / 流程时长 |
+| `result_due_at` | timestamptz NULL | **HR 告知的出结果时间**，驱动 workflow 七提醒 |
+| `review_md` | text NULL | 复盘总评 |
+| `good_points_md` / `improve_points_md` | text NULL | 亮点 / 改进点（含语言/表达具体问题） |
+| `feelings_md` | text NULL | 对城市 / HR / 面试官 / 公司的感受 |
+| `position_insight_md` | text NULL | 该职位最新心得 |
+| `sent_followup_at` | timestamptz NULL | 是否已发跟进 |
+
+### 4.4 `interview_qa`（新增 · 录音解析的问题/回答）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `interview_id` | uuid FK → interview | |
+| `sequence` | int | 顺序 |
+| `question_text` | text | 问题 |
+| `answer_text` | text NULL | 用户回答 |
+| `answer_duration_sec` | int NULL | 作答时长（录音解析） |
+| `category` | varchar | `technical` \| `behavior` \| `single` \| `group` \| `other` |
+| `rating` | varchar NULL | `good` \| `bad` \| `mixed`（评判） |
+| `note_md` | text NULL | 具体点评 |
+| `source` | varchar | `recording` \| `chat` \| `manual` |
+
+### 4.5 `interview_note`（新增 · 面经）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `organization_id` | uuid FK NULL → organization | 与公司挂钩 |
+| `job_posting_id` | uuid FK NULL → job_posting | 与岗位挂钩 |
+| `interview_id` | uuid FK NULL → interview | 由某次面试产生 |
+| `content_md` | text | 面经正文 |
+| `source` | varchar | `user` \| `agent` \| `web` |
+
+### 4.6 `follow_up`（新增 · 跟进邮件/消息）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `interview_id` | uuid FK NULL → interview | 关联面试 |
+| `application_id` | uuid FK NULL → application | 关联投递 |
+| `channel` | varchar | `email` \| `message`（用户明确选择） |
+| `language` | varchar | `zh` \| `en` |
+| `draft_md` | text | 草稿内容（结合复盘+岗位+公司） |
+| `status` | varchar | `draft` \| `sent` \| `confirmed` \| `skipped` |
+| `sent_at` | timestamptz NULL | 确认发送时间 |
+| `generated_from_md` | text NULL | 生成所依据的复盘/岗位摘要（溯源） |
+| `document_version_id` | uuid FK NULL → document_version | 复用的邮件版 |
+
+### 4.7 `question_bank`（新增 · 分类题库）
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid（私有） | |
+| `category` | varchar | `technical` \| `behavior` \| `single` \| `group` \| `other` |
+| `question_md` | text | 题目 |
+| `source` | varchar | `interview` \| `user` \| `agent` \| `web` |
+| `related_interview_id` | uuid FK NULL → interview | 沉淀来源 |
+| `related_skill_id` | uuid FK NULL → skill | 关联技能 |
+
+---
+
+## 5. 关键不变量（数据完整性红线）
+
+1. **版本映射只在确认后写**：`application_material.confirmed_by_user = true` 才可落库；生成 CV/CL/邮件时绝不预填。
+2. **多轮同职**：同一 `application_id` 下的 `interview.round_no` 连续唯一；跨 `application` 不混轮次。
+3. **结果时间驱动提醒**：`interview.result_due_at` 一旦写入，必须生成对应 `nudge`（workflow 七触发点）；提醒与手设 `reminder` 分表。
+4. **跟进渠道明确**：`follow_up` 落库时 `channel` 必填；`status` 进入 `confirmed` 前不得视为已发送。
+5. **底层经历唯一**：同一段经历只存一条 `experience`，中英文差异只体现在 `document_version.language`，不复制 `experience`。
+6. **不编造**：任何「搜不到」的面试信息 / 面经，宁可留空也不写库。
+
+---
+
+## 6. 待评审（用户将逐处修改）
+
+- [ ] `interview` 复盘字段是否进一步正交化（如拆分 `interview_review` 表）？
+- [ ] `follow_up` 与 `document_version(doc_kind='email')` 的复用边界：草稿阶段是否就建 `document_version`？
+- [ ] `question_bank` 是否需 `difficulty` / `used_count` 字段支撑「针对性练习」排序？
+- [ ] 多语言语料库：是否独立于 `document_version` 另设 `corpus` 表？
+- [ ] `nudge_rule` 中「出结果提醒」「跟进提醒」的规则参数如何配置？

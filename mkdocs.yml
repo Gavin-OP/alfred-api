@@ -55,6 +55,7 @@ nav:
       - 求职助理用户流程: prd/job-seeking.md
   - 设计文档 (Design):
       - 数据模型 V2: DATA_MODEL_V2.md
+      - 数据模型 V3（求职领域细化 · 草稿）: DATA_MODEL_V3.md
       - 引擎规范 (GRAPH): GRAPH.md
       - 捕获与分发工作流: UPLOAD_WORKFLOW.md
       - 重新设计会话 2026-08-03: design-sessions/2026-08-03-v1-redesign.md
