@@ -69,7 +69,7 @@ status: 现行有效
 
 | 领域 | 关键表 | 说明 |
 |---|---|---|
-| **job**（求职）| `job_posting` `application` `interview` `offer` `experience` `experience_source` `position_requirement` `user_skill` `document_version` `document_version_fact` | 现有表原样保留并包成 Domain Graph |
+| **job**（求职）| `job_posting` `application` `interview` `offer` `experience` `experience_source` `position_requirement` `user_skill` `document_version` `document_version_fact` 等（求职领域细化新增 `application_evidence` `application_material` `interview_qa` `interview_note` `follow_up` `question_bank` `written_test` `written_test_question` `rejection` `activity_log` `contract_review` `interaction` `interaction_person`，完整表清单见 [DATA_MODEL_V3](../DATA_MODEL_V3.md)）| 现有表原样保留并包成 Domain Graph；V3 在其上扩展求职领域包 |
 | **habit**（习惯）| `habit` `habit_log` | 习惯定义 + 打卡记录（`habit_log` 可挂 `location_id`）|
 | **media**（作品/书影音）| `work_item` `review` | 书/影/剧/游戏 + 读后感/观后感（`work_item` 可挂 `location_id`）|
 | **progress**（进度/项目/旅行）| `project` `progress_log` `trip_day` | `project.kind` 区分 vlog/project/**trip**；旅行按天 `trip_day` 挂 `location_id` |

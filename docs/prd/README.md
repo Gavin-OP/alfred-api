@@ -32,4 +32,4 @@ related:
 
 ## 现有 PRD
 
-> 当前暂无特性级 PRD。产品级方向见 [VISION](../VISION.md)（北极星）。
+- [求职助理用户流程](./job-seeking.md) — V1 首个产品路径：工作流一至十五（JD 采集 → 投递 → 面试 → Offer/拒信 → 比较 / 保温 / 统计 / Coffee Chat / 合同审查）+ FR-1～FR-22；关联设计文档 [DATA_MODEL_V3](../DATA_MODEL_V3.md)。

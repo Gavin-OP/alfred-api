@@ -12,7 +12,8 @@ status: 现行有效
 | 你想看 | 去这里 |
 |---|---|
 | 产品最终要成为什么 | [产品愿景 VISION](VISION.md) |
-| 数据库到底长什么样（权威） | [数据模型 V2](DATA_MODEL_V2.md) |
+| 数据库到底长什么样（权威内核） | [数据模型 V2](DATA_MODEL_V2.md) |
+| 求职领域细化（草稿） | [数据模型 V3](DATA_MODEL_V3.md) |
 | 术语别搞混（position / job_posting / occupation …） | [术语表 GLOSSARY](GLOSSARY.md) |
 | 改了什么、为什么改 | [变更记录 CHANGELOG](CHANGELOG.md) |
 | 三轮建模拷问的完整推理 | [重新设计会话 2026-08-03](design-sessions/2026-08-03-v1-redesign.md) |

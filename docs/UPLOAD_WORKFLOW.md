@@ -8,7 +8,7 @@ status: 现行有效
 > **元信息** ｜ 状态：现行有效 ｜ 最后更新：2026-08-05 ｜ 范围：用户输入从进入到落库的完整链路 ｜ 关联：[GRAPH](./GRAPH.md)、[ADR-0020](./adr/0020-four-layer-dispatch.md)
 
 > 配套 [GRAPH.md](./GRAPH.md) 与 [ADR-0020](./adr/0020-four-layer-dispatch.md)。
-> 描述一次用户输入从进入到落库的完整链路：**4 层分发（L0–L3）** + **Mode A 捕获家族** + **Mode B 组装/查询**。
+> 描述一次用户输入从进入到落库的完整链路：**4 层分发（L0–L3）** + **Mode A 捕获家族** + **Mode B 组装/查询**。对应产品侧工作流见 [求职助理用户流程 PRD](./prd/job-seeking.md)（工作流一至十五）。
 
 ---
 

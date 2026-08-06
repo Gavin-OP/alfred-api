@@ -10,6 +10,13 @@ status: 现行有效
 
 ---
 
+## 2026-08-06 · 文档一致性修正（mermaid / 流程图 / 索引）
+- [PRD：job-seeking](./prd/job-seeking.md) 修复工作流三 mermaid 语法错误（节点标签内多余引号导致无法渲染）；为原缺流程图的工作流八（笔试）、十一（Offer 比较）、十四（Coffee Chat）补齐 flowchart，统一为带引号标签风格。
+- [LATEST](./LATEST.md) 补 2026-08-06 更新索引（此前停在 08-05）。
+- [prd/README](./prd/README.md) 登记求职助理用户流程 PRD（此前误写「暂无特性级 PRD」）。
+- [GLOSSARY](./GLOSSARY.md) / [index](./index.md) 补求职领域细化表与 DATA_MODEL_V3 链接。
+- 说明：CHANGELOG 此前已含 08-06「工作流十一～十五」条目；DATA_MODEL_V3 仍为草稿（工作流 11/13/14 的结构化字段、activity_log 物化、person 画像隔离待评审）。
+
 ## 2026-08-06 · 求职工作流补全（十一～十五）与数据模型细化
 - [PRD：job-seeking](./prd/job-seeking.md) 新增工作流十一～十五（Offer 比较 / 静默期保温 / 统计与分析 / Coffee Chat / 合同审查）+ FR-18～FR-22；候选工作流章节裁剪已转正项。
 - [DATA_MODEL_V3.md](./DATA_MODEL_V3.md) 扩展：`follow_up.kind`（thank_you / result_follow_up / silence_warmup）、`activity_log`、`contract_review`、`person`/`interaction` 画像字段；补工作流 11–15 数据流行与关键不变量（共 14 条）。
