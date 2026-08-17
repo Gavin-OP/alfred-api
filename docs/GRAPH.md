@@ -5,7 +5,11 @@ status: 现行有效
 
 # GRAPH — 引擎规范：Node / Graph / Action
 
-> **元信息** ｜ 状态：现行有效 ｜ 最后更新：2026-08-05 ｜ 范围：引擎本体的权威规范（三层抽象落地 / Node / Graph / Action）｜ 关联：[ADR-0018](./adr/0018-engine-terminology-node-graph-action.md)、[ADR-0019](./adr/0019-graph-as-python.md)、[GLOSSARY](./GLOSSARY.md)
+> **元信息**
+> - 状态：现行有效
+> - 最后更新：2026-08-05
+> - 范围：引擎本体的权威规范（三层抽象落地 / Node / Graph / Action）
+> - 关联：[ADR-0018](./adr/0018-engine-terminology-node-graph-action.md)、[ADR-0019](./adr/0019-graph-as-python.md)、[GLOSSARY](./GLOSSARY.md)
 
 > 配套 [GLOSSARY.md](./GLOSSARY.md) 与 [ADR-0018](./adr/0018-engine-terminology-node-graph-action.md)、[ADR-0019](./adr/0019-graph-as-python.md)。
 > 本文件是**引擎本体的权威规范**：三层抽象如何落地、Node 怎么写、Graph 怎么画、Action 怎么落库。

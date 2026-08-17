@@ -1,7 +1,7 @@
 ---
 type: contributing
 status: 现行有效
-updated: YYYY-MM-DD
+updated: 2026-08-18
 scope: 描述 alfred-api 从需求到 merge 的人机协作全生命周期
 related:
   - ../../STYLE.md
@@ -12,6 +12,18 @@ related:
 
 > 本文件是 alfred-api 人机协作开发的**权威流程规范**，对应 `CONTEXT.md` §7 的「Vibe Coding」实践。
 > 核心纪律：**先规范、后代码**——任何代码改动都必须先落到 PRD / Design / ADR，再写实现；文档未更新的 PR 不得合入。
+
+## 开发模式：Sprint / 迭代（个人开发者）
+
+本仓库采用 **Sprint / 迭代** 模式，而非 Waterfall（瀑布）。理由：
+
+- 个人开发者无阶段间 handoff 需求，Waterfall 只会把反馈拖到最后、错了全盘重来。
+- 需求必然漂移，迭代可在每个 milestone 重排优先级。
+- 小里程碑持续闭合，比「憋大招」更可持续。
+
+本工作流即 Sprint 模型的具体化：**milestone = 时间盒增量（sprint）**，**issue = backlog 项**，每个 issue 走 TDD（红 → 绿 → 重构），milestone 内所有 issue 关闭后出 PR。
+
+> **个人开发者适配**：保留时间盒、优先级 backlog、done = 已测、定期重排等 agile 精髓；**去除团队仪式**（无需 daily standup 自我汇报、无需 sprint review 会议），仅保留轻量 self-retro / 重排闸门即可。
 
 ## 生命周期总览
 
