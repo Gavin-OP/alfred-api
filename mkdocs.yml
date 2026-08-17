@@ -55,6 +55,7 @@ nav:
       - VISION: VISION.md
   - 产品需求 PRD:
       - 分区说明与索引: prd/README.md
+      - PRD 模板: prd/TEMPLATE.md
       - 求职助理用户流程: prd/job-seeking.md
   - 设计文档 (Design):
       - 数据模型 V2: DATA_MODEL_V2.md
@@ -67,6 +68,7 @@ nav:
       - 变更记录 (CHANGELOG): CHANGELOG.md
   - 架构决策 ADR:
       - 索引: adr/README.md
+      - ADR 模板: adr/TEMPLATE.md
       - "ADR-0001 PostgreSQL": adr/0001-postgresql-over-sqlite.md
       - "ADR-0002 双仓库": adr/0002-two-repositories.md
       - "ADR-0003 Taro 三端": adr/0003-taro-react-tri-platform.md
@@ -92,6 +94,7 @@ nav:
       - "ADR-0023 图表归档位置": adr/0023-diagram-placement.md
   - 协作与贡献 (Contributing):
       - 文档规范 (STYLE): STYLE.md
+      - 开发工作流: agents/dev-workflow.md
       - 领域文档: agents/domain.md
       - Issue 追踪: agents/issue-tracker.md
       - 分层标签: agents/triage-labels.md

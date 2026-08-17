@@ -64,9 +64,11 @@ Normalize first: anything that needs cross-internal querying / joining must be r
 
 ## 7. Dev Workflow (Vibe Coding)
 
-Natural-language requirement → `/grilling` (relentless interview to finalize, grill-with-docs emits ADR/glossary/CHANGELOG in sync) → `to-spec` pushes the spec to the GitHub issue tracker (labeled `ready-for-agent`) → Agent implements to spec → TDD verification.
+从自然语言需求到可运行代码的回路：**讨论需求 → AI 更新 PRD / Design / ADR → AI 追问 design 与 test → 拆 milestones / issues 上传 GitHub 并归入 Project → 人工确认 → AI 逐 issue 用 TDD 实现 → 自动 commit / close / 更新 Project → milestone 完成 → 生成 PR + AI review 总结 → 人工 approve → merge 自动关闭 issues 与 milestone**。
 
-Engineering skills (Matt Pocock collection) are configured under `docs/agents/`; issue tracking and triage labels are in `docs/agents/issue-tracker.md` and `docs/agents/triage-labels.md`.
+- 完整生命周期、AI 对 `Related` vs `Closes` 的自主判定、文档优先约束，见权威规范 [`docs/agents/dev-workflow.md`](docs/agents/dev-workflow.md)。
+- 工程技能（Matt Pocock 合集）配置于 `docs/agents/`；issue 跟踪与分层标签见 `docs/agents/issue-tracker.md` 与 `docs/agents/triage-labels.md`。
+- 规范变更控制（spec-driven）：任何用户更新先落 PRD / Design / ADR，代码从规范派生。
 
 ## 8. Documentation change control (spec-driven)
 

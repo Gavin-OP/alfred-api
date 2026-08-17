@@ -25,10 +25,18 @@ related:
 
 ## 如何新增一篇 PRD
 
-1. 在 `docs/prd/` 下新建 `NNN-<slug>.md`，开头用 YAML frontmatter 声明 `type: prd`。
-2. 必备章节：**背景与目标 / 用户场景 / 功能需求 / 非功能需求 / 成功指标 / 范围（in/out）/ 关联 Design**。
-3. 在 `mkdocs.yml` 的「产品需求 PRD」分区登记。
-4. 相应设计落 `design` 文档，关键决策落 `adr`。
+1. **从模板起手**：复制 [`TEMPLATE.md`](./TEMPLATE.md)，其章节已对齐本说明。
+2. 在 `docs/prd/` 下新建 `NNN-<slug>.md`，开头用 YAML frontmatter 声明 `type: prd`。
+3. 必备章节（**小 PRD 可删除无关 section**，不必保留空标题）：
+   - 摘要（Executive Summary）
+   - 目标用户（Target User）
+   - 成功指标（Success Metrics）
+   - 范围（In Scope）
+   - 非范围（Out of Scope）
+   - 关联 Design
+4. 可选章节（按需启用）：背景与目标 / 用户场景 / 功能需求 / 非功能需求 / 里程碑与 Issue 拆解。
+5. 在 `mkdocs.yml` 的「产品需求 PRD」分区登记。
+6. 相应设计落 `design` 文档，关键决策落 `adr`。
 
 ## 现有 PRD
 

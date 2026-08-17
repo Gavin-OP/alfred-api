@@ -20,12 +20,4 @@ status: 现行有效
 | 每条关键决策的前因后果 | [架构决策 ADR](adr/README.md) |
 | 旧版草稿（已作废，仅参考） | [历史基线 v0.1](archive/v0.1-baseline/README.md) |
 
-## 当前设计的核心定论
 
-1. **真相双轨**：`event`（行为，append-only）与 `fact`（状态，带 `valid_from` → `valid_to`）并列互补，不是谁派生谁。
-2. **命名**：`job_posting`（具体招聘实例）+ `occupation`（职位大类）；旧 `position` 退役。
-3. **多用户边界**：私有表带 `user_id`，共享实体/词表（`person` / `organization` / `occupation` / `skill` / `location`）不带。
-4. **编排**：LangGraph 管状态与中断，Action 原语仍管写库。
-5. **可解释简历**：软引用 `fact` + 渲染强制 footnote + 校验阻断无源。
-
-> 本站点由 MkDocs Material 构建，支持全文搜索与移动端阅读。手机上浏览请善用右上角搜索与深色模式切换。

@@ -115,3 +115,13 @@ related:
 ### 6.5 图表归档位置（Diagram Placement）
 
 图表按类型归属 PRD / Design / ADR 的硬映射，以及「一篇图只归一个分区」的约束，已提升为独立决策记录 [ADR-0023](./adr/0023-diagram-placement.md)。本文不再重复表格。
+
+### 6.6 index 类型红线（首页 / 分区索引页）
+
+`type: index` 文档（含首页 `index.md` 与各分区 `README.md`）只承载**项目简介与导航索引**：
+
+- **不得内联任何设计定论或决策结论**——结论一律入 ADR，index 仅以**导航链接**指向之（如「每条关键决策的前因后果 → 架构决策 ADR」）。
+- 不得复述 ADR / Design / PRD 的正文内容；若需呈现要点，只放指向源文档的链接。
+- 此红线防止上层文档与决策文档（ADR）产生治理漂移；违反时以 ADR 为权威来源。
+
+> 另：新建 `prd` 以 `docs/prd/TEMPLATE.md` 起手，新建 `adr` 以 `docs/adr/TEMPLATE.md` 起手。
