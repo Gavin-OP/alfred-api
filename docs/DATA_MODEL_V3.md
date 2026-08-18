@@ -6,6 +6,7 @@ status: 草稿
 # Alfred 数据模型 V3（求职领域细化 · 草稿）
 
 > **元信息**
+>
 > - 状态：草稿（待评审，用户会逐处修改）
 > - 范围：求职领域包（V1 第一个产品路径）的细化数据模型
 > - 关联：[DATA_MODEL_V2](../DATA_MODEL_V2.md)、[求职助理 PRD](../prd/job-seeking.md)、[ADR-0023 图表归档位置](../adr/0023-diagram-placement.md)
