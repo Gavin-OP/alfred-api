@@ -17,7 +17,7 @@ status: 现行有效
 - [PRD：job-seeking](./prd/job-seeking.md) 新增 NFR-4（缺失信息·人工补齐优先）并补工作流二 step 5(d)；工作流一补「缺失補全闭环」并修正子项层级。**工作流二**：修正触发条件（紧接工作流一 → 「同一会话中用户继续投递该岗位」，明确仅针对刚才那个岗位）；推荐改为可迭代反馈闭环；文件交付明确「可直接下载的文件（即下载链接）」。
 - [UPLOAD_WORKFLOW](./UPLOAD_WORKFLOW.md) / [GRAPH](./GRAPH.md) / [DATA_MODEL_V2](./DATA_MODEL_V2.md) / [design-sessions](./design-sessions/2026-08-03-v1-redesign.md) / [DATA_MODEL_V3](./DATA_MODEL_V3.md) 元信息块统一「每项一行」渲染修复并同步 `最后更新`。
 - [VISION](./VISION.md) 北极星句由裸引用块改为 `[!ABSTRACT]` callout，与元信息块明确区分（纠正「位置误当元信息」）。
-- [PRD：job-seeking](./prd/job-seeking.md) 工作流一～多处的 `(a)(b)(c)` 子项改为嵌套有序列表（`a. b. c.`），每个另起一行、渲染清晰。
+- [PRD：job-seeking](./prd/job-seeking.md) 工作流一～多处的 `(a)(b)(c)` 子项改为嵌套有序列表（`a. b. c.`），每个另起一行、渲染清晰。**工作流三**：step2 补「官网投递可能无邮件」说明；投递台账与额外处理改每项一行的嵌套有序列表（mermaid 同步）。
 - [LATEST](./LATEST.md) 补 2026-08-18 索引（`updated` 一并补），落实「每次更新自动同步元数据 + CHANGELOG + LATEST」纪律。
 
 ## 2026-08-07 · 站点导航去除 status 徽章「!」
