@@ -12,7 +12,7 @@ status: 草稿
 > - 范围：求职领域包（V1 第一个产品路径）的细化数据模型
 > - 关联：[DATA_MODEL_V2](../DATA_MODEL_V2.md)、[求职助理 PRD](../prd/job-seeking.md)、[ADR-0023 图表归档位置](../adr/0023-diagram-placement.md)
 
-> **本篇是 `DATA_MODEL_V2.md` 在求职领域的细化草稿**，不重复 V2 已定义的内核表（USER / CHAT_THREAD / EVENT / FACT / PERSON / ORGANIZATION / SKILL …），只在其之上**扩展求职领域包**，并补完工作流五～七所需的新表。V2 仍为内核权威；本篇经评审后将回流进 V2。
+> **本篇是 `DATA_MODEL_V2.md` 在求职领域的细化草稿**，不重复 V2 已定义的内核表（USER / CHAT_THREAD / EVENT / FACT / PERSON / ORGANIZATION / SKILL …），只在其之上**扩展求职领域包**，并补完工作流四、六、七所需的新表（原工作流五，现已重排为工作流四）。V2 仍为内核权威；本篇经评审后将回流进 V2。
 > 数据是所有流程的核心——本篇以 **ER 图 + 数据流（每个工作流读写哪些表）** 为主线，先定数据形状，再谈行为。
 
 ---
