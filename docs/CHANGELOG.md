@@ -20,6 +20,9 @@ status: 现行有效
 - [PRD：job-seeking](./prd/job-seeking.md) 工作流一～多处的 `(a)(b)(c)` 子项改为嵌套有序列表（`a. b. c.`），每个另起一行、渲染清晰。**工作流三**：step2 补「官网投递可能无邮件」说明；投递台账与额外处理改每项一行的嵌套有序列表（mermaid 同步）。**工作流四 / 五对调（物理位置 + 编号一并调整）**：面试准备（原工作流五，更重要）上移为「工作流四」，面试信息追踪（原工作流四）下移为「工作流五」；VISION 经历库引用、PRD 工作流八 多轮串联注记、DATA_MODEL_V3 新表归属同步改为工作流五。工作流九/十一/十四/十五 与 FR-21/FR-22 的内联字段枚举拆分为独立子项，便于浏览。
 - [LATEST](./LATEST.md) 补 2026-08-18 索引（`updated` 一并补），落实「每次更新自动同步元数据 + CHANGELOG + LATEST」纪律。
 
+- [Design：job-seeking-graph-architecture](./design/job-seeking-graph-architecture.md) 新建（草稿）：将 PRD 工作流翻译为引擎 Graph 的编排设计；先落地 Graph 1（JD 解析 + 确认 + 入库，对应工作流一 step 1–5），术语对齐 ADR-0018（Side Effect=Action、Interrupt=LangGraph interrupt、Conditional Edge=分支 Edge），不涉及数据模型（见 DATA_MODEL_V2/V3）。**已拍板并落地**：范围=工作流一～四；一个工作流可拆多 Graph（边界=独立触发事件）；Step 6 想法记录=Side Effect（非独立 Graph）；Reminder 固定 10/20/30 天；Node 1 Parse JD=纯 LLM 抽取（多模态归一在 Graph 外接入层）；Node 3 User Confirm=一次 HITL interrupt（复用 Node 2 缺失分支机制）。新增 §3.5（Step 6=Side Effect）与 Graph 2–5 占位。**当前暂停点**：等你讲工作流一第二部分（Graph 2）后再画工作流二～四。
+- [GLOSSARY](./GLOSSARY.md) 新增 Side Effect / Conditional Edge / Graph Lifecycle 词条；Interrupt 指明复用 LangGraph interrupt/resume（HITL）。
+
 ## 2026-08-07 · 站点导航去除 status 徽章「!」
 - 根因：MkDocs Material 将 frontmatter 的 `status`（如 `现行有效` / `草稿` / `accepted`）当作内置「页面状态」徽章渲染到左侧导航，未知状态值回退成「!」图标。该 `status` 字段是站点治理元数据（见 [STYLE §6.3](../STYLE.md)），供 AI 过滤，不应被主题渲染。
 - 修法：新增 [docs/css/extra.css](./css/extra.css) 对 `.md-status` 设 `display:none`，并在 [mkdocs.yml](../mkdocs.yml) 注册 `extra_css`；仅隐藏视觉标记，保留文档内 `status` 数据本身。不影响任何正文内容。

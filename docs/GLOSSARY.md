@@ -1,6 +1,7 @@
 ---
 type: reference
 status: 现行有效
+updated: 2026-08-18
 ---
 
 # Alfred 领域词汇表（Glossary / Ubiquitous Language）
@@ -23,6 +24,9 @@ status: 现行有效
 | **Subgraph** | 子图 | 被外层 Graph 包进去复用的 Domain Graph 或跨域 subgraph。 | LangGraph `add_subgraph` |
 | **Outer Router** | 外层路由 | 把多个 Domain Graph 编排成总流的顶层 Graph；决策"进哪个领域图"。 | `alfred/graphs/root.py` |
 | **Edge** | 边 | Graph 中连接两个 Node 的有向弧，可带条件（conditional edge）实现分支 / 并行 / 循环。 | `StateGraph.add_edge` / `add_conditional_edges` |
+| **Conditional Edge** | 条件边 | 带条件的 Edge，按 `AlfredState` 分支到不同 Node（齐全 / 缺失 / 轮次…）。 | `StateGraph.add_conditional_edges` |
+| **Side Effect** | 副作用 | Node 主逻辑完成后触发的**附加 Action**（如建 Reminder、派生 fact）。不是新原语，即"一组 Action"。 | `services/executor.py` Action handler |
+| **Graph Lifecycle** | 图生命周期 | Graph 的「起点（独立触发事件）→ 终点（完成）」；中途可经 Interrupt 暂停后 `resume`，同源 `thread_id` 继续。 | `alfred/graphs/<domain>.py` |
 | **Manifest** | 清单 | Node 的声明式配置文件（`node.yaml`）。描述：身份（name/domain/version）、路由（match）、分块（chunking）、prompt、output_schema。**只做配置，不做控制流**。 | `alfred/nodes/<name>/node.yaml` |
 | **State** | 状态 | LangGraph Graph 在运行期间携带的共享状态（TypedDict）。所有 Node 读它、改它。 | `AlfredState`（见 [GRAPH.md](./GRAPH.md)）|
 | **ui_intent** | UI 意图 | Graph 产出的"客户端下一帧该渲染什么"结构（capture 表单 / 确认预览 / 列表 / 多模态提示）。引擎**无头**，不关心客户端形态。 | `AlfredState["ui_intent"]` |

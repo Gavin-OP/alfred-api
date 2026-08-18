@@ -16,6 +16,7 @@ updated: 2026-08-18
 - [DATA_MODEL_V2](./DATA_MODEL_V2.md) / [DATA_MODEL_V3](./DATA_MODEL_V3.md) — 元信息块渲染修复 + 最后更新同步
 - [UPLOAD_WORKFLOW](./UPLOAD_WORKFLOW.md) / [GRAPH](./GRAPH.md) — 元信息块渲染修复 + 最后更新同步
 - [design-sessions](./design-sessions/2026-08-03-v1-redesign.md) — 元信息块渲染修复
+- [Design：job-seeking-graph-architecture](./design/job-seeking-graph-architecture.md) — Graph 编排框架 + Graph 1；拍板：范围=工作流一～四、一工作流可拆多 Graph、Step 6=Side Effect、Reminder 固定 10/20/30 天、Node1 纯 LLM 抽取、Node3 确认=interrupt；新增 §3.5 + Graph 2–5 占位（暂停待 Graph 2）
 
 ## 2026-08-06
 
