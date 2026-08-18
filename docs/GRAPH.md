@@ -8,7 +8,7 @@ status: 现行有效
 > **元信息**
 >
 > - 状态：现行有效
-> - 最后更新：2026-08-05
+> - 最后更新：2026-08-18
 > - 范围：引擎本体的权威规范（三层抽象落地 / Node / Graph / Action）
 > - 关联：[ADR-0018](./adr/0018-engine-terminology-node-graph-action.md)、[ADR-0019](./adr/0019-graph-as-python.md)、[GLOSSARY](./GLOSSARY.md)
 

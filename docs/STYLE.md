@@ -1,6 +1,7 @@
 ---
 type: contributing
 status: 现行有效
+updated: 2026-08-18
 ---
 
 # 文档规范（STYLE）

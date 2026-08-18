@@ -1,7 +1,7 @@
 ---
 type: vision
 status: 现行有效
-updated: 2026-08-06
+updated: 2026-08-18
 scope: 产品最上位愿景、分期与核心命题（北极星，独立于 PRD）
 related:
   - ./adr/0016-domain-agnostic-kernel.md
@@ -13,7 +13,7 @@ related:
 > **元信息**
 >
 > - 状态：现行有效
-> - 最后更新：2026-08-06
+> - 最后更新：2026-08-18
 > - 范围：产品最上位愿景、分期与核心命题
 > - 关联：[ADR-0016 领域无关内核](./adr/0016-domain-agnostic-kernel.md)、[ADR 总览](./adr/README.md)
 
