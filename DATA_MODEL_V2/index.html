@@ -1,0 +1,3676 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Alfred 个人 AI 求职助理 — 产品需求、数据模型与架构决策文档站">
+      
+      
+      
+      
+        <link rel="prev" href="../prd/job-seeking/">
+      
+      
+        <link rel="next" href="../DATA_MODEL_V3/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>数据模型 V2 - Alfred · 产品设计文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#alfred-v2v1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="Alfred · 产品设计文档" class="md-header__button md-logo" aria-label="Alfred · 产品设计文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Alfred · 产品设计文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              数据模型 V2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Alfred · 产品设计文档" class="md-nav__button md-logo" aria-label="Alfred · 产品设计文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Alfred · 产品设计文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    最新更新 (Latest)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    最新更新 (Latest)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LATEST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    最近更新索引
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    产品愿景 (VISION)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    产品愿景 (VISION)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../VISION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VISION
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    产品需求 PRD
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    产品需求 PRD
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    分区说明与索引
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prd/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD 模板
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prd/job-seeking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    求职助理用户流程
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--草稿"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设计文档 (Design)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设计文档 (Design)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 V2
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 V2
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 旧 → 新 重命名映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 旧 → 新 重命名映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-2026-08-04adr-0018-0019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 引擎术语重构（2026-08-04，ADR-0018 / 0019）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 设计铁律（写代码前必读）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-erkernel-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 全景 ER（kernel 与 domain 分层）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 内核表（领域无关，V3 管家直接复用）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 内核表（领域无关，V3 管家直接复用）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-event-append-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 event — 行为真相（append-only）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-fact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 fact — 状态真相（物化快照）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-person-organization-occupation-skill-skill_alias-location-location_alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 person / organization / occupation / skill / skill_alias / location / location_alias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-chat_thread-chat_segment-chat_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 chat_thread / chat_segment / chat_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-memory-reminder-nudge-nudge_rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 memory / reminder / nudge / nudge_rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 求职领域包（V1 专属）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 求职领域包（V1 专属）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-job_posting-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 job_posting（原 position）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-position_requirement-positionrequirements-jsonb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 position_requirement（替代 position.requirements JSONB）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-application-interview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 application / interview（强类型，独立）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-experience-experience_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 experience / experience_source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-user_skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 user_skill（我的技能）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-document_asset-document_version-document_version_experience-document_version_fact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 document_asset / document_version / document_version_experience / document_version_fact
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-interaction-coffee_chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 interaction（泛化接触记录，替代窄 coffee_chat）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-habit-media-progressadr-0021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 新增领域包（habit / media / progress，ADR-0021）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 新增领域包（habit / media / progress，ADR-0021）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-habit-habit_log-tracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 habit / habit_log（习惯 Tracker）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-work_item-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 work_item / review（作品 / 书影音）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-project-progress_log-trip_day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 project / progress_log / trip_day（进度 / 项目 / 旅行）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 关键查询模式
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 迁移影响面（实现期）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_MODEL_V3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 V3（求职领域细化 · 草稿）
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--草稿"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GRAPH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引擎规范 (GRAPH)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UPLOAD_WORKFLOW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    捕获与分发工作流
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-sessions/2026-08-03-v1-redesign/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    重新设计会话 2026-08-03
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--已归档"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考 (Reference)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考 (Reference)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表 (GLOSSARY)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    变更记录 (CHANGELOG)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构决策 ADR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    架构决策 ADR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    索引
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 模板
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--proposed"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0001-postgresql-over-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 PostgreSQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0002-two-repositories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 双仓库
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0003-taro-react-tri-platform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0003 Taro 三端
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0004-scriptable-skill-directories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 可脚本化技能目录
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0005-chunked-pipeline-for-long-input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0005 长输入分块
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0006-defer-latex-pdf-compilation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0006 推迟 LaTeX 编译
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--superseded"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0007-naming-alfred/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0007 命名 Alfred
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0008-services-as-single-write-path/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0008 services 唯一落库
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0009-naming-job-posting-occupation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0009 命名 job_posting/occupation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0010-event-fact-dual-truth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0010 Event/Fact 双真相
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0011-multi-tenant-boundary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0011 多用户边界
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0012-orchestration-langgraph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0012 编排 LangGraph
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0013-context-segments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0013 上下文分段
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0014-resume-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0014 简历溯源
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0015-location-entity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0015 Location 实体
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0016-domain-agnostic-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0016 领域无关内核
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0017-organization-generalization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0017 Organization 泛化
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0018-engine-terminology-node-graph-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0018 引擎术语 Node/Graph/Action
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0019-graph-as-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0019 图即 Python
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0020-four-layer-dispatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0020 四层分发
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0021-domain-graph-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0021 领域图包
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0022-documentation-taxonomy-prd-design-adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0022 文档治理 PRD/Design/ADR
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0023-diagram-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0023 图表归档位置
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    协作与贡献 (Contributing)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    协作与贡献 (Contributing)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../STYLE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文档规范 (STYLE)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/dev-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    开发工作流
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/domain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    领域文档
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/issue-tracker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue 追踪
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/triage-labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    分层标签
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    可视化 (HTML)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    可视化 (HTML)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diagrams/workflow.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    上传工作流图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页原型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diagrams/changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    变更日志图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    历史基线 v0.1 (已作废)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    历史基线 v0.1 (已作废)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    说明
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/SPEC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SPEC 总体设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 契约
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/SKILLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills 规范
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    路线图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/DATA_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 (旧)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/v0.1-baseline/UPLOAD_WORKFLOW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    上传工作流
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 旧 → 新 重命名映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 旧 → 新 重命名映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-2026-08-04adr-0018-0019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 引擎术语重构（2026-08-04，ADR-0018 / 0019）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 设计铁律（写代码前必读）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-erkernel-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 全景 ER（kernel 与 domain 分层）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 内核表（领域无关，V3 管家直接复用）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 内核表（领域无关，V3 管家直接复用）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-event-append-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 event — 行为真相（append-only）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-fact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 fact — 状态真相（物化快照）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-person-organization-occupation-skill-skill_alias-location-location_alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 person / organization / occupation / skill / skill_alias / location / location_alias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-chat_thread-chat_segment-chat_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 chat_thread / chat_segment / chat_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-memory-reminder-nudge-nudge_rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 memory / reminder / nudge / nudge_rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 求职领域包（V1 专属）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 求职领域包（V1 专属）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-job_posting-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 job_posting（原 position）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-position_requirement-positionrequirements-jsonb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 position_requirement（替代 position.requirements JSONB）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-application-interview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 application / interview（强类型，独立）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-experience-experience_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 experience / experience_source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-user_skill" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 user_skill（我的技能）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-document_asset-document_version-document_version_experience-document_version_fact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 document_asset / document_version / document_version_experience / document_version_fact
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-interaction-coffee_chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 interaction（泛化接触记录，替代窄 coffee_chat）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-habit-media-progressadr-0021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 新增领域包（habit / media / progress，ADR-0021）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 新增领域包（habit / media / progress，ADR-0021）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-habit-habit_log-tracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 habit / habit_log（习惯 Tracker）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-work_item-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 work_item / review（作品 / 书影音）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-project-progress_log-trip_day" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 project / progress_log / trip_day（进度 / 项目 / 旅行）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 关键查询模式
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 迁移影响面（实现期）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="alfred-v2v1">Alfred 数据模型 V2（V1 重新设计定稿）<a class="headerlink" href="#alfred-v2v1" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>元信息</strong></p>
+<ul>
+<li>状态：现行有效</li>
+<li>最后更新：2026-08-18</li>
+<li>范围：V1 重新设计的权威数据模型</li>
+<li>关联：<a href="../adr/">ADR-0009~0017</a>、<a href="../design-sessions/2026-08-03-v1-redesign/">重新设计会话</a></li>
+</ul>
+<p><strong>这是 V1 重新设计的权威数据模型。</strong> 旧 <code>DATA_MODEL.md</code> 已过时，仅供对照。
+决策背景与逐条论证见 <a href="../design-sessions/2026-08-03-v1-redesign/">design-sessions/2026-08-03-v1-redesign.md</a>；每个决策有对应 ADR（0009–0017）。
+数据库：PostgreSQL 16 ｜ ORM：SQLModel ｜ 迁移：Alembic ｜ 编排：LangGraph（见 ADR-0012）。</p>
+</blockquote>
+<hr />
+<h2 id="0">0. 旧 → 新 重命名映射<a class="headerlink" href="#0" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>旧（DATA_MODEL.md）</th>
+<th>新（V2）</th>
+<th>ADR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td><code>job_posting</code></td>
+<td><a href="../adr/0009-naming-job-posting-occupation/">0009</a></td>
+</tr>
+<tr>
+<td><code>position.job_family</code></td>
+<td><code>occupation</code></td>
+<td><a href="../adr/0009-naming-job-posting-occupation/">0009</a></td>
+</tr>
+<tr>
+<td><code>company</code></td>
+<td><code>organization</code></td>
+<td><a href="../adr/0017-organization-generalization/">0017</a></td>
+</tr>
+<tr>
+<td><code>tag.namespace = 'skill'</code></td>
+<td><code>skill</code> 表 + <code>user_skill</code></td>
+<td><a href="../adr/0010-event-fact-dual-truth/">0010</a>、<a href="../adr/0011-multi-tenant-boundary/">0011</a></td>
+</tr>
+<tr>
+<td><code>event</code>（带 kind 的时间轴表）</td>
+<td><code>event</code>（行为真相）+ <code>interaction</code>/<code>interview</code> 强类型表</td>
+<td><a href="../adr/0010-event-fact-dual-truth/">0010</a></td>
+</tr>
+<tr>
+<td><code>coffee_chat</code> 概念</td>
+<td><code>interaction</code>（kind 枚举，泛化）</td>
+<td><a href="../adr/0010-event-fact-dual-truth/">0010</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="01-2026-08-04adr-0018-0019">0.1 引擎术语重构（2026-08-04，ADR-0018 / 0019）<a class="headerlink" href="#01-2026-08-04adr-0018-0019" title="Permanent link">&para;</a></h3>
+<p>另有一组<strong>引擎层</strong>重命名（非数据表）：原 "Skill" 目录改为 <strong>Node</strong>；多 Node 经 Edge 组成 <strong>Graph</strong>（Python 声明，见 ADR-0019）；Node 内部原子写原语 <strong>Action</strong> 不变。数据模型里的 <code>skill</code> 表不参与此次改名，仍指能力词表。</p>
+<table>
+<thead>
+<tr>
+<th>旧（引擎）</th>
+<th>新（引擎）</th>
+<th>ADR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Skill</code> 目录（含 prompt+output_schema+actions）</td>
+<td><code>Node</code>（处理单元）</td>
+<td><a href="../adr/0018-engine-terminology-node-graph-action/">0018</a></td>
+</tr>
+<tr>
+<td>—（Node 之间原本无真控制流）</td>
+<td><code>Graph</code>（LangGraph <code>StateGraph</code>，Python 声明）</td>
+<td><a href="../adr/0018-engine-terminology-node-graph-action/">0018</a>、<a href="../adr/0019-graph-as-python/">0019</a></td>
+</tr>
+<tr>
+<td><code>ACTION_KINDS</code> / executor handler</td>
+<td><code>Action</code>（不变）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1">1. 设计铁律（写代码前必读）<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>双真相（ADR-0010）</strong>：行为 → <code>event</code>（append-only 不可变）；状态 → <code>fact</code>（物化快照，<code>valid_from→valid_to</code>）。二者并列互补，经 <code>fact.source_event_id</code> 双向可追。<code>application</code>/<code>interview</code> 是强类型表，Event 只记"行为发生"。</li>
+<li><strong>Action 唯一写入口（ADR-0012）</strong>：LangGraph 节点落库一律走 <code>ActionExecutor</code>，保留 <code>dry_run/commit</code> 与 Fake-provider 可测。</li>
+<li><strong>租户边界（ADR-0011）</strong>：私有表带 <code>user_id</code>；共享实体/词表（<code>user</code>/<code>person</code>/<code>organization</code>/<code>occupation</code>/<code>skill</code>/<code>location</code>）不带。</li>
+<li><strong>强类型优先（ADR-0010）</strong>：可归类数据进强类型表，<code>memory</code> 仅收容残余。</li>
+<li><strong>简历可解释（ADR-0014）</strong>：bullet 软引用 <code>fact</code>，渲染加 footnote，校验阻断无源。</li>
+<li><strong>内核领域无关（ADR-0016）</strong>：内核表不带求职专有字段；新领域（健康/记账）未来平行加领域包。</li>
+<li><strong>枚举用 varchar + StrEnum</strong>（沿用现有约定），不用 PG 原生 enum。</li>
+</ol>
+<hr />
+<h2 id="2-erkernel-domain">2. 全景 ER（kernel 与 domain 分层）<a class="headerlink" href="#2-erkernel-domain" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>erDiagram
+    %% ---- 领域无关内核 ----
+    USER ||--o{ CHAT_THREAD : "拥有"
+    CHAT_THREAD ||--o{ CHAT_SEGMENT : "分段"
+    CHAT_THREAD ||--o{ CHAT_MESSAGE : "含"
+    CHAT_MESSAGE ||--o{ ATTACHMENT : "含(方向化)"
+    CHAT_MESSAGE ||--o{ EVENT : "触发行为"
+    EVENT ||--o| FACT : "物化为状态"
+    PERSON }o--o{ ORGANIZATION : "任职于"
+    ORGANIZATION ||--o{ JOB_POSTING : "发布"
+    OCCUPATION ||--o{ JOB_POSTING : "属于"
+    LOCATION ||--o{ JOB_POSTING : "位于"
+    LOCATION ||--o{ LOCATION_ALIAS : "别名"
+    SKILL ||--o{ SKILL_ALIAS : "别名"
+    USER ||--o{ FACT : "私有状态"
+    USER ||--o{ EVENT : "私有行为"
+    USER ||--o{ MEMORY : "私有记忆"
+    USER ||--o{ REMINDER : "手设提醒"
+    USER ||--o{ NUDGE : "系统提醒"
+
+    %% ---- 求职领域包 ----
+    USER ||--o{ APPLICATION : "私有投递"
+    USER ||--o{ USER_SKILL : "我的技能"
+    USER ||--o{ EXPERIENCE : "我的经历"
+    OCCUPATION }o--o{ USER_SKILL : "跨用户可比"
+    SKILL ||--o{ USER_SKILL : "技能定义"
+    SKILL ||--o{ POSITION_REQUIREMENT : "JD所需"
+    JOB_POSTING ||--o{ APPLICATION : "投递"
+    JOB_POSTING ||--o{ POSITION_REQUIREMENT : "要求"
+    APPLICATION ||--o{ INTERVIEW : "轮次"
+    APPLICATION }o--o| DOCUMENT_VERSION : "所用CV"
+    APPLICATION }o--o| DOCUMENT_VERSION : "所用CL"
+    EXPERIENCE ||--o{ EXPERIENCE_SOURCE : "来源"
+    DOCUMENT_ASSET ||--o{ DOCUMENT_VERSION : "版本链"
+    DOCUMENT_VERSION ||--o{ DOCUMENT_VERSION_EXPERIENCE : "引用经历"
+    DOCUMENT_VERSION ||--o{ DOCUMENT_VERSION_FACT : "溯源fact"
+    FACT ||--o{ DOCUMENT_VERSION_FACT : "被引用"
+    PERSON ||--o{ INTERVIEW_INTERVIEWER : "面试官"
+    INTERVIEW ||--o{ INTERVIEW_INTERVIEWER : ""
+    PERSON ||--o{ INTERACTION_PERSON : "参与"
+    INTERACTION ||--o{ INTERACTION_PERSON : "多人"
+
+    %% ---- 习惯领域包（ADR-0021） ----
+    USER ||--o{ HABIT : "定义"
+    HABIT ||--o{ HABIT_LOG : "打卡"
+    LOCATION ||--o{ HABIT_LOG : "场所"
+
+    %% ---- 作品领域包（ADR-0021） ----
+    USER ||--o{ WORK_ITEM : "记录"
+    WORK_ITEM ||--o{ REVIEW : "观后感/读后感"
+    LOCATION ||--o{ WORK_ITEM : "地点"
+
+    %% ---- 进度/旅行领域包（ADR-0021） ----
+    USER ||--o{ PROJECT : "管理(kind)"
+    PROJECT ||--o{ PROJECT : "父子"
+    PROJECT ||--o{ PROGRESS_LOG : "日志"
+    PROJECT ||--o{ TRIP_DAY : "按天"
+    LOCATION ||--o{ TRIP_DAY : "足迹"</code></pre>
+<hr />
+<h2 id="3-v3">3. 内核表（领域无关，V3 管家直接复用）<a class="headerlink" href="#3-v3" title="Permanent link">&para;</a></h2>
+<h3 id="31-event-append-only">3.1 <code>event</code> — 行为真相（append-only）<a class="headerlink" href="#31-event-append-only" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>uuid PK</td>
+<td></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>varchar</td>
+<td><code>FACT_DECLARED</code>|<code>APPLICATION_SUBMITTED</code>|<code>INTERACTION_HAPPENED</code>|<code>SKILL_EXTRACTED</code>|<code>INTERVIEW_SCHEDULED</code>|<code>RESUME_GENERATED</code>|<code>CUSTOM</code></td>
+</tr>
+<tr>
+<td><code>actor_user_id</code></td>
+<td>uuid</td>
+<td><strong>私有</strong>（行为主体）</td>
+</tr>
+<tr>
+<td><code>occurred_at</code></td>
+<td>timestamptz</td>
+<td></td>
+</tr>
+<tr>
+<td><code>source_type</code></td>
+<td>varchar</td>
+<td><code>conversation</code>|<code>import</code>|<code>api</code></td>
+</tr>
+<tr>
+<td><code>source_ref_id</code></td>
+<td>uuid</td>
+<td>指向 chat_message / import 等</td>
+</tr>
+<tr>
+<td><code>payload</code></td>
+<td>jsonb</td>
+<td>指向本次创建的实体 <code>{fact_id?, person_id?, application_id?, ...}</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>不可变</strong>：写入后不更新、不软删。</p>
+<h3 id="32-fact">3.2 <code>fact</code> — 状态真相（物化快照）<a class="headerlink" href="#32-fact" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>uuid PK</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>varchar</td>
+<td><code>skill_declaration</code>|<code>relationship</code>|<code>attribute</code>|<code>custom</code></td>
+</tr>
+<tr>
+<td><code>valid_from</code></td>
+<td>timestamptz</td>
+<td></td>
+</tr>
+<tr>
+<td><code>valid_to</code></td>
+<td>timestamptz NULL</td>
+<td>纠错时封口旧值</td>
+</tr>
+<tr>
+<td><code>subject_ref</code> / <code>object_ref</code></td>
+<td>uuid</td>
+<td>指向 person/skill/organization</td>
+</tr>
+<tr>
+<td><code>proficiency</code></td>
+<td>varchar NULL</td>
+<td>技能类 Fact 的量表（定义在 fact 内）</td>
+</tr>
+<tr>
+<td><code>source_event_id</code></td>
+<td>uuid FK → event</td>
+<td>双向追溯</td>
+</tr>
+<tr>
+<td><code>source_conversation_id</code></td>
+<td>uuid FK → chat_message</td>
+<td></td>
+</tr>
+<tr>
+<td><code>owner_user_id</code></td>
+<td>uuid</td>
+<td><strong>私有</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-person-organization-occupation-skill-skill_alias-location-location_alias">3.3 <code>person</code> / <code>organization</code> / <code>occupation</code> / <code>skill</code> / <code>skill_alias</code> / <code>location</code> / <code>location_alias</code><a class="headerlink" href="#33-person-organization-occupation-skill-skill_alias-location-location_alias" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>person</code>：保持 slug 唯一标识（"每一个人都要有 unique identifier"）。</li>
+<li><code>organization</code>（原 <code>company</code>）：加 <code>kind</code> 枚举（company/school/club/ngo/government/fund/open_source_office/other）。<strong>共享表</strong>。</li>
+<li><code>occupation</code>：职位大类，跨公司可比。<strong>共享表</strong>。</li>
+<li><code>skill</code>：<strong>共享词表</strong>（"Excel" 全库只定义一次）；<code>skill_alias</code> 反查合并。</li>
+<li><code>location</code> + <code>location_alias</code>：结构化地点 + 别名（香港/HK/Hong Kong → 同行）。<strong>共享表</strong>。</li>
+</ul>
+<h3 id="34-chat_thread-chat_segment-chat_message">3.4 <code>chat_thread</code> / <code>chat_segment</code> / <code>chat_message</code><a class="headerlink" href="#34-chat_thread-chat_segment-chat_message" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>chat_thread</code>：每用户一个常驻。</li>
+<li><code>chat_segment</code>（新增）：<code>id, thread_id, title, started_at, ended_at, status(active|archived|merged), summary_md, user_id</code>。</li>
+<li><code>chat_message</code>：双方全量原话 + sequence + <code>segment_id</code> 外键化；保留软丢弃。</li>
+</ul>
+<h3 id="35-memory-reminder-nudge-nudge_rule">3.5 <code>memory</code> / <code>reminder</code> / <code>nudge</code> / <code>nudge_rule</code><a class="headerlink" href="#35-memory-reminder-nudge-nudge_rule" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>memory</code>：残余非结构化（kind=fact/preference/intent/context）。<strong>私有</strong>。</li>
+<li><code>reminder</code>：用户<strong>手设</strong>提醒。</li>
+<li><code>nudge_rule</code> + <code>nudge</code>：<strong>系统主动</strong>生成的提醒（与 reminder 分表）。<code>nudge</code> 预留 <code>channel</code>(email/digest/miniprogram) 供未来扩展（M2 账本本轮 defer）。<strong>私有</strong>。</li>
+</ul>
+<hr />
+<h2 id="4-v1">4. 求职领域包（V1 专属）<a class="headerlink" href="#4-v1" title="Permanent link">&para;</a></h2>
+<h3 id="41-job_posting-position">4.1 <code>job_posting</code>（原 <code>position</code>）<a class="headerlink" href="#41-job_posting-position" title="Permanent link">&para;</a></h3>
+<p>加 <code>occupation_id</code> FK、<code>location_id</code> FK（替代 <code>location</code> 字符串）、<code>required_documents</code>、<code>posted_at</code>；保留 <code>fingerprint</code>(UNIQUE)、薪资/签证/工作模式等字段。<code>deadline_at</code> 驱动提醒。</p>
+<h3 id="42-position_requirement-positionrequirements-jsonb">4.2 <code>position_requirement</code>（替代 <code>position.requirements</code> JSONB）<a class="headerlink" href="#42-position_requirement-positionrequirements-jsonb" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>列</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>uuid PK</td>
+<td></td>
+</tr>
+<tr>
+<td><code>position_id</code></td>
+<td>uuid FK</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>varchar</td>
+<td><code>skill</code>|<code>qualification</code>|<code>experience</code></td>
+</tr>
+<tr>
+<td><code>skill_id</code></td>
+<td>uuid FK NULL → skill</td>
+<td></td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>varchar</td>
+<td>要求原文（可追溯 JD 原句）</td>
+</tr>
+<tr>
+<td><code>importance</code></td>
+<td>varchar</td>
+<td><code>must</code>|<code>nice</code></td>
+</tr>
+<tr>
+<td><code>source_sentences</code></td>
+<td>jsonb</td>
+<td>JD 原句追溯</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-application-interview">4.3 <code>application</code> / <code>interview</code>（强类型，独立）<a class="headerlink" href="#43-application-interview" title="Permanent link">&para;</a></h3>
+<p>保持现有状态机与外键。<code>application</code> 的"投递行为"同时写一条 <code>event(APPLICATION_SUBMITTED)</code>；细节仍在 <code>application</code>。投递凭证用 <code>application_evidence(application_id, attachment_id, role)</code>（截图是凭证非普通附件）。<code>interview</code> 每轮一条。</p>
+<h3 id="44-experience-experience_source">4.4 <code>experience</code> / <code>experience_source</code><a class="headerlink" href="#44-experience-experience_source" title="Permanent link">&para;</a></h3>
+<p>一条经历一行，仅存 <code>raw_input_md</code>（口语稿）。多条语音经 <code>experience_source</code> 挂到同一条经历。AI 优化稿不存经历，按岗位存入 <code>document_version_experience.rendered_bullets</code>。</p>
+<h3 id="45-user_skill">4.5 <code>user_skill</code>（我的技能）<a class="headerlink" href="#45-user_skill" title="Permanent link">&para;</a></h3>
+<p><code>id, user_id, skill_id, proficiency(1-5)</code>。是 <code>fact</code> 中"技能声明"的查询投影（ADR-0010）。支撑三大匹配查询：① 哪些岗位需我的技能 X ② 我凭 X 能投哪些岗位 ③ 我的技能 vs 岗位要求匹配度（matched/gap）。</p>
+<h3 id="46-document_asset-document_version-document_version_experience-document_version_fact">4.6 <code>document_asset</code> / <code>document_version</code> / <code>document_version_experience</code> / <code>document_version_fact</code><a class="headerlink" href="#46-document_asset-document_version-document_version_experience-document_version_fact" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>document_version</code> 改存<strong>结构化 Markdown 主信息</strong> + <code>template_ref</code> + <code>checksum</code>；编译时套 <code>resume_asset.base_template</code> 生成 PDF。版本复用基于全局 checksum（不限最新版），<code>based_on_id</code> 指向用户显式选择的父版本。</li>
+<li><code>document_version_fact</code>（新增）：简历 bullet → <code>fact</code> 软引用，支撑渲染 footnote + 校验阻断无源（ADR-0014）。</li>
+</ul>
+<h3 id="47-interaction-coffee_chat">4.7 <code>interaction</code>（泛化接触记录，替代窄 <code>coffee_chat</code>）<a class="headerlink" href="#47-interaction-coffee_chat" title="Permanent link">&para;</a></h3>
+<p><code>id, user_id, kind(coffee_chat|meal|hangout|call|networking_event|info_session|referral_talk), occurred_at, summary_md</code>；多人场景用 <code>interaction_person</code> 关系表。其"发生"行为写 <code>event(INTERACTION_HAPPENED)</code>。</p>
+<hr />
+<h2 id="5-habit-media-progressadr-0021">5. 新增领域包（habit / media / progress，ADR-0021）<a class="headerlink" href="#5-habit-media-progressadr-0021" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>本轮（2026-08-04）在「共享基座 + 领域扩展表」路线下新增三领域，先定模型、逐步实现。job 现有表（§4）原样保留并包成第一个 Domain Graph。</p>
+</blockquote>
+<h3 id="51-habit-habit_log-tracker">5.1 <code>habit</code> / <code>habit_log</code>（习惯 Tracker）<a class="headerlink" href="#51-habit-habit_log-tracker" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>habit</code>：<code>id, user_id, name, kind(health|sport|study|life|other), cadence(daily|weekly|custom), goal_md, created_at, archived_at</code>。习惯定义。</li>
+<li><code>habit_log</code>：<code>id, user_id, habit_id, occurred_at, note_md, location_id NULL → location</code>。打卡记录；<strong>可挂 <code>location_id</code></strong>（如「在某某球馆打乒乓球」）。</li>
+</ul>
+<h3 id="52-work_item-review">5.2 <code>work_item</code> / <code>review</code>（作品 / 书影音）<a class="headerlink" href="#52-work_item-review" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>work_item</code>：<code>id, user_id, kind(book|movie|drama|game|music|other), title, creator_md, location_id NULL → location, started_at, finished_at, status(wish|doing|done), rating(1-5) NULL</code>。书/影/剧/游戏等；<strong>可挂 <code>location_id</code></strong>（如「在某某书店读完」）。</li>
+<li><code>review</code>：<code>id, user_id, work_item_id, rating(1-5), content_md, reviewed_at</code>。读后感/观后感。</li>
+</ul>
+<h3 id="53-project-progress_log-trip_day">5.3 <code>project</code> / <code>progress_log</code> / <code>trip_day</code>（进度 / 项目 / 旅行）<a class="headerlink" href="#53-project-progress_log-trip_day" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>project</code>：<code>id, user_id, kind(vlog|project|trip|other), title, parent_id NULL → project（父子）, status, started_at, due_at, summary_md</code>。<code>kind='trip'</code> 即旅行；支持父子（大项目拆子项目）。</li>
+<li><code>progress_log</code>：<code>id, user_id, project_id, occurred_at, note_md, progress_pct NULL</code>。进度日志（vlog 第几集、项目里程碑）。</li>
+<li><code>trip_day</code>：<code>id, user_id, project_id(kind=trip), day_date, location_id → location, note_md</code>。旅行按天挂 <code>location_id</code>，实现「今天去哪/明天去哪」。</li>
+</ul>
+<blockquote>
+<p><strong>旅行归 progress</strong>：不单独设 travel 领域；<code>project.kind='trip'</code> + <code>trip_day</code> 表达，靠共享 <code>location</code> 与 job/habit/media 的地点统一挂钩。</p>
+</blockquote>
+<h2 id="6">6. 关键查询模式<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>技能匹配</strong>：<code>user_skill ⋈ skill ⋈ position_requirement</code> 三表 JOIN（均带索引）。</li>
+<li><strong>简历溯源</strong>：渲染时经 <code>document_version_fact</code> 拼 footnote；校验器阻断 <code>source</code> 为空的 bullet。</li>
+<li><strong>统一时间轴</strong>：<code>SELECT ... FROM event WHERE actor_user_id=:u ORDER BY occurred_at</code>（行为视角）；状态快照查 <code>fact WHERE owner_user_id=:u AND valid_to IS NULL</code>。</li>
+<li><strong>上下文组装</strong>：<code>context = summary(相关 segment) + 当前 segment 近 N 轮 + 向量/BM25 召回 fact/event</code>（ADR-0013）。</li>
+</ul>
+<hr />
+<h2 id="7">7. 迁移影响面（实现期）<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>重命名</strong>：<code>position→job_posting</code>、<code>company→organization</code>、<code>position.job_family→occupation</code>、<code>tag.namespace='skill'→skill+user_skill</code>。</li>
+<li><strong>新增表</strong>（按依赖顺序）：<code>occupation</code> → <code>job_posting</code> → <code>skill</code> → <code>skill_alias</code> → <code>location</code> → <code>location_alias</code> → <code>position_requirement</code> → <code>experience</code> → <code>experience_source</code> → <code>user_skill</code> → <code>fact</code> → <code>event</code> → <code>chat_segment</code> → <code>interaction</code> → <code>interaction_person</code> → <code>application_evidence</code> → <code>document_version_fact</code> → <code>nudge_rule</code> → <code>nudge</code>。</li>
+<li><strong>语义变更</strong>：<code>event</code> 从时间轴表改为行为真相；旧 <code>event.kind</code> 内容迁移到 <code>interaction</code>/<code>interview</code> 强类型表。</li>
+<li><strong>租户列</strong>：所有私有表加 <code>user_id</code> + 复合唯一约束（<code>UNIQUE(user_id, slug)</code>）。</li>
+<li><strong>每表独立 Alembic revision</strong>，避免巨型迁移。</li>
+<li><strong>新增领域包表</strong>（ADR-0021，先定模型逐步实现）：<code>habit</code> → <code>habit_log</code> → <code>work_item</code> → <code>review</code> → <code>project</code> → <code>progress_log</code> → <code>trip_day</code>；其中 <code>habit_log</code> / <code>work_item</code> / <code>trip_day</code> 挂 <code>location_id</code> 复用共享 <code>location</code>。<code>travel</code> 不单设领域，<code>project.kind='trip'</code> + <code>trip_day</code> 表达。</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "navigation.tracking", "content.code.copy", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>alfred-api · Changelog v0.1.0</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel-2: #1e222e;
+    --line: #2a2f3d;
+    --txt: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #6ea8fe;
+    --green: #3fb950;
+    --amber: #d29922;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, #1b2740 0%, var(--bg) 55%);
+    color: var(--txt);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  header.hero {
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border-radius: var(--radius);
+    padding: 32px 34px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  }
+  .hero h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: .3px; }
+  .hero .sub { color: var(--muted); margin: 0; }
+  .badges { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .badge {
+    font-size: 13px; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--muted);
+  }
+  .badge.ver { color: #fff; background: #2563eb; border-color: #2563eb; font-weight: 600; }
+  .badge.ok { color: var(--green); border-color: #1f5132; background: #11261a; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+  .stat {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px; text-align: center;
+  }
+  .stat .n { font-size: 26px; font-weight: 700; color: var(--accent); }
+  .stat .l { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  section { margin-top: 34px; }
+  h2 { font-size: 20px; border-left: 4px solid var(--accent); padding-left: 12px; margin: 0 0 16px; }
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+  }
+  .card h3 { margin: 0 0 8px; font-size: 15px; color: #fff; }
+  .card p, .card li { font-size: 13.5px; color: var(--muted); margin: 4px 0; }
+  .card ul { margin: 6px 0 0; padding-left: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; background: var(--panel-2); }
+  td .ok { color: var(--green); font-weight: 700; }
+  td .id { color: var(--accent); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px;
+    background: #0c0e14; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: #cdd6e6;
+  }
+  pre {
+    background: #0c0e14; border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.7;
+  }
+  pre code { border: 0; padding: 0; background: none; }
+  .note {
+    border: 1px solid #4a3a14; background: #241c0c; border-radius: 12px; padding: 16px 18px;
+  }
+  .note h3 { margin: 0 0 10px; color: var(--amber); font-size: 15px; }
+  .note li { color: #e8d9b5; font-size: 13.5px; margin: 6px 0; }
+  .pill { display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color:var(--muted); margin-left:6px; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; text-align: center; }
+  @media (max-width: 720px) {
+    .stats, .cards { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div style="background:#2a2410;border-bottom:1px solid #473b14;color:#f3d98a;font-size:13px;padding:9px 16px;text-align:center">⚠️ 本页是 <b>v0.1.0</b> 历史变更记录，已作废。最新变更见 <a href="../CHANGELOG.html" style="color:#ffd97a">CHANGELOG（2026-08-03 V1 重新设计）</a>。本页仅供历史追溯。</div>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>alfred-api</h1>
+    <p class="sub">个人 AI 助理后端 · 变更日志与交付总结</p>
+    <div class="badges">
+      <span class="badge ver">v0.1.0</span>
+      <span class="badge ok">2026-08-02</span>
+      <span class="badge ok">57 tests passing</span>
+      <span class="badge">FastAPI · SQLModel · PostgreSQL 16</span>
+      <span class="badge">TDD · vertical slices</span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n">12/12</div><div class="l">v0.1 需求完成</div></div>
+    <div class="stat"><div class="n">17</div><div class="l">数据表</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">内置技能</div></div>
+    <div class="stat"><div class="n">8</div><div class="l">Action 原语</div></div>
+  </div>
+
+  <section>
+    <h2>需求 Cross-Check（ROADMAP v0.1）</h2>
+    <table>
+      <thead><tr><th>#</th><th>需求</th><th>状态</th><th>落地证据</th></tr></thead>
+      <tbody>
+        <tr><td class="id">1</td><td>项目骨架（uv / docker-compose PG16 / .env / Makefile）</td><td class="ok">✓</td><td>pyproject.toml, docker-compose.yml, Makefile, .env.example</td></tr>
+        <tr><td class="id">2</td><td>配置 + DB session + Alembic 初始化</td><td class="ok">✓</td><td>alfred/config.py, alfred/db.py, alembic（4 个 migration）</td></tr>
+        <tr><td class="id">3</td><td>实体表 + entity_link + 审计 的 SQLModel 与首迁</td><td class="ok">✓*</td><td>17 张表已建；软删除 <code>archived_at</code> 替代独立审计表（见偏差）</td></tr>
+        <tr><td class="id">4</td><td>Provider 抽象（LLM/Vision/STT）+ OpenAI + Fake</td><td class="ok">✓</td><td>alfred/providers/*，FakeProvider 用于测试</td></tr>
+        <tr><td class="id">5</td><td>GET /health, GET /v1/llm-ping</td><td class="ok">✓</td><td>alfred/main.py, alfred/router/v1.py</td></tr>
+        <tr><td class="id">6</td><td>8 个 Action 原语</td><td class="ok">✓</td><td>alfred/services/executor.py</td></tr>
+        <tr><td class="id">7</td><td>技能框架（manifest/registry/render/retry/executor）</td><td class="ok">✓</td><td>alfred/skills/_runtime.py, _registry.py</td></tr>
+        <tr><td class="id">8</td><td>3 个内置技能（extract_job / capture_note / coffee_chat）</td><td class="ok">✓</td><td>alfred/skills/{extract_job,capture_note,coffee_chat}</td></tr>
+        <tr><td class="id">9</td><td>POST /v1/attachments + STT/vision</td><td class="ok">✓</td><td>alfred/router/v1.py, alfred/services/attachments.py</td></tr>
+        <tr><td class="id">10</td><td>POST /v1/ingest（4 模态）+ 状态查询/重试</td><td class="ok">✓</td><td>alfred/router/v1.py, alfred/ingest.py</td></tr>
+        <tr><td class="id">11</td><td>基础 CRUD（companies/positions/people/notes）</td><td class="ok">✓</td><td>alfred/router/v1.py</td></tr>
+        <tr><td class="id">12</td><td>pytest 体系（service / skill / API contract）</td><td class="ok">✓</td><td>9 个测试文件，57 用例全绿</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>已完成功能（按切片）</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>基础平台</h3>
+        <ul>
+          <li>FastAPI + SQLModel + PostgreSQL 16（docker-compose 一键起库）</li>
+          <li>Alembic 迁移（render_as_batch，含 drift 检测测试）</li>
+          <li>Provider 抽象：LLM / Vision / STT，OpenAI 实装 + FakeProvider</li>
+          <li>软删除 <code>archived_at</code> 贯穿所有表</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>写入路径（services 唯一写入口）</h3>
+        <ul>
+          <li>upsert_company / upsert_position / upsert_person</li>
+          <li>create_note / create_event / create_reminder</li>
+          <li>add_tags / link + 关系词表校验</li>
+          <li>事务提交 + dry-run 预演</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>技能框架与内置技能</h3>
+        <ul>
+          <li>声明式技能：manifest + 模板渲染 + schema 校验重试</li>
+          <li><code>extract_job</code>：解析招聘信息 → 公司/职位/笔记</li>
+          <li><code>capture_note</code>：笔记抽取 + fallback</li>
+          <li><code>coffee_chat</code>：脚本式 + 分块抽取人物/公司/话题并关联</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>摄入 / 附件 / CRUD 端点</h3>
+        <ul>
+          <li>ingest：text / url / file / requested_skill + 状态查询/重试</li>
+          <li>attachments：上传去重（sha256）、STT 转写、视觉描述</li>
+          <li>CRUD：companies / positions / people / notes 全套增删改查</li>
+          <li>/v1/graph、/v1/links、/meta/vocab（提前实现）</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>如何运行与验证</h2>
+    <p style="color:var(--muted); font-size:13.5px;">
+      仓库已含 <code>.venv</code>，依赖已装好；无需 API key 即可跑测试（走 FakeProvider）。下面是 PowerShell 命令：
+    </p>
+    <pre><code># 1) 跑全部测试（SQLite 内存库 + FakeProvider，无需外部依赖）
+.venv\Scripts\python -m pytest -q
+
+# 或用 uv（若已安装）
+uv run pytest -q
+
+# 2) 起交互式文档 / 开发服务器（默认 sqlite；接真实 LLM 需 .env 的 OPENAI_API_KEY）
+cp .env.example .env          # 编辑 OPENAI_API_KEY
+.venv\Scripts\python -m alfred.main
+# 或：uv run uvicorn alfred.main:app --reload --port 8000
+# 打开 http://localhost:8000/docs 查看 OpenAPI
+
+# 3) 接 PostgreSQL（可选）
+docker compose up -d db
+uv run alembic upgrade head
+uv run uvicorn alfred.main:app --reload --port 8000</code></pre>
+    <p style="color:var(--muted); font-size:13.5px;">
+      验证点：测试全绿（57 passed）即代表 service / skill / API contract 三层都通过；
+      <code>/v1/llm-ping</code> 验证 LLM 连通；<code>/v1/skills/coffee_chat/dry-run</code> 走 dry-run 不落库。
+    </p>
+  </section>
+
+  <section>
+    <div class="note">
+      <h3>偏差与待办（需你确认）</h3>
+      <ul>
+        <li><b>审计表</b>：需求 v0.1 §3 提到独立审计表，实际改为所有表 <code>archived_at</code> 软删除。如需 append-only 审计日志请告知。</li>
+        <li><b>docs/SKILLS.md</b>：<code>SkillManifest.match</code> 实为单个 <code>MatchRule(inputs/keywords/url_patterns/priority)</code>，并非文档写的 <code>kind/intent/overrides</code>。</li>
+        <li><b>docs/API.md</b>：<code>IngestIn</code> 字段是 <code>text</code>，不是文档写的 <code>content</code>。</li>
+        <li>仓库根目录曾有一份陈旧的 <code>pytest_out.txt</code>（含中途失败快照），已删除以免误导。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    alfred-api v0.1.0 · 测试优先（TDD）交付 · 详见仓库根目录 CHANGELOG.md
+  </footer>
+
+</div>
+</body>
+</html>

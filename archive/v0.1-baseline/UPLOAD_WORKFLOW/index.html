@@ -1,0 +1,5082 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Alfred 个人 AI 求职助理 — 产品需求、数据模型与架构决策文档站">
+      
+      
+      
+      
+        <link rel="prev" href="../DATA_MODEL/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>上传工作流 - Alfred · 产品设计文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#alfred" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="Alfred · 产品设计文档" class="md-header__button md-logo" aria-label="Alfred · 产品设计文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Alfred · 产品设计文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              上传工作流
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Alfred · 产品设计文档" class="md-nav__button md-logo" aria-label="Alfred · 产品设计文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Alfred · 产品设计文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    最新更新 (Latest)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    最新更新 (Latest)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../LATEST/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    最近更新索引
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    产品愿景 (VISION)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    产品愿景 (VISION)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../VISION/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VISION
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    产品需求 PRD
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    产品需求 PRD
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    分区说明与索引
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prd/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRD 模板
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../prd/job-seeking/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    求职助理用户流程
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--草稿"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设计文档 (Design)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设计文档 (Design)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DATA_MODEL_V2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 V2
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../DATA_MODEL_V3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 V3（求职领域细化 · 草稿）
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--草稿"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../GRAPH/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    引擎规范 (GRAPH)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../UPLOAD_WORKFLOW/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    捕获与分发工作流
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../design-sessions/2026-08-03-v1-redesign/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    重新设计会话 2026-08-03
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--已归档"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考 (Reference)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考 (Reference)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../GLOSSARY/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表 (GLOSSARY)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    变更记录 (CHANGELOG)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    架构决策 ADR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    架构决策 ADR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    索引
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/TEMPLATE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR 模板
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--proposed"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0001-postgresql-over-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 PostgreSQL
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0002-two-repositories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 双仓库
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0003-taro-react-tri-platform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0003 Taro 三端
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0004-scriptable-skill-directories/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 可脚本化技能目录
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0005-chunked-pipeline-for-long-input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0005 长输入分块
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0006-defer-latex-pdf-compilation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0006 推迟 LaTeX 编译
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--superseded"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0007-naming-alfred/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0007 命名 Alfred
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0008-services-as-single-write-path/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0008 services 唯一落库
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0009-naming-job-posting-occupation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0009 命名 job_posting/occupation
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0010-event-fact-dual-truth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0010 Event/Fact 双真相
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0011-multi-tenant-boundary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0011 多用户边界
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0012-orchestration-langgraph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0012 编排 LangGraph
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0013-context-segments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0013 上下文分段
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0014-resume-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0014 简历溯源
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0015-location-entity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0015 Location 实体
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0016-domain-agnostic-kernel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0016 领域无关内核
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0017-organization-generalization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0017 Organization 泛化
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0018-engine-terminology-node-graph-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0018 引擎术语 Node/Graph/Action
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0019-graph-as-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0019 图即 Python
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0020-four-layer-dispatch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0020 四层分发
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0021-domain-graph-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0021 领域图包
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0022-documentation-taxonomy-prd-design-adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0022 文档治理 PRD/Design/ADR
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0023-diagram-placement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0023 图表归档位置
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--accepted"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    协作与贡献 (Contributing)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    协作与贡献 (Contributing)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../STYLE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文档规范 (STYLE)
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/dev-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    开发工作流
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/domain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    领域文档
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/issue-tracker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue 追踪
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/triage-labels/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    分层标签
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--现行有效"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    可视化 (HTML)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    可视化 (HTML)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../diagrams/workflow.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    上传工作流图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页原型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../diagrams/changelog.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    变更日志图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    历史基线 v0.1 (已作废)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    历史基线 v0.1 (已作废)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    说明
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SPEC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SPEC 总体设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API 契约
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../SKILLS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills 规范
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ROADMAP/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    路线图
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DATA_MODEL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据模型 (旧)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    上传工作流
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    上传工作流
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 这份文档在说什么
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 这份文档在说什么">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 已经拍板的三个决策
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 一句话概括整条链路
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 名词对照表（口语 → 系统里的叫法）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 核心实体与唯一标识
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 核心实体与唯一标识">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 唯一键总表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 三个"两层结构"怎么表达
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Agent 对「技能」的定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Agent 对「技能」的定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 AI 抽技能的四步法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 什么不算技能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 技能词表初始形态（举例）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-jd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 工作流一：上传 JD（链接 / 截图 / 语音 / 文字）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 工作流一：上传 JD（链接 / 截图 / 语音 / 文字）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 分步说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 拆出来的字段清单
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 特殊情况怎么办
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 工作流二：简历 / 求职信生成
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 工作流二：简历 / 求职信生成">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 分步说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 关键设计：记住"这版用了哪几条经历"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 版本管理规则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 经历表长什么样
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 工作流三：投递与面试跟踪
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-alfred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 工作流四：你和 Alfred 的聊天时间线
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 工作流四：你和 Alfred 的聊天时间线">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 为什么要单独一张表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 表结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-ingest_request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 和 ingest_request 的分工
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-data-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 数据流图（Data Flow Diagram）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 数据流图（Data Flow Diagram）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-level-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Level 0 —— 整体
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-level-1-jd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Level 1 —— 上传 JD 的内部数据流
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-level-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Level 1 —— 简历生成的数据流
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 流程图（Flow Diagram）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. 流程图（Flow Diagram）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-jd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 上传 JD 主流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 技能确认流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 简历生成流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 从上传到投递的完整闭环
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-er" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. ER 图（实体关系）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. ER 图（实体关系）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 上传与解析相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 岗位 · 技能 · 要求
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 经历 · 文档 · 投递
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-entity_link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 万能连线 entity_link
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-brainstorm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 潜在问题 Brainstorm（先踩坑）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. 潜在问题 Brainstorm（先踩坑）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        高风险（不处理一定出事）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中风险（会不舒服但不致命）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        低风险（记着就行）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 与现有代码的差距（实现清单）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. 与现有代码的差距（实现清单）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 要新建的表（5 张）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 要改的地方
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 建议的落地顺序
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 还需要你后续拍板的开放问题
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. 这份文档在说什么
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0. 这份文档在说什么">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1 已经拍板的三个决策
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2 一句话概括整条链路
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 名词对照表（口语 → 系统里的叫法）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 核心实体与唯一标识
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 核心实体与唯一标识">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 唯一键总表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 三个"两层结构"怎么表达
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Agent 对「技能」的定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Agent 对「技能」的定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 AI 抽技能的四步法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 什么不算技能
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 技能词表初始形态（举例）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-jd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 工作流一：上传 JD（链接 / 截图 / 语音 / 文字）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 工作流一：上传 JD（链接 / 截图 / 语音 / 文字）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 分步说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 拆出来的字段清单
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 特殊情况怎么办
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 工作流二：简历 / 求职信生成
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 工作流二：简历 / 求职信生成">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 分步说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 关键设计：记住"这版用了哪几条经历"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 版本管理规则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 经历表长什么样
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 工作流三：投递与面试跟踪
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-alfred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 工作流四：你和 Alfred 的聊天时间线
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 工作流四：你和 Alfred 的聊天时间线">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 为什么要单独一张表
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 表结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-ingest_request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 和 ingest_request 的分工
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-data-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 数据流图（Data Flow Diagram）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 数据流图（Data Flow Diagram）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-level-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Level 0 —— 整体
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-level-1-jd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Level 1 —— 上传 JD 的内部数据流
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-level-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Level 1 —— 简历生成的数据流
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 流程图（Flow Diagram）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. 流程图（Flow Diagram）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-jd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 上传 JD 主流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 技能确认流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 简历生成流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 从上传到投递的完整闭环
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-er" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. ER 图（实体关系）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. ER 图（实体关系）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 上传与解析相关
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 岗位 · 技能 · 要求
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 经历 · 文档 · 投递
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-entity_link" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4 万能连线 entity_link
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-brainstorm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 潜在问题 Brainstorm（先踩坑）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. 潜在问题 Brainstorm（先踩坑）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        高风险（不处理一定出事）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        中风险（会不舒服但不致命）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        低风险（记着就行）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 与现有代码的差距（实现清单）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. 与现有代码的差距（实现清单）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 要新建的表（5 张）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 要改的地方
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 建议的落地顺序
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 还需要你后续拍板的开放问题
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="alfred">Alfred 上传工作流设计说明<a class="headerlink" href="#alfred" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>⚠️ <strong>本文件属于 v0.1 基线草稿，已作废。</strong> 当前权威版本见顶层 <a href="../../../UPLOAD_WORKFLOW/"><code>UPLOAD_WORKFLOW</code></a> 与可视化 <a href="../../../ui/workflow.html"><code>ui/workflow.html</code></a>（均已更新至 V2）。本文档仅供历史追溯。</p>
+<p>面向人：产品负责人（你自己）+ 后续实现的人
+配套：<a href="../DATA_MODEL/">数据模型</a> ｜ <a href="../SKILLS/">技能规范</a> ｜ <a href="../API/">接口</a>
+可视化版本：<code>ui/workflow.html</code>（同样的内容，带可交互图）</p>
+</blockquote>
+<hr />
+<h2 id="0">0. 这份文档在说什么<a class="headerlink" href="#0" title="Permanent link">&para;</a></h2>
+<p>只讲一件事：<strong>东西是怎么从"你随手发一段话/一张截图"变成"库里干净、能查、能复用的数据"的。</strong></p>
+<p>投递之后的分析、统计、提醒不在这里展开。</p>
+<h3 id="01">0.1 已经拍板的三个决策<a class="headerlink" href="#01" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>议题</th>
+<th>结论</th>
+<th>为什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>技能库怎么建</td>
+<td><strong>AI 提议 + 你确认</strong>，确认后才进正式词表</td>
+<td>防止「Excel / Microsoft Excel / 熟练使用 Excel」变成三个技能</td>
+</tr>
+<tr>
+<td>个人经历放哪</td>
+<td><strong>单独建一张表</strong>，和「笔记/想法」彻底分开</td>
+<td>经历是"简历素材"，要能被反复挑用；笔记是"我的情绪和判断"，两者用途完全不同</td>
+</tr>
+<tr>
+<td>和 Alfred 的对话怎么存</td>
+<td><strong>双方都存</strong>，我发的和它回的都带时间戳</td>
+<td>你要的是一条像微信一样能回看的时间线</td>
+</tr>
+</tbody>
+</table>
+<h3 id="02">0.2 一句话概括整条链路<a class="headerlink" href="#02" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>你发东西  →  原样存档（永不丢）  →  AI 拆解  →  你过目确认  →  正式入库  →  以后随时调用
+</code></pre></div>
+<p><strong>最关键的一步是「你过目确认」。</strong> 没有它，截图认错的公司名、AI 瞎编的截止日期，会悄无声息地污染整个库。</p>
+<hr />
+<h2 id="1">1. 名词对照表（口语 → 系统里的叫法）<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>你平时说的</th>
+<th>系统里的名字</th>
+<th>一句话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>公司</td>
+<td><code>company</code></td>
+<td>一家公司只存一条，不管它在几个地方出现</td>
+</tr>
+<tr>
+<td>岗位 / 职位</td>
+<td><code>position</code></td>
+<td>某家公司的某个具体职位</td>
+</tr>
+<tr>
+<td>职位大类</td>
+<td><code>position.job_family</code></td>
+<td>心理咨询 / 数据 / 研究…… 用来做"筛某一类岗位"</td>
+</tr>
+<tr>
+<td>技能</td>
+<td><code>skill</code></td>
+<td><strong>新表</strong>。两层：大类 → 细分</td>
+</tr>
+<tr>
+<td>岗位要求</td>
+<td><code>position_requirement</code></td>
+<td><strong>新表</strong>。JD 里的每一条要求单独一行</td>
+</tr>
+<tr>
+<td>我的经历</td>
+<td><code>experience</code></td>
+<td><strong>新表</strong>。可反复挑进简历的素材</td>
+</tr>
+<tr>
+<td>简历 / 求职信</td>
+<td><code>document_asset</code> + <code>document_version</code></td>
+<td>档案 + 每一版快照</td>
+</tr>
+<tr>
+<td>我的想法/评价</td>
+<td><code>note</code></td>
+<td>主观内容</td>
+</tr>
+<tr>
+<td>我和 Alfred 的聊天</td>
+<td><code>chat_message</code></td>
+<td><strong>新表</strong>。双方消息，带时间戳</td>
+</tr>
+<tr>
+<td>我发的那次东西</td>
+<td><code>ingest_request</code></td>
+<td>原始输入存档 + 处理状态</td>
+</tr>
+<tr>
+<td>语音/图片原件</td>
+<td><code>attachment</code></td>
+<td>原文件 + 转写文字</td>
+</tr>
+<tr>
+<td>投递记录</td>
+<td><code>application</code></td>
+<td>投了哪家哪个岗，用的哪版简历</td>
+</tr>
+<tr>
+<td>面试</td>
+<td><code>interview</code></td>
+<td>每一轮单独一条</td>
+</tr>
+<tr>
+<td>任意两样东西的关联</td>
+<td><code>entity_link</code></td>
+<td>万能连线：这条笔记是关于那个岗位的</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2">2. 核心实体与唯一标识<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1 唯一键总表<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>实体</th>
+<th>唯一键</th>
+<th>长什么样</th>
+<th>冲突了怎么办</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>公司 <code>company</code></td>
+<td><code>slug</code></td>
+<td><code>bytedance</code>、<code>hku-psychology</code></td>
+<td>先按 slug 查，再按别名做模糊匹配；命中就复用，不新建</td>
+</tr>
+<tr>
+<td>岗位 <code>position</code></td>
+<td><code>fingerprint</code></td>
+<td><code>sha256(公司id + 标准化职位名 + 地点)</code></td>
+<td>同一个岗位从小红书和 LinkedIn 各发一次 → 只留一条，来源附加上去</td>
+</tr>
+<tr>
+<td>技能 <code>skill</code></td>
+<td><code>slug</code></td>
+<td>大类 <code>english</code>；细分 <code>english/business-writing</code></td>
+<td>归一化后仍不命中 → 建成 <code>proposed</code> 状态等你确认</td>
+</tr>
+<tr>
+<td>岗位要求 <code>position_requirement</code></td>
+<td><code>(position_id, 要求原文的哈希)</code></td>
+<td>—</td>
+<td>同一句要求重复解析只留一条</td>
+</tr>
+<tr>
+<td>经历 <code>experience</code></td>
+<td><code>slug</code></td>
+<td><code>hku-psy-ra-2025</code></td>
+<td>你自己命名，重名直接拒绝</td>
+</tr>
+<tr>
+<td>简历档案 <code>document_asset</code></td>
+<td><code>slug</code></td>
+<td><code>cv-clinical-psy</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>简历版本 <code>document_version</code></td>
+<td><code>(asset_id, version_no)</code> + 内容 <code>checksum</code></td>
+<td><code>cv-clinical-psy #7</code></td>
+<td>内容没变就不新建版本</td>
+</tr>
+<tr>
+<td>投递 <code>application</code></td>
+<td><code>id</code>（业务软约束 <code>position_id + 投递日</code>）</td>
+<td>—</td>
+<td>同岗二投是合法的，不去重，但会提醒你"这个岗你 3 月投过"</td>
+</tr>
+<tr>
+<td>聊天消息 <code>chat_message</code></td>
+<td><code>id</code> + <code>sent_at</code></td>
+<td>—</td>
+<td>客户端重发用 <code>idempotency_key</code> 挡掉</td>
+</tr>
+<tr>
+<td>附件 <code>attachment</code></td>
+<td><code>sha256</code></td>
+<td>—</td>
+<td>同一张截图上传两次，只存一份</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22">2.2 三个"两层结构"怎么表达<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<p>你提到三处需要「大类 → 细分」，处理方式不一样：</p>
+<p><strong>① 职位：不需要新表</strong>
+- 大类 = <code>position.job_family</code>（受控词表，如 <code>research</code>）
+- 细分 = <code>position.title</code>（原始职位名，如 "临床心理咨询实习生"）
+- 理由：职位天然属于某家公司，脱离公司谈"职位大类"没有独立存在的必要。</p>
+<p><strong>② 技能：需要新表，用自引用</strong>
+- 大类是一条记录（<code>slug=english</code>，<code>parent_id=null</code>）
+- 细分是另一条记录（<code>slug=english/business-writing</code>，<code>parent_id=英语那条的id</code>）
+- 理由：技能要跨公司复用，"所有要 Excel 的岗位"必须能一键查出来。</p>
+<p><strong>③ 经历：一层就够，靠标签补充</strong>
+- <code>experience</code> 本身是平的，通过挂技能（<code>experience_skill</code>）来体现"这段经历证明了什么能力"。</p>
+<hr />
+<h2 id="3-agent">3. Agent 对「技能」的定义<a class="headerlink" href="#3-agent" title="Permanent link">&para;</a></h2>
+<p>这是整个设计里最需要说死的一点，因为 AI 一旦自由发挥，技能库三天就废了。</p>
+<h3 id="31">3.1 定义<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>技能 = 一个归一化、去重、可跨岗位复用的「能力标签」，两层结构（大类 → 细分），并且必须能追溯到 JD 里的原句。</strong></p>
+</blockquote>
+<p>技能有四个必填要素：</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>说明</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大类 <code>category</code></td>
+<td>粗粒度，用来做导航</td>
+<td><code>英语</code></td>
+</tr>
+<tr>
+<td>名称 <code>name</code></td>
+<td>具体能力</td>
+<td><code>商务写作</code></td>
+</tr>
+<tr>
+<td>证据句 <code>evidence_text</code></td>
+<td>JD 里哪句话推出来的</td>
+<td>"能独立撰写英文邮件与报告"</td>
+</tr>
+<tr>
+<td>要求强度 <code>importance</code></td>
+<td><code>must</code> 硬性 / <code>nice</code> 加分</td>
+<td><code>must</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-ai">3.2 AI 抽技能的四步法<a class="headerlink" href="#32-ai" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>第 1 步  抽取：把 JD 句子压成技能短语
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>        "熟练使用 Excel 进行数据透视分析"  →  Excel
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>第 2 步  归一：去掉大小写、标点、修饰词，套同义词表
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        "Microsoft Excel" / "excel" / "EXCEL 技能"  →  excel
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>第 3 步  匹配：拿归一化结果去 skill 表比对（slug + 别名 + 模糊匹配）
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        命中  →  直接复用已有技能（99% 的情况）
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        不命中 →  进第 4 步
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>第 4 步  提议：新建一条 status='proposed' 的技能，等你确认
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        你确认 → approved（进入正式词表）
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        你说"这跟已有的 XX 是一回事" → merged（合并，别名自动加进 XX）
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        你说"这不算技能" → rejected
+</code></pre></div>
+<p><strong>关键约束</strong>：<code>proposed</code> 状态的技能<strong>不参与任何统计和筛选</strong>，它只是候选。这样即使 AI 提了一堆垃圾，也不会污染你的正式技能库。</p>
+<h3 id="33">3.3 什么<strong>不算</strong>技能<a class="headerlink" href="#33" title="Permanent link">&para;</a></h3>
+<p>你原话里提到"心理学背景、实习经历"也算技能需求——这里要拆开，否则技能库会混进一堆不是能力的东西。</p>
+<p>JD 里的要求分三类，全部进 <code>position_requirement</code> 表，用 <code>kind</code> 区分：</p>
+<table>
+<thead>
+<tr>
+<th><code>kind</code></th>
+<th>含义</th>
+<th>例子</th>
+<th>是否挂 <code>skill_id</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skill</code></td>
+<td>能力</td>
+<td>英语商务写作、Excel 数据透视、CBT 咨询技术</td>
+<td>✅ 挂</td>
+</tr>
+<tr>
+<td><code>qualification</code></td>
+<td>学历 / 证书 / 专业背景</td>
+<td>心理学硕士、注册心理师执照</td>
+<td>❌ 不挂</td>
+</tr>
+<tr>
+<td><code>experience</code></td>
+<td>经历 / 年限</td>
+<td>2 年以上咨询实习经验</td>
+<td>❌ 不挂</td>
+</tr>
+</tbody>
+</table>
+<p>好处：你既能问"所有要 CBT 技术的岗位"（查 skill），也能问"哪些岗位要求心理学硕士"（查 qualification），两者不混淆。</p>
+<h3 id="34">3.4 技能词表初始形态（举例）<a class="headerlink" href="#34" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>心理学
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a> ├── 临床评估
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a> ├── CBT 认知行为疗法
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a> └── 个案报告撰写
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>英语
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a> ├── 商务写作
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a> └── 会议口语
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Microsoft Office
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a> ├── Excel 数据处理
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a> └── 商务邮件撰写
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>研究方法
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a> ├── SPSS 统计分析
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a> └── 文献综述
+</code></pre></div>
+<hr />
+<h2 id="4-jd">4. 工作流一：上传 JD（链接 / 截图 / 语音 / 文字）<a class="headerlink" href="#4-jd" title="Permanent link">&para;</a></h2>
+<h3 id="41">4.1 分步说明<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>发生了什么</th>
+<th>落到哪张表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 你发东西</td>
+<td>链接、截图、语音、文字，或混着发</td>
+<td><code>chat_message</code>（role=user）、<code>ingest_request</code>、<code>attachment</code></td>
+</tr>
+<tr>
+<td>② 原样存档</td>
+<td><strong>在调 AI 之前就先存</strong>。哪怕 AI 全挂了，你的原始输入也在</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>③ 归一成文本</td>
+<td>链接抓正文、截图 OCR、语音转文字，最后都变成一段纯文本</td>
+<td><code>attachment.transcription</code> / <code>vision_caption</code></td>
+</tr>
+<tr>
+<td>④ 选技能（路由）</td>
+<td>判断这是「一个岗位」还是「一段感想」还是「一次 coffee chat」</td>
+<td><code>ingest_run</code>（step=route）</td>
+</tr>
+<tr>
+<td>⑤ AI 拆解</td>
+<td>抽出公司、岗位、日期、投递方式、要求、技能候选、你的评价</td>
+<td><code>ingest_run</code>（step=extract）</td>
+</tr>
+<tr>
+<td>⑥ <strong>预览卡片</strong></td>
+<td><strong>暂不入库</strong>。以卡片形式给你看，字段可直接改</td>
+<td>内存 / <code>ingest_run.parsed</code></td>
+</tr>
+<tr>
+<td>⑦ 背景搜集</td>
+<td>顺手搜一下这家公司的新闻、口碑，<strong>只展示不入库</strong></td>
+<td>不落库（只在这次回复里）</td>
+</tr>
+<tr>
+<td>⑧ 你确认</td>
+<td>改完点确认</td>
+<td>正式写 <code>company</code> / <code>position</code> / <code>position_requirement</code> / <code>note</code></td>
+</tr>
+<tr>
+<td>⑨ Alfred 回话</td>
+<td>一句话总结 + 待确认的技能候选</td>
+<td><code>chat_message</code>（role=assistant）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42">4.2 拆出来的字段清单<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
+<p><strong>基本信息</strong> → <code>position</code> / <code>company</code>
+- 公司名称、公司简介 → <code>company.name</code> / <code>description_md</code>
+- 职位名称 → <code>position.title</code>；职位大类 → <code>job_family</code>
+- 发布日期 → <code>posted_at</code>；<strong>投递截止</strong> → <code>deadline_at</code>（自动生成提前 3 天的提醒）
+- 地点 → <code>location</code>；工作模式 → <code>work_mode</code>；签证 → <code>visa_sponsorship</code></p>
+<p><strong>投递信息</strong> → <code>position</code>
+- 投递链接 → <code>apply_url</code>；投递方式 → <code>apply_method</code>
+- <strong>需要准备的材料</strong>（CV / Cover Letter / Personal Statement）→ 新字段 <code>required_documents</code>（列表）
+  - 这条很重要：有了它，Alfred 才能提醒你"这家还要 PS，你还没写"</p>
+<p><strong>技能需求</strong> → <code>position_requirement</code> + <code>skill</code>
+- 每条要求一行，标 <code>must</code> / <code>nice</code>，能力类的挂技能</p>
+<p><strong>背景搜集</strong> → 不入库
+- 公司新闻、口碑、面经，作为这次回复的一部分展示给你
+- 理由：这类信息会过期，存下来反而误导；需要时随时重搜</p>
+<p><strong>我的评价</strong> → <code>note</code> + <code>position</code>
+- 喜好程度 → <code>position.interest_level</code>（1–5）
+- 原话 → <code>position.personal_comment_md</code>
+- 改简历的思路、面试准备要点 → 拆成独立 <code>note</code>，<code>kind</code> 分别为 <code>idea</code> / <code>reflection</code>，并用 <code>entity_link</code> 挂到这个岗位上</p>
+<h3 id="43">4.3 特殊情况怎么办<a class="headerlink" href="#43" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JD 里没写公司名（小红书吐槽帖）</td>
+<td>建一个 <code>slug=unknown-&lt;随机&gt;</code> 的占位公司，标 <code>needs_review</code>，等你补</td>
+</tr>
+<tr>
+<td>同一个岗位从两个渠道发了两次</td>
+<td>fingerprint 命中 → 复用，把新来源追加到来源列表，不新建</td>
+</tr>
+<tr>
+<td>截止日期写"本周五"</td>
+<td>AI 按今天日期换算成具体日期，并在预览里<strong>高亮标出</strong>这是推算的</td>
+</tr>
+<tr>
+<td>一张截图里有三个岗位</td>
+<td>拆成三个预览卡片，你可以只确认其中一个</td>
+</tr>
+<tr>
+<td>AI 挂了</td>
+<td><code>ingest_request.status = partial</code>，原始输入还在，随时可重跑</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5">5. 工作流二：简历 / 求职信生成<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<h3 id="51">5.1 分步说明<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>① 你说：给字节的数据分析岗改简历，用经历 1、3、5
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>② Alfred 定位：company + position（没有就先建）
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>③ 取素材：从 experience 表取出你点名的那几条
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>④ 对齐要求：把 position_requirement 和 experience_skill 对一遍
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>   → 告诉你「这个岗要 SPSS，你选的三条经历里没有体现，要不要加经历 4」
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>⑤ 生成 LaTeX 草稿      ← 这是雏形，还不是最终版
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>⑥ 你确认 / 让它改
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>⑦ 定稿 → 存 document_version（存 LaTeX 源码）
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>⑧ 编译 PDF → 存文件路径
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>⑨ 抽取关键内容 → 建索引，方便以后搜"哪份简历写过 SPSS"
+</code></pre></div>
+<h3 id="52">5.2 关键设计：记住"这版用了哪几条经历"<a class="headerlink" href="#52" title="Permanent link">&para;</a></h3>
+<p>新增关联表 <code>document_version_experience</code>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>document_version_id</code></td>
+<td>哪一版简历</td>
+</tr>
+<tr>
+<td><code>experience_id</code></td>
+<td>用了哪条经历</td>
+</tr>
+<tr>
+<td><code>order_no</code></td>
+<td>在简历里排第几</td>
+</tr>
+<tr>
+<td><code>rendered_bullets</code></td>
+<td>这一版实际怎么措辞的（同一段经历，投研究岗和投咨询岗写法不一样）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么必须有这张表</strong>：三个月后你收到面试通知，能一眼看到"当时投这个岗用的是经历 1/3/5，其中实习那段我强调的是数据分析"，直接照着准备面试。</p>
+<h3 id="53">5.3 版本管理规则<a class="headerlink" href="#53" title="Permanent link">&para;</a></h3>
+<ul>
+<li>每次定稿 = 一个<strong>不可变</strong>的新版本，老版本永远不改</li>
+<li>每版必须有 <code>change_summary_md</code>（这版改了什么），<strong>AI 自动生成，你可以改</strong></li>
+<li>内容没变（checksum 相同）就不建新版本，避免版本号灌水</li>
+<li>只在<strong>你确认后</strong>才编译 PDF —— 草稿阶段不浪费编译时间</li>
+</ul>
+<h3 id="54">5.4 经历表长什么样<a class="headerlink" href="#54" title="Permanent link">&para;</a></h3>
+<p><code>experience</code>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>slug</code></td>
+<td>唯一标识</td>
+<td><code>hku-psy-ra-2025</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>显示名</td>
+<td>香港大学心理系 研究助理</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td>类型</td>
+<td><code>internship</code> / <code>project</code> / <code>research</code> / <code>volunteer</code> / <code>award</code></td>
+</tr>
+<tr>
+<td><code>org_name</code> / <code>org_company_id</code></td>
+<td>在哪做的</td>
+<td>香港大学</td>
+</tr>
+<tr>
+<td><code>started_on</code> / <code>ended_on</code></td>
+<td>起止</td>
+<td>2025-06 ~ 2025-09</td>
+</tr>
+<tr>
+<td><code>summary_md</code></td>
+<td>一句话概括</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>bullets</code></td>
+<td><strong>简历条目候选</strong>，一个列表，可存多种措辞和中英双语</td>
+<td><code>["独立完成 40 份个案评估报告", …]</code></td>
+</tr>
+<tr>
+<td><code>display_order</code></td>
+<td>你说的"经历 1、2、3"就是这个</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><code>experience_skill</code>（经历 ↔ 技能）：<code>experience_id</code> + <code>skill_id</code> + <code>proficiency</code>(1–5) + <code>evidence_text</code></p>
+<p>这张关联表带来一个很爽的能力：<strong>Alfred 能反向推荐</strong>——「这个岗要 CBT，你的经历 2 里有 CBT，建议加进去」。</p>
+<hr />
+<h2 id="6">6. 工作流三：投递与面试跟踪<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p>这块现有表基本够用，只补充说明关联关系。</p>
+<table>
+<thead>
+<tr>
+<th>记录什么</th>
+<th>存哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>投了哪家哪个岗</td>
+<td><code>application.position_id</code></td>
+</tr>
+<tr>
+<td><strong>用的哪份简历/求职信</strong></td>
+<td><code>application.resume_version_id</code> / <code>cover_letter_version_id</code></td>
+</tr>
+<tr>
+<td>投递渠道、投递时间</td>
+<td><code>channel</code> / <code>submitted_at</code></td>
+</tr>
+<tr>
+<td>网页表单里填了什么</td>
+<td><code>submission_detail_md</code></td>
+</tr>
+<tr>
+<td>内推人是谁</td>
+<td><code>referrer_person_id</code></td>
+</tr>
+<tr>
+<td>面试轮次、类型、时间</td>
+<td><code>interview</code></td>
+</tr>
+<tr>
+<td><strong>面试问了什么、我怎么答的</strong></td>
+<td><code>interview.questions</code>（结构化列表）</td>
+</tr>
+<tr>
+<td>面试感受</td>
+<td><code>interview.feedback_md</code> + <code>feeling</code></td>
+</tr>
+</tbody>
+</table>
+<p>投递状态流转（已有状态机，见 <code>alfred/models/enums.py</code>）：
+<code>draft → submitted → ack_received → interviewing → offer → accepted</code>，另有 <code>ghosted</code>（已读不回）、<code>rejected</code>、<code>withdrawn</code> 等分支。</p>
+<hr />
+<h2 id="7-alfred">7. 工作流四：你和 Alfred 的聊天时间线<a class="headerlink" href="#7-alfred" title="Permanent link">&para;</a></h2>
+<h3 id="71">7.1 为什么要单独一张表<a class="headerlink" href="#71" title="Permanent link">&para;</a></h3>
+<p>现有的 <code>ingest_request</code> 记的是"<strong>处理任务</strong>"——每次你发东西，它记下原始内容和处理状态。但它不是聊天记录：
+- Alfred 的回复只有一句 <code>summary_md</code>，读起来不像对话
+- 有些消息（比如你问"帮我看看这周有什么截止"）根本不产生 ingest 任务，没地方存</p>
+<p>所以新增 <code>chat_message</code>，专门承载"像微信一样的时间线"。</p>
+<h3 id="72">7.2 表结构<a class="headerlink" href="#72" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>唯一</td>
+</tr>
+<tr>
+<td><code>sent_at</code></td>
+<td><strong>时间戳</strong>，时间线排序靠它</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>user</code>（你发的） / <code>assistant</code>（Alfred 回的）</td>
+</tr>
+<tr>
+<td><code>media_kind</code></td>
+<td><code>text</code> / <code>voice</code> / <code>image</code> / <code>link</code> / <code>mixed</code></td>
+</tr>
+<tr>
+<td><code>content_md</code></td>
+<td>显示用的文本（语音就是转写、图片就是描述）</td>
+</tr>
+<tr>
+<td><code>attachment_ids</code></td>
+<td>语音、图片的原件</td>
+</tr>
+<tr>
+<td><code>ingest_request_id</code></td>
+<td>这条消息触发了哪次处理（可空）</td>
+</tr>
+<tr>
+<td><code>reply_to_id</code></td>
+<td>Alfred 这句在回你的哪句</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>sent</code> / <code>processing</code> / <code>done</code> / <code>failed</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-ingest_request">7.3 和 <code>ingest_request</code> 的分工<a class="headerlink" href="#73-ingest_request" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>chat_message</code></th>
+<th><code>ingest_request</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>是什么</td>
+<td>聊天记录，给人看</td>
+<td>处理任务，给系统用</td>
+</tr>
+<tr>
+<td>谁的内容</td>
+<td>你 + Alfred 双方</td>
+<td>只有你的输入</td>
+</tr>
+<tr>
+<td>读取频率</td>
+<td>高（每次打开都刷时间线）</td>
+<td>低（排查问题时才看）</td>
+</tr>
+<tr>
+<td>关系</td>
+<td>一条 user 消息 → 0 或 1 个 ingest_request</td>
+<td>一个 ingest_request ← 一条 user 消息</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>有意的冗余</strong>：<code>chat_message.content_md</code> 会把语音转写文字冗余存一份，不必每次都去 join attachment。时间线是读得最频繁的东西，多存一份文本换取秒开，是划算的。</p>
+</blockquote>
+<hr />
+<h2 id="8-data-flow-diagram">8. 数据流图（Data Flow Diagram）<a class="headerlink" href="#8-data-flow-diagram" title="Permanent link">&para;</a></h2>
+<h3 id="81-level-0">8.1 Level 0 —— 整体<a class="headerlink" href="#81-level-0" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    U(["你"])
+    subgraph ALFRED["Alfred 系统"]
+        direction TB
+        A1["接收与存档"]
+        A2["AI 拆解"]
+        A3["确认与入库"]
+        A4["调用与生成"]
+    end
+    LLM(["AI 模型"])
+    WEB(["外部网页 / 搜索"])
+    DB[("数据库")]
+
+    U -- "文字/语音/图片/链接" --&gt; A1
+    A1 -- "原始内容" --&gt; DB
+    A1 -- "归一化文本" --&gt; A2
+    A2 &lt;-- "问答" --&gt; LLM
+    A2 -- "抓正文/查背景" --&gt; WEB
+    A2 -- "预览卡片" --&gt; U
+    U -- "改一改 + 确认" --&gt; A3
+    A3 -- "正式写入" --&gt; DB
+    U -- "给这个岗改简历" --&gt; A4
+    DB -- "经历/技能/岗位要求" --&gt; A4
+    A4 -- "简历草稿" --&gt; U</code></pre>
+<h3 id="82-level-1-jd">8.2 Level 1 —— 上传 JD 的内部数据流<a class="headerlink" href="#82-level-1-jd" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TB
+    IN(["你发的内容"])
+    N1["归一化&lt;br/&gt;链接抓正文 / 截图OCR / 语音转写"]
+    S1[("attachment&lt;br/&gt;原件+转写")]
+    S2[("ingest_request&lt;br/&gt;原始输入")]
+    S3[("chat_message&lt;br/&gt;你说的这句")]
+    R1["路由：这是什么类型的东西"]
+    E1["抽取：拆成结构化字段"]
+    K1["技能归一：匹配已有技能库"]
+    P1{"预览卡片&lt;br/&gt;等你确认"}
+    W1["写入实体"]
+    S4[("company / position")]
+    S5[("position_requirement")]
+    S6[("skill 提议区")]
+    S7[("note 我的评价")]
+    S8[("reminder 截止提醒")]
+    S9[("chat_message&lt;br/&gt;Alfred 的回复")]
+    BG["背景搜集&lt;br/&gt;只看不存"]
+
+    IN --&gt; N1
+    IN --&gt; S2
+    IN --&gt; S3
+    N1 --&gt; S1
+    N1 --&gt; R1
+    R1 --&gt; E1
+    E1 --&gt; K1
+    K1 --&gt; P1
+    E1 --&gt; BG
+    BG -.-&gt;|"只展示"| P1
+    P1 --&gt;|"确认"| W1
+    P1 --&gt;|"丢弃"| X(["不入库"])
+    W1 --&gt; S4
+    W1 --&gt; S5
+    W1 --&gt; S6
+    W1 --&gt; S7
+    W1 --&gt; S8
+    W1 --&gt; S9</code></pre>
+<h3 id="83-level-1">8.3 Level 1 —— 简历生成的数据流<a class="headerlink" href="#83-level-1" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    Q(["给X公司Y岗改简历&lt;br/&gt;用经历1/3/5"])
+    D1[("position_requirement&lt;br/&gt;这个岗要什么")]
+    D2[("experience&lt;br/&gt;我的经历素材")]
+    D3[("experience_skill&lt;br/&gt;经历证明了什么能力")]
+    M["缺口比对&lt;br/&gt;要求 vs 我有的"]
+    G["LaTeX 生成"]
+    P{"你确认"}
+    V[("document_version&lt;br/&gt;源码快照")]
+    L[("document_version_experience&lt;br/&gt;用了哪几条经历")]
+    PDF[("PDF 文件")]
+
+    Q --&gt; M
+    D1 --&gt; M
+    D2 --&gt; M
+    D3 --&gt; M
+    M --&gt;|"提示缺口"| Q
+    M --&gt; G
+    G --&gt; P
+    P --&gt;|"再改改"| G
+    P --&gt;|"定稿"| V
+    V --&gt; L
+    V --&gt; PDF</code></pre>
+<hr />
+<h2 id="9-flow-diagram">9. 流程图（Flow Diagram）<a class="headerlink" href="#9-flow-diagram" title="Permanent link">&para;</a></h2>
+<h3 id="91-jd">9.1 上传 JD 主流程<a class="headerlink" href="#91-jd" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    START(["你发了链接/截图/语音"]) --&gt; SAVE["立即存档原件&lt;br/&gt;此刻起内容不会丢"]
+    SAVE --&gt; NORM["归一成纯文本"]
+    NORM --&gt; OK1{"文本拿到了吗"}
+    OK1 --&gt;|"否"| FAIL1["标记 partial&lt;br/&gt;告诉你抓取失败&lt;br/&gt;可手动补内容"]
+    OK1 --&gt;|"是"| ROUTE["判断类型"]
+    ROUTE --&gt; ISJOB{"是岗位信息吗"}
+    ISJOB --&gt;|"否"| OTHER["走别的技能&lt;br/&gt;笔记 / coffee chat"]
+    ISJOB --&gt;|"是"| EXTRACT["AI 拆解字段"]
+    EXTRACT --&gt; CO{"识别到公司了吗"}
+    CO --&gt;|"否"| PLACE["建占位公司&lt;br/&gt;标记待补"]
+    CO --&gt;|"是"| MATCH["按 slug + 别名匹配已有公司"]
+    PLACE --&gt; FP
+    MATCH --&gt; FP["算岗位指纹"]
+    FP --&gt; DUP{"这个岗已经存过了吗"}
+    DUP --&gt;|"是"| MERGE["复用已有岗位&lt;br/&gt;追加新来源"]
+    DUP --&gt;|"否"| NEW["准备新建岗位"]
+    MERGE --&gt; SK
+    NEW --&gt; SK["技能归一与匹配"]
+    SK --&gt; SKHIT{"技能库里有吗"}
+    SKHIT --&gt;|"有"| REUSE["直接复用"]
+    SKHIT --&gt;|"没有"| PROPOSE["建成待确认技能"]
+    REUSE --&gt; CARD
+    PROPOSE --&gt; CARD["生成预览卡片"]
+    CARD --&gt; BG["顺手搜背景信息&lt;br/&gt;只展示不入库"]
+    BG --&gt; REVIEW{"你看一眼"}
+    REVIEW --&gt;|"改字段"| CARD
+    REVIEW --&gt;|"丢弃"| DROP(["不入库&lt;br/&gt;原始内容仍留档"])
+    REVIEW --&gt;|"确认"| WRITE["写入数据库"]
+    WRITE --&gt; REM{"有截止日期吗"}
+    REM --&gt;|"有"| MKREM["自动建提前3天的提醒"]
+    REM --&gt;|"没有"| REPLY
+    MKREM --&gt; REPLY["Alfred 回话&lt;br/&gt;写进聊天时间线"]
+    REPLY --&gt; END(["完成"])</code></pre>
+<h3 id="92">9.2 技能确认流程<a class="headerlink" href="#92" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    P(["AI 提议的新技能"]) --&gt; Q{"你怎么看"}
+    Q --&gt;|"确实是新技能"| A["approved&lt;br/&gt;进正式词表"]
+    Q --&gt;|"跟已有的重复"| M["merged&lt;br/&gt;并入已有技能&lt;br/&gt;说法自动变成别名"]
+    Q --&gt;|"这不算技能"| R["rejected&lt;br/&gt;下次不再提"]
+    Q --&gt;|"先放着"| P
+    A --&gt; USE(["可用于筛选和统计"])
+    M --&gt; USE</code></pre>
+<h3 id="93">9.3 简历生成流程<a class="headerlink" href="#93" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    S(["给某公司某岗改简历"]) --&gt; PICK{"指定用哪几条经历了吗"}
+    PICK --&gt;|"指定了"| GET["取出指定经历"]
+    PICK --&gt;|"没指定"| REC["按岗位要求自动推荐经历"]
+    REC --&gt; CONFIRM1{"这几条行吗"}
+    CONFIRM1 --&gt;|"换一批"| REC
+    CONFIRM1 --&gt;|"可以"| GET
+    GET --&gt; GAP["比对岗位要求&lt;br/&gt;找出没覆盖到的能力"]
+    GAP --&gt; WARN{"有明显缺口吗"}
+    WARN --&gt;|"有"| TELL["提示你&lt;br/&gt;要求SPSS但选的经历没体现"]
+    WARN --&gt;|"没有"| GEN
+    TELL --&gt; GEN["生成 LaTeX 草稿"]
+    GEN --&gt; LOOK{"你看草稿"}
+    LOOK --&gt;|"改措辞/换经历"| GEN
+    LOOK --&gt;|"定稿"| SAVE["存新版本&lt;br/&gt;记录用了哪几条经历"]
+    SAVE --&gt; CK{"内容和上一版一样吗"}
+    CK --&gt;|"一样"| SKIP["不新建版本"]
+    CK --&gt;|"不一样"| PDF["编译 PDF"]
+    PDF --&gt; IDX["抽取关键词建索引"]
+    IDX --&gt; DONE(["可用于投递"])</code></pre>
+<h3 id="94">9.4 从上传到投递的完整闭环<a class="headerlink" href="#94" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart LR
+    A(["发现岗位"]) --&gt; B(["解析入库"])
+    B --&gt; C(["写评价与准备思路"])
+    C --&gt; D(["生成定制简历"])
+    D --&gt; E(["投递"])
+    E --&gt; F(["跟踪状态"])
+    F --&gt; G(["面试记录"])
+    G --&gt; H(["复盘写进笔记"])
+    H -.-&gt;|"经验反哺"| C
+    G -.-&gt;|"新技能被问到"| I(["补进技能库"])
+    I -.-&gt; D</code></pre>
+<hr />
+<h2 id="10-er">10. ER 图（实体关系）<a class="headerlink" href="#10-er" title="Permanent link">&para;</a></h2>
+<h3 id="101">10.1 上传与解析相关<a class="headerlink" href="#101" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>erDiagram
+    CHAT_MESSAGE ||--o| INGEST_REQUEST : "触发"
+    INGEST_REQUEST ||--o{ INGEST_RUN : "每次AI调用"
+    INGEST_REQUEST ||--o{ ATTACHMENT : "原件"
+    INGEST_REQUEST ||--o{ COMPANY : "产出"
+    INGEST_REQUEST ||--o{ POSITION : "产出"
+    INGEST_REQUEST ||--o{ NOTE : "产出"
+
+    CHAT_MESSAGE {
+        string id PK
+        timestamp sent_at "时间戳"
+        string role "user 或 assistant"
+        string media_kind "text voice image link"
+        text content_md "显示文本"
+        json attachment_ids
+        string ingest_request_id FK
+        string reply_to_id FK
+        string status
+    }
+    INGEST_REQUEST {
+        string id PK
+        string skill_name
+        text raw_text
+        string link
+        text transcript
+        json attachment_ids
+        string status "received running partial succeeded failed"
+        text summary_md
+    }
+    ATTACHMENT {
+        string id PK
+        string media_kind
+        string sha256 UK "同文件不重复存"
+        string storage_uri
+        text transcription "语音转写"
+        text vision_caption "图片描述"
+    }</code></pre>
+<h3 id="102">10.2 岗位 · 技能 · 要求<a class="headerlink" href="#102" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>erDiagram
+    COMPANY ||--o{ POSITION : "发布"
+    POSITION ||--o{ POSITION_REQUIREMENT : "要求"
+    SKILL ||--o{ POSITION_REQUIREMENT : "被要求"
+    SKILL ||--o{ SKILL : "大类包含细分"
+    SKILL ||--o{ EXPERIENCE_SKILL : "被证明"
+    EXPERIENCE ||--o{ EXPERIENCE_SKILL : "证明"
+
+    COMPANY {
+        string id PK
+        string name
+        string slug UK "唯一标识"
+        json aliases "别名用于去重"
+        string industry
+        int interest_level
+    }
+    POSITION {
+        string id PK
+        string company_id FK
+        string fingerprint UK "去重指纹"
+        string title "细分职位名"
+        string job_family "职位大类"
+        string location
+        timestamp deadline_at "投递截止"
+        string apply_url "投递链接"
+        json required_documents "要交的材料"
+        string source_kind "来源渠道"
+        int interest_level "喜好程度"
+        text personal_comment_md "我的评价原话"
+    }
+    SKILL {
+        string id PK
+        string slug UK "english 或 english-business-writing"
+        string name "显示名"
+        string parent_id FK "大类指向空"
+        json aliases "同义说法"
+        string kind "hard soft language tool domain"
+        string status "proposed approved merged rejected"
+        string merged_into_id FK
+    }
+    POSITION_REQUIREMENT {
+        string id PK
+        string position_id FK
+        string kind "skill qualification experience"
+        string skill_id FK "仅能力类才有"
+        text text "要求原文"
+        string importance "must nice"
+        real confidence
+    }
+    EXPERIENCE_SKILL {
+        string experience_id FK
+        string skill_id FK
+        int proficiency "1到5"
+        text evidence_text
+    }</code></pre>
+<h3 id="103">10.3 经历 · 文档 · 投递<a class="headerlink" href="#103" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>erDiagram
+    EXPERIENCE ||--o{ DOCUMENT_VERSION_EXPERIENCE : "被引用"
+    DOCUMENT_ASSET ||--o{ DOCUMENT_VERSION : "版本链"
+    DOCUMENT_VERSION ||--o{ DOCUMENT_VERSION_EXPERIENCE : "用了哪几条"
+    DOCUMENT_VERSION ||--o{ APPLICATION : "投递时所用"
+    POSITION ||--o{ APPLICATION : "投递"
+    APPLICATION ||--o{ INTERVIEW : "面试轮次"
+    APPLICATION ||--o| OFFER : "结果"
+
+    EXPERIENCE {
+        string id PK
+        string slug UK
+        string title
+        string kind "internship project research award"
+        string org_name
+        string org_company_id FK
+        date started_on
+        date ended_on
+        text summary_md
+        json bullets "简历条目候选"
+        int display_order "经历1 2 3"
+    }
+    DOCUMENT_ASSET {
+        string id PK
+        string slug UK
+        string kind "resume 或 cover_letter"
+        string name
+        string template_source "LaTeX模板"
+    }
+    DOCUMENT_VERSION {
+        string id PK
+        string asset_id FK
+        int version_no "与asset唯一"
+        string checksum "内容没变就不新建"
+        string source_format "latex"
+        text source_content "完整源码"
+        string tailored_for_position_id FK
+        text change_summary_md "这版改了什么"
+        string compiled_pdf_url
+    }
+    DOCUMENT_VERSION_EXPERIENCE {
+        string document_version_id FK
+        string experience_id FK
+        int order_no "简历里排第几"
+        json rendered_bullets "实际措辞"
+    }
+    APPLICATION {
+        string id PK
+        string position_id FK
+        string status "投递状态机"
+        string resume_version_id FK
+        string cover_letter_version_id FK
+        timestamp submitted_at
+        text submission_detail_md
+    }
+    INTERVIEW {
+        string id PK
+        string application_id FK
+        int round_no
+        string kind
+        timestamp scheduled_at
+        json questions "问了什么我怎么答"
+        text feedback_md "我的感受"
+    }</code></pre>
+<h3 id="104-entity_link">10.4 万能连线 <code>entity_link</code><a class="headerlink" href="#104-entity_link" title="Permanent link">&para;</a></h3>
+<p>任何两个实体都能连起来，不用为每种关系加一张表。</p>
+<pre class="mermaid"><code>erDiagram
+    ENTITY_LINK {
+        string id PK
+        string source_type "note position company person"
+        string source_id
+        string target_type
+        string target_id
+        string relation "受控词表"
+        text note "为什么连"
+    }</code></pre>
+<p>常用连法：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>连法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>这条笔记是关于那个岗的</td>
+<td><code>note → position</code>，relation = <code>about</code></td>
+</tr>
+<tr>
+<td>这条笔记提到了某家公司</td>
+<td><code>note → company</code>，relation = <code>mentions</code></td>
+</tr>
+<tr>
+<td>这个岗需要某技能</td>
+<td>走 <code>position_requirement</code> 专表，不用 entity_link</td>
+</tr>
+<tr>
+<td>这张截图是这次投递的凭证</td>
+<td><code>application → attachment</code>，relation = <code>evidence</code></td>
+</tr>
+<tr>
+<td>这条笔记来自那段录音</td>
+<td><code>note → attachment</code>，relation = <code>derived_from</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="11-brainstorm">11. 潜在问题 Brainstorm（先踩坑）<a class="headerlink" href="#11-brainstorm" title="Permanent link">&para;</a></h2>
+<h3 id="_1">高风险（不处理一定出事）<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p><strong>① 技能库爆炸</strong>
+- 现象：三个月后技能表里有 400 条，其中 300 条是同义重复
+- 对策：AI 只能提议不能直接入库；<code>proposed</code> 不参与筛选；提供"合并技能"操作，合并时旧说法自动进别名</p>
+<p><strong>② 截图 / OCR 认错关键字段</strong>
+- 现象：公司名认成"字节眺动"，截止日期认成去年
+- 对策：强制走预览卡片；AI 推算出来的字段（如"本周五"→ 具体日期）在卡片上<strong>高亮标注</strong>，提醒你重点检查</p>
+<p><strong>③ 经历和笔记混为一谈</strong>
+- 现象：想往简历里加东西时，翻遍笔记也找不到那段实习怎么写的
+- 对策：已定案分表。判断标准一句话——<strong>能写进简历的是经历，其余全是笔记</strong></p>
+<p><strong>④ 简历版本认不出来</strong>
+- 现象：收到面试通知，不知道当初投的是哪版
+- 对策：<code>application.resume_version_id</code> 硬关联 + <code>document_version_experience</code> 记录用了哪几条经历 + 每版必填改动摘要</p>
+<h3 id="_2">中风险（会不舒服但不致命）<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p><strong>⑤ 同一岗位重复入库</strong>
+- 小红书发一次、LinkedIn 再发一次 → 指纹去重，但指纹依赖"标准化职位名"，"数据分析师"和"数据分析实习生"会被当成两个岗（这是对的）；而"Data Analyst"和"数据分析师"会被当成两个岗（这是错的）
+- 对策：指纹先用中英归一表处理一遍；命中不确定时在预览卡片上问你"这是不是和已有的 XX 是同一个岗"</p>
+<p><strong>⑥ 聊天时间线越滚越长</strong>
+- 对策：时间线按天分组、分页加载；给消息加 <code>is_pinned</code>，重要的能置顶；纯闲聊可以标记为可归档</p>
+<p><strong>⑦ 你的评价被塞进 JD 描述里</strong>
+- 现象：AI 把"这家听说加班很凶"写进了 <code>position.description_md</code>
+- 对策：prompt 里已明确"my_comment 只记录用户自己说的主观评价"；再加一条校验——描述字段里如果出现第一人称，打回重来</p>
+<p><strong>⑧ 背景搜集的信息想留下来</strong>
+- 目前定的是不入库。但如果你搜到一条"这家去年裁员 30%"，肯定想留
+- 对策：背景信息默认不存，但在卡片上给一个「存为笔记」按钮，你点了才存成 <code>note</code>（<code>kind=research</code>）</p>
+<h3 id="_3">低风险（记着就行）<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p><strong>⑨ 投递材料清单没人管</strong> → <code>position.required_documents</code> + 生成 checklist 提醒
+<strong>⑩ 同一岗二次投递</strong> → 不阻止，但提示"你 3 月投过这个岗"
+<strong>⑪ PDF 越存越多</strong> → PDF 本身不大；真占地方的是截图，用 sha256 去重已能解决大半</p>
+<hr />
+<h2 id="12">12. 与现有代码的差距（实现清单）<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
+<h3 id="121-5">12.1 要新建的表（5 张）<a class="headerlink" href="#121-5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>表</th>
+<th>作用</th>
+<th>优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skill</code></td>
+<td>两级技能受控词表，带 proposed 状态</td>
+<td>P0</td>
+</tr>
+<tr>
+<td><code>position_requirement</code></td>
+<td>替代 <code>position.requirements</code> 这个 JSON 字段</td>
+<td>P0</td>
+</tr>
+<tr>
+<td><code>experience</code></td>
+<td>个人经历素材库</td>
+<td>P0</td>
+</tr>
+<tr>
+<td><code>experience_skill</code></td>
+<td>经历 ↔ 技能</td>
+<td>P1</td>
+</tr>
+<tr>
+<td><code>document_version_experience</code></td>
+<td>简历版本 ↔ 用了哪几条经历</td>
+<td>P1</td>
+</tr>
+<tr>
+<td><code>chat_message</code></td>
+<td>你和 Alfred 的双向时间线</td>
+<td>P1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="122">12.2 要改的地方<a class="headerlink" href="#122" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>改什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>alfred/models/tables.py</code></td>
+<td>加上述新表；<code>position</code> 增加 <code>required_documents</code>、<code>posted_at</code></td>
+</tr>
+<tr>
+<td><code>alfred/models/enums.py</code></td>
+<td>加 <code>SkillStatus</code>、<code>SkillKind</code>、<code>RequirementKind</code>、<code>ChatRole</code>、<code>ExperienceKind</code></td>
+</tr>
+<tr>
+<td><code>alfred/skills/extract_job/skill.yaml</code></td>
+<td>输出 schema 里 <code>skills</code> 从"字符串列表"升级为"带大类/证据句/强度的对象列表"；<code>requirements</code> 增加 <code>kind</code> 区分能力/学历/经历；<code>actions</code> 里的 <code>add_tags</code> 换成 <code>upsert_skills</code> + <code>link_requirements</code></td>
+</tr>
+<tr>
+<td><code>alfred/skills/_actions.py</code></td>
+<td>新增 <code>upsert_skill</code>（含归一化匹配）、<code>link_requirement</code>、<code>append_chat_message</code></td>
+</tr>
+<tr>
+<td><code>alfred/ingest.py</code></td>
+<td>支持 dry_run 预览模式；每次 ingest 前后写 <code>chat_message</code></td>
+</tr>
+<tr>
+<td>接口层</td>
+<td>新增：技能确认/合并、经历 CRUD、聊天时间线分页查询、预览确认提交</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>现有 <code>docs/DATA_MODEL.md</code> 里把技能表述为「<code>namespace='skill'</code> 的 tag」。本设计<strong>取代</strong>该方案：tag 是自由标签，扛不住"两级结构 + 提议确认 + 合并去重"这三件事。落地时需同步更新 DATA_MODEL.md。</p>
+</blockquote>
+<h3 id="123">12.3 建议的落地顺序<a class="headerlink" href="#123" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>第 1 步  建 skill + position_requirement 表，改 extract_job 技能  ← 上传链路立刻变干净
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>第 2 步  加预览确认机制（dry_run + 确认接口）                     ← 挡住脏数据
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>第 3 步  建 experience 表 + 录入你现有的经历                      ← 为简历生成铺路
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>第 4 步  简历生成链路 + document_version_experience
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>第 5 步  chat_message 时间线
+</code></pre></div>
+<hr />
+<h2 id="13">13. 还需要你后续拍板的开放问题<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
+<p>这几个不影响现在动工，但迟早要定：</p>
+<ol>
+<li><strong>技能层级会不会不够用？</strong> 现在是两级（大类 → 细分）。像"心理学 → 临床评估 → MMPI 量表施测"这种三级，暂时压成两级（大类=心理学，细分=MMPI 量表施测）。如果以后发现不够，<code>parent_id</code> 自引用天然支持多级，不用改表。</li>
+<li><strong>技能要不要记"我的熟练度"？</strong> 现在熟练度挂在 <code>experience_skill</code> 上（这段经历体现的水平）。要不要再有一个"我整体的 Excel 水平"？建议先不加，用经历自动推算。</li>
+<li><strong>背景搜集完全不存，会不会后悔？</strong> 已给了折中方案（默认不存 + 一键存为笔记）。</li>
+<li><strong>Cover Letter 和 Personal Statement 要不要分开？</strong> 现在 <code>document_asset.kind</code> 已经能区分，加一个枚举值即可。</li>
+<li><strong>经历的"多语言措辞"存哪？</strong> 现在放在 <code>experience.bullets</code> 里（一条经历可以有中英两套说法）。如果以后要做完整的中英双版简历，可能要单独拆。</li>
+</ol>
+<hr />
+<p><em>最后更新：2026-08-02</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.top", "navigation.tracking", "content.code.copy", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

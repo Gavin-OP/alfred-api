@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Alfred · 私人助理</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1f232c; --line:#2a2f3a;
+    --txt:#e7eaf0; --sub:#9aa3b2; --accent:#5b8cff; --ok:#3ecf8e; --warn:#f0b429;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--txt);font-size:15px;line-height:1.5}
+  header{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:12px 16px;
+    background:rgba(15,17,21,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  header h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.3px}
+  header .badge{font-size:11px;color:var(--sub);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+  .wrap{max-width:760px;margin:0 auto;padding:14px 14px 90px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0;margin-bottom:10px}
+  .tab{flex:0 0 auto;padding:7px 14px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);
+    color:var(--sub);font-size:13px;cursor:pointer}
+  .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  textarea,input[type=text]{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+    border-radius:10px;padding:10px;font-size:14px;resize:vertical;font-family:inherit}
+  textarea{min-height:88px}
+  .seg{display:flex;gap:6px;margin:8px 0}
+  .seg button{flex:1;padding:8px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);
+    color:var(--sub);font-size:13px;cursor:pointer}
+  .seg button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 16px;font-size:15px;
+    font-weight:600;cursor:pointer;width:100%}
+  .btn:disabled{opacity:.5}
+  .muted{color:var(--sub);font-size:12px}
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    padding:3px 8px;font-size:12px;margin:3px 4px 0 0;color:var(--sub)}
+  .entity{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--panel2)}
+  .entity b{font-size:14px}
+  .entity .meta{color:var(--sub);font-size:12px;margin-top:3px}
+  .tag{display:inline-block;background:#23304a;color:#9fc0ff;border-radius:6px;padding:2px 7px;font-size:11px;margin:2px 3px 0 0}
+  .summary{background:#16241d;border:1px solid #1f3a2c;color:#bff0d4;border-radius:10px;padding:10px 12px;font-size:13px;white-space:pre-wrap}
+  .warn{background:#2a2410;border:1px solid #473b14;color:#f3d98a;border-radius:10px;padding:8px 10px;font-size:12px;margin-top:8px}
+  .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#000c;color:#fff;
+    padding:10px 16px;border-radius:24px;font-size:13px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1}
+  .stat{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--line)}
+  .stat:last-child{border-bottom:none}
+  .smalllink{color:var(--accent);font-size:12px;cursor:pointer}
+  #statusBar{display:flex;gap:14px;font-size:12px;color:var(--sub)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+  .green{background:var(--ok)} .red{background:#ff5c5c} .gray{background:#666}
+  details summary{cursor:pointer;color:var(--sub);font-size:12px}
+</style>
+</head>
+<body>
+  <div style="background:#2a2410;border-bottom:1px solid #473b14;color:#f3d98a;font-size:13px;padding:9px 16px;text-align:center">⚠️ 本页是 <b>v0.1 基线</b> 的可视化，已作废。最新设计规范见 <a href="workflow.html" style="color:#ffd97a">上传工作流设计（V2）</a> 与 <a href="../DATA_MODEL_V2.html" style="color:#ffd97a">数据模型 V2</a>。本页仅供历史追溯。</div>
+<header>
+  <h1>🤵 Alfred</h1>
+  <span class="badge">私人助理</span>
+  <div style="flex:1"></div>
+  <div id="statusBar">
+    <span><i class="dot gray" id="dotDb"></i><span id="txtDb">DB…</span></span>
+    <span><i class="dot gray" id="dotLlm"></i><span id="txtLlm">LLM…</span></span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <strong>后端地址</strong>
+      <span class="smalllink" onclick="editBase()">修改</span>
+    </div>
+    <input type="text" id="baseUrl" value="" style="margin-top:8px" />
+    <div class="muted" style="margin-top:6px">公众号内访问：填电脑局域网 IP，如 <code>http://192.168.x.x:8000</code></div>
+  </div>
+
+  <div class="card">
+    <strong>💬 跟 Alfred 说点什么</strong>
+    <div class="seg" id="segSource">
+      <button data-v="text" class="active">文字</button>
+      <button data-v="link">链接</button>
+      <button data-v="audio">语音转写</button>
+      <button data-v="image">截图描述</button>
+    </div>
+    <textarea id="inpText" placeholder="例如：今天看到字节跳动一个后端岗位，要求 Go 和分布式，我想先观望一下，下周三提醒我投"></textarea>
+    <div class="row" style="margin-top:8px">
+      <input type="text" id="inpLink" placeholder="贴链接（选了链接/截图时填）" style="display:none" />
+    </div>
+    <label class="muted" style="display:flex;align-items:center;gap:6px;margin-top:6px">
+      <input type="checkbox" id="dryRun" /> 仅预览解析（不落库）
+    </label>
+    <button class="btn" id="sendBtn" style="margin-top:10px">提交给 Alfred</button>
+    <div id="result"></div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>📊 数据总览（点击展开）</summary>
+      <div id="graphOverview" style="margin-top:10px"></div>
+    </details>
+  </div>
+
+  <div class="card">
+    <div class="tabs" id="tabs">
+      <div class="tab active" data-entity="position">职位</div>
+      <div class="tab" data-entity="company">公司</div>
+      <div class="tab" data-entity="person">人脉</div>
+      <div class="tab" data-entity="note">笔记</div>
+      <div class="tab" data-entity="reminder">提醒</div>
+      <div class="tab" data-entity="event">事件</div>
+    </div>
+    <div id="entityList"></div>
+    <div class="row" style="margin-top:6px">
+      <input type="text" id="filterId" placeholder="按实体 id 过滤关联（如 company:xxx 的 id）" />
+      <span class="smalllink" onclick="loadEntities(true)">查关联</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <strong>🧩 已加载技能</strong>
+    <div id="skillList" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (s)=>document.querySelector(s);
+const baseKey = "alfred_base_url";
+let BASE = localStorage.getItem(baseKey) || "http://localhost:8000";
+$("#baseUrl").value = BASE;
+let srcMode = "text";
+
+function editBase(){ const v=prompt("后端地址", BASE); if(v){ BASE=v.trim(); localStorage.setItem(baseKey,BASE); $("#baseUrl").value=BASE; toast("已更新后端地址"); } }
+function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1800); }
+async function api(path, opts){ const r=await fetch(BASE+path, opts); const j=await r.json().catch(()=>({ok:false,error:"无法解析响应"})); return j; }
+
+// 来源切换
+document.querySelectorAll("#segSource button").forEach(b=>{
+  b.onclick=()=>{ document.querySelectorAll("#segSource button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active"); srcMode=b.dataset.v;
+    $("#inpLink").style.display = (srcMode==="link"||srcMode==="image")?"block":"none"; };
+});
+
+// tabs
+document.querySelectorAll("#tabs .tab").forEach(t=>{
+  t.onclick=()=>{ document.querySelectorAll("#tabs .tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active"); $("#filterId").value=""; loadEntities(false); };
+});
+
+// 提交 ingest
+$("#sendBtn").onclick = async ()=>{
+  const btn=$("#sendBtn"); btn.disabled=true; btn.textContent="Alfred 处理中…"; $("#result").innerHTML="";
+  const body={ mode:"auto", source:srcMode, dry_run:$("#dryRun").checked };
+  if(srcMode==="text") body.text=$("#inpText").value;
+  else if(srcMode==="link"){ body.link=$("#inpLink").value; body.text=$("#inpText").value; }
+  else if(srcMode==="audio") body.transcript=$("#inpText").value;
+  else if(srcMode==="image"){ body.text=$("#inpText").value; body.attachment_ids=[]; }
+  try{
+    const j=await api("/v1/ingest",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if(!j.ok){ $("#result").innerHTML=`<div class="warn">失败：${j.error||"未知错误"}</div>`; }
+    else{
+      const d=j.data; let html=`<div class="summary">${d.summary_md||"（已处理）"}</div>`;
+      if(d.created&&d.created.length){ html+="<div style='margin-top:8px'>"+d.created.map(c=>`<span class="pill">${c.ref.type}:${c.ref.id?c.ref.id.slice(0,6):(c.ref.alias||'')}</span>`).join("")+"</div>"; }
+      if(d.warnings&&d.warnings.length){ html+=`<div class="warn">⚠ ${d.warnings.join("<br>")}</div>`; }
+      $("#result").innerHTML=html; loadEntities(false); loadOverview();
+    }
+  }catch(e){ $("#result").innerHTML=`<div class="warn">请求失败：${e.message}</div>`; }
+  finally{ btn.disabled=false; btn.textContent="提交给 Alfred"; }
+};
+
+// 实体列表
+async function loadEntities(withFilter){
+  const ent=document.querySelector("#tabs .tab.active").dataset.entity;
+  let path=`/v1/${ent}s?limit=20`;
+  if(withFilter && $("#filterId").value){ path=`/v1/links?type=${ent}&id=${encodeURIComponent($("#filterId").value)}`; }
+  const j=await api(path);
+  const box=$("#entityList");
+  if(!j.ok){ box.innerHTML=`<div class="muted">加载失败：${j.error}</div>`; return; }
+  const items=j.data||[];
+  if(!items.length){ box.innerHTML=`<div class="muted">暂无数据</div>`; return; }
+  if(ent==="link"||path.includes("/links")){
+    box.innerHTML=items.map(l=>`<div class="entity"><b>${l.source_type}→${l.target_type}</b><div class="meta">${l.relation} · ${l.source_id.slice(0,6)} → ${l.target_id.slice(0,6)}</div></div>`).join("");
+    return;
+  }
+  box.innerHTML=items.map(renderEntity).join("");
+}
+function renderEntity(e){
+  const name=e.title||e.display_name||e.name||e.body_md||e.summary_md||e.kind||"(未命名)";
+  let meta="";
+  if(e.company_id) meta+=`公司 ${e.company_id.slice(0,6)} · `;
+  if(e.location) meta+=e.location+" · ";
+  if(e.occurred_on) meta+=e.occurred_on+" · ";
+  if(e.status) meta+=`状态 ${e.status}`;
+  let tags="";
+  (e.tags||[]).forEach(t=>tags+=`<span class="tag">${t}</span>`);
+  return `<div class="entity"><b>${esc(name)}</b><div class="meta">${esc(meta)}</div>${tags}</div>`;
+}
+function esc(s){ return String(s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+// 总览
+async function loadOverview(){
+  const j=await api("/v1/graph");
+  if(!j.ok) return;
+  const c=j.data.counts||{};
+  $("#graphOverview").innerHTML=Object.entries(c).map(([k,v])=>`<div class="stat"><span>${k}</span><b>${v}</b></div>`).join("");
+}
+
+// skills
+async function loadSkills(){
+  const j=await api("/v1/skills");
+  if(!j.ok){ $("#skillList").innerHTML=`<div class="muted">${j.error}</div>`; return; }
+  $("#skillList").innerHTML=(j.data||[]).map(s=>`<div class="entity"><b>${s.name}</b> <span class="pill">v${s.version}</span> ${s.has_script?'<span class="tag">script</span>':'<span class="tag">declarative</span>'}<div class="meta">${esc(s.description)}</div></div>`).join("");
+}
+
+// 状态
+async function loadStatus(){
+  const db=await api("/v1/health");
+  if(db.ok){ $("#dotDb").className="dot green"; $("#txtDb").textContent=db.data.status; }
+  else{ $("#dotDb").className="dot red"; $("#txtDb").textContent="DB ✗"; }
+  try{ const ll=await api("/v1/llm-ping");
+    if(ll.ok){ $("#dotLlm").className="dot green"; $("#txtLlm").textContent="LLM ✓"; }
+    else{ $("#dotLlm").className="dot red"; $("#txtLlm").textContent="LLM ✗"; }
+  }catch{ $("#dotLlm").className="dot gray"; $("#txtLlm").textContent="LLM ?"; }
+}
+
+loadStatus(); loadEntities(false); loadSkills(); loadOverview();
+setInterval(loadStatus, 30000);
+</script>
+</body>
+</html>
