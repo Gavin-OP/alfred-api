@@ -14,7 +14,7 @@ status: 现行有效
 
 - [STYLE](./STYLE.md) §2 元信息块由单行｜改为多行 bullets；自身 frontmatter 补 `updated`。
 - [VISION](./VISION.md) 补 frontmatter（updated/scope/related）；§2 七条 V1 能力统一「能力—PRD 工作流」格式（去掉孤立加粗的「投递追踪」）；§4 加固约束级边界；元信息「最后更新」同步。
-- [PRD：job-seeking](./prd/job-seeking.md) 新增 NFR-4（缺失信息·人工补齐优先）并补工作流二 step 5(d)；工作流一补「缺失補全闭环」并修正子项层级。
+- [PRD：job-seeking](./prd/job-seeking.md) 新增 NFR-4（缺失信息·人工补齐优先）并补工作流二 step 5(d)；工作流一补「缺失補全闭环」并修正子项层级。**工作流二**：修正触发条件（紧接工作流一 → 「同一会话中用户继续投递该岗位」，明确仅针对刚才那个岗位）；推荐改为可迭代反馈闭环；文件交付明确「可直接下载的文件（即下载链接）」。
 - [UPLOAD_WORKFLOW](./UPLOAD_WORKFLOW.md) / [GRAPH](./GRAPH.md) / [DATA_MODEL_V2](./DATA_MODEL_V2.md) / [design-sessions](./design-sessions/2026-08-03-v1-redesign.md) / [DATA_MODEL_V3](./DATA_MODEL_V3.md) 元信息块统一「每项一行」渲染修复并同步 `最后更新`。
 
 ## 2026-08-07 · 站点导航去除 status 徽章「!」
