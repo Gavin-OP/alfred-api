@@ -12,7 +12,7 @@ updated: 2026-08-18
 
 - [VISION](./VISION.md) — 补 frontmatter（updated/scope/related）、§2 七条 V1 能力统一「能力—PRD 工作流」、§4 约束级边界；北极星句改为 ABSTRACT callout；元数据同步为 08-18
 - [STYLE](./STYLE.md) — §2 元信息块改多行 bullets；补 updated
-- [PRD：job-seeking](./prd/job-seeking.md) — NFR-4（缺失信息·人工补齐优先）、工作流一缺失補全闭环 + 子项层级、工作流二触发条件 / 推荐迭代闭环 / 文件交付；工作流三官网投递说明 + 投递台账嵌套列表；工作流四/五对调；子项改嵌套有序列表
+- [PRD：job-seeking](./prd/job-seeking.md) — NFR-4（缺失信息·人工补齐优先）、工作流一缺失補全闭环 + 子项层级、工作流二触发条件 / 推荐迭代闭环 / 文件交付；工作流三官网投递说明 + 投递台账嵌套列表；工作流四/五对调；工作流九/十一/十四/十五与 FR-21/FR-22 内联枚举拆独立子项；子项改嵌套有序列表
 - [DATA_MODEL_V2](./DATA_MODEL_V2.md) / [DATA_MODEL_V3](./DATA_MODEL_V3.md) — 元信息块渲染修复 + 最后更新同步
 - [UPLOAD_WORKFLOW](./UPLOAD_WORKFLOW.md) / [GRAPH](./GRAPH.md) — 元信息块渲染修复 + 最后更新同步
 - [design-sessions](./design-sessions/2026-08-03-v1-redesign.md) — 元信息块渲染修复
